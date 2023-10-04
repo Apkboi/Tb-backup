@@ -1,0 +1,147 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:triberly/app/auth/presentation/pages/location_access/location_access_page.dart';
+import 'package:triberly/app/auth/presentation/pages/onboarding/onboarding_page.dart';
+import 'package:triberly/app/auth/presentation/pages/otp/otp_page.dart';
+import 'package:triberly/app/auth/presentation/pages/password_reset/complete_password_reset_page.dart';
+import 'package:triberly/app/auth/presentation/pages/password_reset/password_reset_page.dart';
+import 'package:triberly/app/auth/presentation/pages/sign_in/sign_in_page.dart';
+import 'package:triberly/app/auth/presentation/pages/sign_up/sign_up_page.dart';
+import 'package:triberly/app/auth/presentation/pages/upload_profile_photo/upload_profile_photo_page.dart';
+import 'package:triberly/app/base/presentation/pages/base/base_page.dart';
+import 'package:triberly/app/base/presentation/pages/splash/splash_page.dart';
+import 'package:triberly/app/chat/presentation/pages/chat/chat_page.dart';
+import 'package:triberly/app/community/presentation/pages/community/community_page.dart';
+import 'package:triberly/app/home/presentation/pages/home/home_page.dart';
+import 'package:triberly/app/profile/presentation/pages/profile/profile_page.dart';
+import 'package:triberly/app/profile/presentation/pages/profile_details/profile_details_page.dart';
+import 'package:triberly/core/navigation/path_params.dart';
+import 'package:triberly/core/navigation/route_url.dart';
+
+final _rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'rootNavigator');
+final _shellNavigatorAKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
+final _shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'shellB');
+final _shellNavigatorCKey = GlobalKey<NavigatorState>(debugLabel: 'shellC');
+final _shellNavigatorDKey = GlobalKey<NavigatorState>(debugLabel: 'shellD');
+
+class CustomRoutes {
+  static final goRouter = GoRouter(
+    initialLocation: '/home',
+    navigatorKey: _rootNavigatorKey,
+    debugLogDiagnostics: true,
+    routes: [
+      GoRoute(
+        path: '/splash',
+        name: PageUrl.splash,
+        builder: (context, state) => SplashPage(),
+      ),
+      GoRoute(
+        path: '/signUp',
+        name: PageUrl.signUp,
+        builder: (context, state) => SignUpPage(),
+      ),
+      GoRoute(
+        path: '/signIn',
+        name: PageUrl.signIn,
+        builder: (context, state) => SignInPage(
+          email: state.uri.queryParameters[PathParam.email] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: '/otpPage',
+        name: PageUrl.otpPage,
+        builder: (context, state) => OtpPage(
+          phoneNumber: state.uri.queryParameters[PathParam.phoneNumber] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: '/locationAccessPage',
+        name: PageUrl.locationAccessPage,
+        builder: (context, state) => const LocationAccessPage(),
+      ),
+      GoRoute(
+        path: '/passwordReset',
+        name: PageUrl.passwordReset,
+        builder: (context, state) => const PasswordResetPage(),
+      ),
+      GoRoute(
+        path: '/completePasswordReset',
+        name: PageUrl.completePasswordReset,
+        builder: (context, state) => const CompletePasswordResetPage(),
+      ),
+      GoRoute(
+        path: '/uploadProfilePhoto',
+        name: PageUrl.uploadProfilePhoto,
+        builder: (context, state) => const UploadProfilePhotoPage(),
+      ),
+      GoRoute(
+        path: '/onBoardingPage',
+        name: PageUrl.onBoardingPage,
+        builder: (context, state) => const OnBoardingPage(),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return BasePage(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _shellNavigatorAKey,
+            routes: [
+              GoRoute(
+                path: '/home',
+                name: PageUrl.home,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: HomePage(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _shellNavigatorBKey,
+            routes: [
+              GoRoute(
+                path: '/community',
+                name: PageUrl.community,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: CommunityPage(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _shellNavigatorCKey,
+            routes: [
+              GoRoute(
+                path: '/chat',
+                name: PageUrl.chat,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: ChatPage(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _shellNavigatorDKey,
+            routes: [
+              GoRoute(
+                path: '/profile',
+                name: PageUrl.profile,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: ProfilePage(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'details',
+                    name: PageUrl.profileDetails,
+                    builder: (context, state) => ProfileDetailsPage(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}

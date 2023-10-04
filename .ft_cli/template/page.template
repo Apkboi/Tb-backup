@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+import '{{controllerNameFile}}.{{controllerExtension}}';
+
+class {{pageNameClass}} extends StatefulWidget {
+  const {{pageNameClass}}({super.key});
+
+  @override
+  State<{{pageNameClass}}> createState() => _{{pageNameClass}}State();
+}
+
+class _{{pageNameClass}}State extends State<{{pageNameClass}}> {
+  final _controller = {{controllerNameClass}}();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('{{pageNameClass.sentenceCase}}'),
+      ),
+      body: Container(),
+    );
+  }
+}
+  

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "297535846989",
+    "project_id": "triberly-app",
+    "storage_bucket": "triberly-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297535846989:android:0181b464736c37b2573a04",
+        "android_client_info": {
+          "package_name": "com.triberly.triberly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZjur--I6lPdk5wlE7cyJWldv_rvH8wIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
