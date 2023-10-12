@@ -4,13 +4,22 @@ class PageUrl {
   static const signIn = 'signIn';
   static const home = 'home';
   static const chat = 'chat';
+  static const chatDetails = 'chatDetails';
   static const community = 'community';
+
+  ///PROFILE
   static const profile = 'profile';
   static const profileDetails = 'profileDetails';
+  static const uploadPhotos = 'uploadPhotos';
+  static const setupProfileIntroPage = 'setupProfileIntroPage';
+  static const setupProfilePage = 'setupProfilePage';
   static const otpPage = 'otpPage';
   static const locationAccessPage = 'locationAccessPage';
   static const passwordReset = 'passwordReset';
   static const uploadProfilePhoto = 'uploadProfilePhoto';
   static const completePasswordReset = 'completePasswordReset';
   static const onBoardingPage = 'onBoardingPage';
+
+  ///NOTIFICATIONS
+  static const notificationsPage = 'notificationsPage';
 }

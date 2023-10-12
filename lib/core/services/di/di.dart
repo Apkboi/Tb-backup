@@ -1,10 +1,13 @@
+import 'package:cloudinary/cloudinary.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:logger/logger.dart';
+import 'package:triberly/app/chat/external/datasources/audio_dao_imp_datasource.dart';
 import 'package:triberly/core/services/firebase/crashlytics.dart';
+import 'package:triberly/firebase_options.dart';
 
 import '../../_core.dart';
 import '../data/hive/hive_manager.dart';
@@ -36,13 +39,28 @@ Future<void> initCore() async {
   // final objectBox = await BoxManager.create();
   await sessionManager.init();
 
+  // final response = await cloudinary.unsignedUpload(
+  //     file: file.path,
+  //     uploadPreset: somePreset,
+  //     fileBytes: file.readAsBytesSync(),
+  //     resourceType: CloudinaryResourceType.image,
+  //     folder: cloudinaryCustomFolder,
+  //     fileName: 'some-name',
+  //     progressCallback: (count, total) {
+  //       print('Uploading image from file with progress: $count/$total');
+  //     });
+  //
+  // if (response.isSuccessful) {
+  //   print('Get your image from with ${response.secureUrl}');
+  // }
+
   sl.registerLazySingleton<SessionManager>(() => sessionManager);
 }
 
 Future<void> initFirebaseServices() async {
   await Firebase.initializeApp(
-      // options: DefaultFirebaseOptions.currentPlatform,
-      );
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   CrashlyticsService.onCrash();
 
@@ -53,6 +71,8 @@ Future<void> initFirebaseServices() async {
 
 Future<void> initializeDB() async {
   await Hive.initFlutter();
+
+  await AudioDaoImpDatasource().init();
   await HiveBoxes.openAllBox();
 }
 

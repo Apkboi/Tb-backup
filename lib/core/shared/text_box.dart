@@ -27,6 +27,7 @@ class TextBoxField extends StatefulWidget {
 
   final bool isPasswordField;
   final bool isPhoneField;
+  final bool topLabel;
   final AutovalidateMode? autoValidate;
   final void Function(String)? onSubmit;
   final void Function()? onTap;
@@ -41,6 +42,7 @@ class TextBoxField extends StatefulWidget {
     this.suffix,
     this.isEnabled = true,
     this.hasLabel = true,
+    this.topLabel = false,
     // this.isTextObscured = false,
     required this.controller,
     this.hintText,
@@ -95,6 +97,21 @@ class _TextBoxFieldState extends State<TextBoxField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Builder(builder: (context) {
+          if (widget.topLabel)
+            return Column(
+              children: [
+                TextView(
+                  text: widget.label ?? '',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Pallets.maybeBlack,
+                ),
+                8.verticalSpace,
+              ],
+            );
+          return SizedBox();
+        }),
         // if (widget.hasLabel)
         //   TextView(
         //     text: widget.label ?? widget.hintText ?? '',

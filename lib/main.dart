@@ -12,9 +12,11 @@ import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'core/services/_services.dart';
 import 'generated/l10n.dart';
 
-void main() {
-  HttpOverrides.global = CustomHttpOverrides();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
+  HttpOverrides.global = CustomHttpOverrides();
+  await initializeApp(environment: Environment.production);
   runApp(const ProviderScope(child: MyApp()));
 }
 

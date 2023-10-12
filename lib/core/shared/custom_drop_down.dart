@@ -55,13 +55,22 @@ class _FilterCustomDropDownState extends State<FilterCustomDropDown> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.label != null)
-          TextView(
-            text: widget.label ?? '',
-            fontSize: 14,
-            color: Pallets.primaryDark,
-          ),
-        if (widget.label != null) 0.verticalSpace,
+        Builder(builder: (context) {
+          if (widget.label != null) {
+            return Column(
+              children: [
+                TextView(
+                  text: widget.label ?? '',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Pallets.maybeBlack,
+                ),
+                8.verticalSpace,
+              ],
+            );
+          }
+          return SizedBox();
+        }),
         DropdownButtonFormField2(
           key: widget.dropDownKey,
           decoration: const InputDecoration(

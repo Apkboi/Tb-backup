@@ -26,7 +26,7 @@ class AppTheme extends ChangeNotifier {
     appBarTheme: AppBarTheme(
       color: Pallets.white,
       iconTheme: const IconThemeData(
-        color: Colors.black,
+        color: Pallets.primary,
         size: 24,
       ),
       actionsIconTheme: const IconThemeData(

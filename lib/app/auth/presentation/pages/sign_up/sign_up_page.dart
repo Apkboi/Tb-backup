@@ -88,7 +88,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               fontSize: 12,
             ),
             16.verticalSpace,
-
             CustomPhoneField(
               controller: phoneNumber,
               initialCountryCode: 'NG',
@@ -97,10 +96,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 // print(number.completeNumber);
               },
             ),
-            // TextBoxField(
-            //   label: 'Phone Number',
-            //   controller: phoneNumber,
-            // ),
             FilterCustomDropDown(
               hintText: "Gender",
               listItems: ['Male', 'Female'],

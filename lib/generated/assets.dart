@@ -6,21 +6,26 @@ class Assets {
       'assets/images/pngs/home_appbar_triberly.png';
   static const String pngsLaunch = 'assets/images/pngs/launch.png';
   static const String pngsLogo2 = 'assets/images/pngs/logo2.png';
+  static const String pngsLogoMain = 'assets/images/pngs/logo_main.png';
   static const String pngsMale = 'assets/images/pngs/male.png';
   static const String pngsOnboarding1 = 'assets/images/pngs/onboarding1.png';
   static const String pngsOnboarding2 = 'assets/images/pngs/onboarding2.png';
   static const String pngsSplashMain = 'assets/images/pngs/splash_main.png';
+  static const String svgsAddPhotos = 'assets/images/svgs/add_photos.svg';
   static const String svgsApple = 'assets/images/svgs/apple.svg';
   static const String svgsBackIcon = 'assets/images/svgs/back_icon.svg';
+  static const String svgsBlock = 'assets/images/svgs/block.svg';
   static const String svgsBlurPink = 'assets/images/svgs/blur_pink.svg';
   static const String svgsBookmark = 'assets/images/svgs/bookmark.svg';
   static const String svgsCall = 'assets/images/svgs/call.svg';
   static const String svgsCategory = 'assets/images/svgs/category.svg';
   static const String svgsChat = 'assets/images/svgs/chat.svg';
   static const String svgsChatSelected = 'assets/images/svgs/chat_selected.svg';
+  static const String svgsConfetti = 'assets/images/svgs/confetti.png';
   static const String svgsCrown = 'assets/images/svgs/crown.svg';
   static const String svgsExport = 'assets/images/svgs/export.svg';
   static const String svgsFilterIcon = 'assets/images/svgs/filter_icon.svg';
+  static const String svgsFlag = 'assets/images/svgs/flag.svg';
   static const String svgsGlobalSearch = 'assets/images/svgs/global_search.svg';
   static const String svgsGoogle = 'assets/images/svgs/google.svg';
   static const String svgsHeart = 'assets/images/svgs/heart.svg';
@@ -33,8 +38,15 @@ class Assets {
   static const String svgsLogoWhite = 'assets/images/svgs/logo_white.svg';
   static const String svgsLogout = 'assets/images/svgs/logout.svg';
   static const String svgsMenuIcon = 'assets/images/svgs/menu_icon.svg';
+  static const String svgsMicrophone = 'assets/images/svgs/microphone.svg';
   static const String svgsMore = 'assets/images/svgs/more.svg';
   static const String svgsNotification = 'assets/images/svgs/notification.svg';
+  static const String svgsNotificationBackground =
+      'assets/images/svgs/notification_background.svg';
+  static const String svgsNotificationBell =
+      'assets/images/svgs/notification_bell.svg';
+  static const String svgsPaperAirPlane =
+      'assets/images/svgs/paper_air_plane.svg';
   static const String svgsPasswordSuccess =
       'assets/images/svgs/password_success.svg';
   static const String svgsProfile = 'assets/images/svgs/profile.svg';

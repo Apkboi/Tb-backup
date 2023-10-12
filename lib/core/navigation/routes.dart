@@ -11,10 +11,15 @@ import 'package:triberly/app/auth/presentation/pages/upload_profile_photo/upload
 import 'package:triberly/app/base/presentation/pages/base/base_page.dart';
 import 'package:triberly/app/base/presentation/pages/splash/splash_page.dart';
 import 'package:triberly/app/chat/presentation/pages/chat/chat_page.dart';
+import 'package:triberly/app/chat/presentation/pages/chat_details/chat_details_page.dart';
 import 'package:triberly/app/community/presentation/pages/community/community_page.dart';
 import 'package:triberly/app/home/presentation/pages/home/home_page.dart';
+import 'package:triberly/app/notifications/presentation/pages/notifications/notifications_page.dart';
 import 'package:triberly/app/profile/presentation/pages/profile/profile_page.dart';
 import 'package:triberly/app/profile/presentation/pages/profile_details/profile_details_page.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_intro_page.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_page.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/upload_photos_page.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/navigation/route_url.dart';
 
@@ -27,7 +32,7 @@ final _shellNavigatorDKey = GlobalKey<NavigatorState>(debugLabel: 'shellD');
 
 class CustomRoutes {
   static final goRouter = GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/chat/details',
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
@@ -80,6 +85,12 @@ class CustomRoutes {
         name: PageUrl.onBoardingPage,
         builder: (context, state) => const OnBoardingPage(),
       ),
+      GoRoute(
+        path: '/notificationsPage',
+        name: PageUrl.notificationsPage,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const NotificationsPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return BasePage(navigationShell: navigationShell);
@@ -118,6 +129,16 @@ class CustomRoutes {
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: ChatPage(),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'details',
+                    name: PageUrl.chatDetails,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => ChatDetailsPage(
+                      chatId: state.uri.queryParameters[PathParam.chatId] ?? '',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -135,6 +156,26 @@ class CustomRoutes {
                     path: 'details',
                     name: PageUrl.profileDetails,
                     builder: (context, state) => ProfileDetailsPage(),
+                  ),
+                  GoRoute(
+                    path: 'setupProfileIntroPage',
+                    name: PageUrl.setupProfileIntroPage,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => SetupProfileIntroPage(),
+                    routes: [
+                      GoRoute(
+                        path: 'uploadPhotos',
+                        name: PageUrl.uploadPhotos,
+                        parentNavigatorKey: _rootNavigatorKey,
+                        builder: (context, state) => UploadPhotosPage(),
+                      ),
+                      GoRoute(
+                        path: 'setupProfilePage',
+                        name: PageUrl.setupProfilePage,
+                        parentNavigatorKey: _rootNavigatorKey,
+                        builder: (context, state) => SetupProfilePage(),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -41,7 +41,8 @@ class TimeUtil {
     if (updatedAt.isEmpty) return 'N/A';
 
     final dt = DateTime.parse(updatedAt);
-    return DateFormat('HH:MM a').format(dt);
+    return DateFormat('HH:mm a').format(dt);
+    // return DateFormat('MMMM, d  kk:mm a').format(dt);
   }
 
   static String _returnOngoingTime(Duration difference) {

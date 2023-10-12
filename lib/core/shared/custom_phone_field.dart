@@ -14,6 +14,7 @@ class CustomPhoneField extends StatefulWidget {
       required this.controller,
       this.validator,
       this.enabled = true,
+      this.topLabel = false,
       this.initialCountryCode})
       : super(key: key);
 
@@ -21,6 +22,7 @@ class CustomPhoneField extends StatefulWidget {
   final TextEditingController controller;
   final String? initialCountryCode;
   final bool enabled;
+  final bool topLabel;
   final FutureOr<String?> Function(PhoneNumber?)? validator;
 
   @override
@@ -33,12 +35,21 @@ class _CustomPhoneFieldState extends State<CustomPhoneField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // const TextView(
-        //   text: 'Phone Number',
-        //   fontSize: 14,
-        //   color: Pallets.primaryDark,
-        // ),
-        // 10.verticalSpace,
+        Builder(builder: (context) {
+          if (widget.topLabel)
+            return Column(
+              children: [
+                TextView(
+                  text: 'Phone Number',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Pallets.maybeBlack,
+                ),
+                8.verticalSpace,
+              ],
+            );
+          return SizedBox();
+        }),
         IntlPhoneField(
           // showDropdownIcon: false,
 

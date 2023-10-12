@@ -101,8 +101,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
               title: 'Sign In',
               onTap: () {
                 context.pushNamed(PageUrl.uploadProfilePhoto);
-                // CustomDialogs.showFlushBar(
-                //     context, 'Phone number verified successfully');
               },
             ),
             16.verticalSpace,

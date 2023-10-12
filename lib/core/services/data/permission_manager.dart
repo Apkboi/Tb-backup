@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:system_settings/system_settings.dart';
 
 class PermissionManager {
   /// checks for users permission
@@ -41,7 +40,7 @@ class PermissionManager {
       case PermissionStatus.limited:
         break;
       case PermissionStatus.permanentlyDenied:
-        await SystemSettings.app();
+        await openAppSettings();
         break;
       default:
         ScaffoldMessenger.of(context).showSnackBar(

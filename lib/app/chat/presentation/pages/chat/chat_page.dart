@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/navigation/path_params.dart';
 
 import 'chat_controller.dart';
 
@@ -61,9 +62,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             17.verticalSpace,
             Expanded(
               child: ListView.separated(
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 150.h),
                 itemBuilder: (contex, index) {
-                  return ChatTile();
+                  return ChatTile(
+                    onTap: () {
+                      context.pushNamed(
+                        PageUrl.chatDetails,
+                        queryParameters: {
+                          PathParam.chatId: '1',
+                        },
+                      );
+                    },
+                  );
                 },
                 separatorBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -72,7 +82,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 itemCount: 17,
               ),
             ),
-            150.verticalSpace,
           ],
         ),
       ),
@@ -83,60 +92,66 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 class ChatTile extends StatelessWidget {
   const ChatTile({
     super.key,
+    this.onTap,
   });
+
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ImageWidget(
-          imageUrl: Assets.pngsMale,
-          size: 61,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        12.horizontalSpace,
-        Expanded(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      TextView(
-                        text: 'Bruno Charles, 32',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      12.horizontalSpace,
-                      Icon(
-                        Icons.circle,
-                        color: Pallets.primary,
-                        size: 10,
-                      )
-                    ],
-                  ),
-                  TextView(
-                    text: '15 min',
-                    fontSize: 12,
-                    color: Pallets.grey,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-              4.verticalSpace,
-              TextView(
-                text:
-                    'I’m on my way to the restaurant for our date. Keep in touch',
-                fontSize: 12,
-                lineHeight: 1.5,
-                fontWeight: FontWeight.w400,
-              ),
-            ],
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ImageWidget(
+            imageUrl: Assets.pngsMale,
+            size: 61,
+            borderRadius: BorderRadius.circular(12),
           ),
-        ),
-      ],
+          12.horizontalSpace,
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        TextView(
+                          text: 'Bruno Charles, 32',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        12.horizontalSpace,
+                        Icon(
+                          Icons.circle,
+                          color: Pallets.primary,
+                          size: 10,
+                        )
+                      ],
+                    ),
+                    TextView(
+                      text: '15 min',
+                      fontSize: 12,
+                      color: Pallets.grey,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ],
+                ),
+                4.verticalSpace,
+                TextView(
+                  text:
+                      'I’m on my way to the restaurant for our date. Keep in touch',
+                  fontSize: 12,
+                  lineHeight: 1.5,
+                  fontWeight: FontWeight.w400,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

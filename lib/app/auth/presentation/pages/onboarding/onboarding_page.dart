@@ -65,6 +65,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                   Positioned.fill(
                     child: ImageWidget(
                       imageUrl: Assets.svgsBlurPink,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(

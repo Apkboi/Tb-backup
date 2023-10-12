@@ -346,10 +346,12 @@ class ButtonDialog extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 25.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: isInverted ? Pallets.borderGrey : Pallets.primary,
+          border: Border.all(color: Pallets.primary),
+          color: isInverted ? Pallets.white : Pallets.primary,
         ),
         child: TextView(
           text: title,

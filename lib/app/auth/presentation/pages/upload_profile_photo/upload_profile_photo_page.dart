@@ -34,7 +34,7 @@ class _UploadProfilePhotoPageState
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Upload a profile picture',
       ),
       body: Padding(
@@ -45,7 +45,7 @@ class _UploadProfilePhotoPageState
               child: Column(
                 children: [
                   24.verticalSpace,
-                  TextView(
+                  const TextView(
                     text:
                         'Make your profile stand out with a lovely photo of you. This will be public and appear to all users.',
                     fontSize: 14,
@@ -71,7 +71,11 @@ class _UploadProfilePhotoPageState
             ),
             ButtonWidget(
               title: 'Confirm',
-              onTap: photo == null ? null : () {},
+              onTap: photo == null
+                  ? null
+                  : () {
+                      context.goNamed(PageUrl.home);
+                    },
             ),
             16.verticalSpace,
             TextView(
@@ -117,7 +121,7 @@ class _EmptyPhotoCardState extends State<EmptyPhotoCard> {
         Container(
           height: 250,
           width: 1.sw,
-          margin: EdgeInsets.symmetric(horizontal: 20.0),
+          margin: const EdgeInsets.symmetric(horizontal: 20.0),
           child: DashedRect(
             color: Pallets.primary,
             strokeWidth: 1.0,
@@ -128,18 +132,18 @@ class _EmptyPhotoCardState extends State<EmptyPhotoCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ImageWidget(imageUrl: Assets.svgsExport),
+              const ImageWidget(imageUrl: Assets.svgsExport),
               8.verticalSpace,
-              TextView(
+              const TextView(
                 text: 'Upload profile picture',
                 color: Pallets.grey,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.0),
                 child: TextView(
-                  text: 'Supported format: .jpeg,.png,.jpeg less than 5MB',
+                  text: 'Supported format: .jpeg,.png,.jpg less than 5MB',
                   color: Pallets.grey,
                   fontSize: 14,
                   align: TextAlign.center,

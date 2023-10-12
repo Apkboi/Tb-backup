@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:297535846989:android:0181b464736c37b2573a04',
     messagingSenderId: '297535846989',
     projectId: 'triberly-app',
+    databaseURL: 'https://triberly-app-default-rtdb.firebaseio.com',
     storageBucket: 'triberly-app.appspot.com',
   );
 
@@ -62,6 +63,7 @@ class DefaultFirebaseOptions {
     appId: '1:297535846989:ios:609f8811c6206784573a04',
     messagingSenderId: '297535846989',
     projectId: 'triberly-app',
+    databaseURL: 'https://triberly-app-default-rtdb.firebaseio.com',
     storageBucket: 'triberly-app.appspot.com',
     iosBundleId: 'com.triberly.triberly',
   );

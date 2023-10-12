@@ -11,6 +11,7 @@ abstract class Pallets {
   static const white = Colors.white;
 
   static const grey = Color(0xff6D6D6D);
+  static const chatTextFiledGrey = Color(0xffF7F7FC);
   static const searchGrey = Color(0xffF3F3F3);
   static const borderGrey = Color(0xffCCCCCC);
   static const unselectedGrey = Color(0xffB4B4B4);

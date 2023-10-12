@@ -12,7 +12,7 @@ class CustomDivider extends StatelessWidget {
     return Container(
       height: 1,
       width: double.infinity,
-      decoration: const BoxDecoration(color: Pallets.borderGrey),
+      decoration: BoxDecoration(color: Pallets.borderGrey.withOpacity(0.5)),
     );
   }
 }
