@@ -18,6 +18,7 @@ class Assets {
   static const String svgsBlurPink = 'assets/images/svgs/blur_pink.svg';
   static const String svgsBookmark = 'assets/images/svgs/bookmark.svg';
   static const String svgsCall = 'assets/images/svgs/call.svg';
+  static const String svgsCamera = 'assets/images/svgs/camera.svg';
   static const String svgsCategory = 'assets/images/svgs/category.svg';
   static const String svgsChat = 'assets/images/svgs/chat.svg';
   static const String svgsChatSelected = 'assets/images/svgs/chat_selected.svg';
@@ -60,4 +61,6 @@ class Assets {
   static const String svgsSearchNormal = 'assets/images/svgs/search_normal.svg';
   static const String svgsSearchStatus = 'assets/images/svgs/search_status.svg';
   static const String svgsSplashLogo = 'assets/images/svgs/splash_logo.svg';
+  static const String svgsTick = 'assets/images/svgs/tick.svg';
+  static const String svgsTickCircle = 'assets/images/svgs/tick_circle.svg';
 }

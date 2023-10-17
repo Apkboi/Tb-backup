@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/sign_in_req_dto.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 
 import '../../../../../core/_core.dart';
@@ -54,6 +57,26 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(signInProvider, (previous, next) {
+      if (next is SignInLoading) {
+        CustomDialogs.showLoading(context);
+      }
+
+      if (next is SignInError) {
+        CustomDialogs.hideLoading(context);
+        CustomDialogs.error(next.message);
+      }
+
+      if (next is SignInSuccess) {
+        CustomDialogs.hideLoading(context);
+
+        final userData = ref.watch(signInProvider.notifier).userData;
+        if (userData?.profileImage == null) {
+          context.pushNamed(PageUrl.uploadProfilePhoto);
+          return;
+        }
+      }
+    });
     return Scaffold(
       key: scaffoldKey,
       appBar: CustomAppBar(
@@ -61,104 +84,130 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            16.verticalSpace,
-            TextView(
-              text: 'Log in to your account',
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-            32.verticalSpace,
-            TextBoxField(
-              label: 'Email Address',
-              controller: email,
-            ),
-            TextBoxField(
-              label: 'Password',
-              controller: password,
-              isPasswordField: true,
-              hasBottomPadding: false,
-            ),
-            10.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextView(
-                  text: 'Forgot Password ?',
-                  fontSize: 12,
-                  color: Pallets.primaryDark,
-                  fontWeight: FontWeight.w500,
-                  onTap: () {
-                    context.pushNamed(PageUrl.passwordReset);
-                  },
-                ),
-              ],
-            ),
-            24.verticalSpace,
-            ButtonWidget(
-              title: 'Sign In',
-              onTap: () {
-                context.pushNamed(PageUrl.uploadProfilePhoto);
-              },
-            ),
-            16.verticalSpace,
-            Center(
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                    text: "You don't have an account? ",
-                    style: ref.read(themeProvider).selectedTextTheme.bodyMedium,
-                    children: [
-                      TextSpan(
-                        text: 'Sign Up',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () =>
-                              context.pushReplacementNamed(PageUrl.signUp),
-                        style:
-                            AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                          color: Pallets.primary,
-                        ),
-                      ),
-                    ]),
+        child: Form(
+          key: dialogKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              16.verticalSpace,
+              TextView(
+                text: 'Log in to your account',
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
               ),
-            ),
-            32.verticalSpace,
-            Row(
-              children: [
-                Expanded(child: CustomDivider()),
-                15.horizontalSpace,
-                TextView(
-                  text: 'OR',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Pallets.primaryDark,
+              32.verticalSpace,
+              TextBoxField(
+                label: 'Email Address',
+                controller: email,
+                validator: FieldValidators.emailValidator,
+              ),
+              TextBoxField(
+                label: 'Password',
+                controller: password,
+                isPasswordField: true,
+                hasBottomPadding: false,
+                validator: FieldValidators.notEmptyValidator,
+              ),
+              10.verticalSpace,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextView(
+                    text: 'Forgot Password ?',
+                    fontSize: 12,
+                    color: Pallets.primaryDark,
+                    fontWeight: FontWeight.w500,
+                    onTap: () {
+                      context.pushNamed(PageUrl.passwordReset);
+                    },
+                  ),
+                ],
+              ),
+              24.verticalSpace,
+              ButtonWidget(
+                title: 'Sign In',
+                onTap: _signIn,
+              ),
+              16.verticalSpace,
+              Center(
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      text: "You don't have an account? ",
+                      style:
+                          ref.read(themeProvider).selectedTextTheme.bodyMedium,
+                      children: [
+                        TextSpan(
+                          text: 'Sign Up',
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () =>
+                                context.pushReplacementNamed(PageUrl.signUp),
+                          style: AppTheme.lightTheme.textTheme.bodyMedium
+                              ?.copyWith(
+                            color: Pallets.primary,
+                          ),
+                        ),
+                      ]),
                 ),
-                15.horizontalSpace,
-                Expanded(child: CustomDivider()),
-              ],
-            ),
-            19.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextView(
-                  text: 'Sign in with',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Pallets.primaryDark,
-                ),
-                12.horizontalSpace,
-                ImageWidget(imageUrl: Assets.svgsGoogle),
-                8.horizontalSpace,
-                ImageWidget(imageUrl: Assets.svgsApple),
-              ],
-            ),
-            45.verticalSpace,
-          ],
+              ),
+              32.verticalSpace,
+              Row(
+                children: [
+                  Expanded(child: CustomDivider()),
+                  15.horizontalSpace,
+                  TextView(
+                    text: 'OR',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Pallets.primaryDark,
+                  ),
+                  15.horizontalSpace,
+                  Expanded(child: CustomDivider()),
+                ],
+              ),
+              19.verticalSpace,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextView(
+                    text: 'Sign in with',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Pallets.primaryDark,
+                  ),
+                  12.horizontalSpace,
+                  InkWell(
+                    onTap: () {
+                      ref.read(signInProvider.notifier).signInGoogle();
+                    },
+                    child: ImageWidget(imageUrl: Assets.svgsGoogle),
+                  ),
+                  16.horizontalSpace,
+                  if (Platform.isIOS)
+                    InkWell(
+                      onTap: () {
+                        ref.read(signInProvider.notifier).signInApple();
+                      },
+                      child: ImageWidget(imageUrl: Assets.svgsApple),
+                    ),
+                ],
+              ),
+              45.verticalSpace,
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _signIn() {
+    final data = SignInReqDto(
+      email: email.text,
+      password: password.text,
+    );
+
+    if (dialogKey.currentState!.validate()) {
+      ref.read(signInProvider.notifier).signIn(data);
+    }
   }
 }

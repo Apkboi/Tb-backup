@@ -1,3 +1,4 @@
+import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -18,32 +19,14 @@ class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
-  late AnimationController _animationController;
-  late Animation<double> _drawerSlideAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 800),
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _animationController.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          _animationController.forward();
-        }
-      });
-    _drawerSlideAnimation = Tween<double>(begin: -1, end: 0)
-        .chain(
-          CurveTween(curve: Curves.elasticOut),
-        )
-        .animate(_animationController);
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     dialogKey.currentState?.dispose();
 
     super.dispose();
@@ -69,7 +52,27 @@ class _HomePageState extends ConsumerState<HomePage>
               text: 'Explore',
             ),
             16.verticalSpace,
-            ExploreCard(),
+            SizedBox(
+              height: .6.sh,
+              width: 1.sw,
+              child: AppinioSwiper(
+                padding: EdgeInsets.zero,
+                loop: true,
+                cardsCount: 10,
+                onSwiping: (AppinioSwiperDirection direction) {
+                  print(direction.toString());
+                },
+                cardsBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    // height: .6.sh,
+                    child: ExploreCard(
+                      name: 'Tam $index',
+                      age: '${(index + 12) * 2}',
+                    ),
+                  );
+                },
+              ),
+            ),
             150.verticalSpace,
           ],
         ),
@@ -330,7 +333,12 @@ class _CustomRangeSliderState extends State<CustomRangeSlider> {
 class ExploreCard extends StatelessWidget {
   const ExploreCard({
     super.key,
+    required this.name,
+    required this.age,
   });
+
+  final String name;
+  final String age;
 
   @override
   Widget build(BuildContext context) {
@@ -340,17 +348,20 @@ class ExploreCard extends StatelessWidget {
       },
       child: Stack(
         children: [
+          Container(
+            height: 470.h,
+          ),
           ImageWidget(
             imageUrl: Assets.pngsMale,
-            height: 490.h,
+            height: .6.sh,
             width: 1.sw,
             fit: BoxFit.cover,
             borderRadius: BorderRadius.circular(15),
           ),
-          Positioned(
+          Positioned.fill(
             bottom: 0,
-            left: 0,
-            right: 0,
+            // left: 0,
+            // right: 0,
             child: Container(
               height: .5.sw,
               decoration: BoxDecoration(
@@ -379,7 +390,7 @@ class ExploreCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextView(
-                      text: 'Bruno, 28',
+                      text: '$name, $age',
                       fontSize: 23,
                       fontWeight: FontWeight.w700,
                       color: Pallets.white,

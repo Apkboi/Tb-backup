@@ -114,8 +114,12 @@ class ImageManager {
               ButtonWidget(
                 title: 'Open Camera',
                 onTap: () async {
-                  await pickImageFromCamera()
-                      .then((value) => Navigator.pop(context, value));
+                  try {
+                    await pickImageFromCamera()
+                        .then((value) => Navigator.pop(context, value));
+                  } catch (e) {
+                    logger.e(e.toString());
+                  }
                 },
               ),
               20.verticalSpace,
@@ -123,8 +127,12 @@ class ImageManager {
                 title: 'Upload from gallery',
                 isInverted: true,
                 onTap: () async {
-                  await pickImageFromGallery()
-                      .then((value) => Navigator.pop(context, value));
+                  try {
+                    await pickImageFromGallery()
+                        .then((value) => Navigator.pop(context, value));
+                  } catch (e) {
+                    logger.e(e.toString());
+                  }
                 },
               ),
             ],
@@ -132,97 +140,5 @@ class ImageManager {
         );
       },
     );
-    // if (Platform.isIOS) {
-    //   showCupertinoModalPopup(
-    //     context: context,
-    //     builder: (BuildContext context) => CupertinoActionSheet(
-    //       title: Text('Change Profile Photo'),
-    //       actions: <Widget>[
-    //         CupertinoActionSheetAction(
-    //           child: Row(
-    //             children: [
-    //               Icon(FontAwesomeIcons.camera,
-    //                   color: CupertinoColors.activeBlue),
-    //               SizedBox(width: 10),
-    //               Text('Take Photo'),
-    //             ],
-    //           ),
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //             pickImageFromCamera();
-    //
-    //             // Implement your camera action here
-    //           },
-    //         ),
-    //         CupertinoActionSheetAction(
-    //           child: Row(
-    //             children: [
-    //               Icon(FontAwesomeIcons.images,
-    //                   color: CupertinoColors.activeBlue),
-    //               SizedBox(width: 10),
-    //               Text('Choose from Library'),
-    //             ],
-    //           ),
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //
-    //             pickImageFromGallery();
-    //
-    //             // Implement your pick from file action here
-    //           },
-    //         ),
-    //       ],
-    //       cancelButton: CupertinoActionSheetAction(
-    //         child: Text(
-    //           'Cancel',
-    //           style: AppTheme.darkTheme.textTheme.labelLarge?.copyWith(
-    //             color: Pallets.red,
-    //           ),
-    //         ),
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       ),
-    //     ),
-    //   );
-    // } else {
-    //   showModalBottomSheet(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return Padding(
-    //         padding: const EdgeInsets.only(bottom: 45.0),
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: <Widget>[
-    //             TextView(
-    //               text: 'Upload Image',
-    //               fontSize: 20,
-    //               fontWeight: FontWeight.w700,
-    //             ),
-    //             34.verticalSpace,
-    //             ButtonWidget(
-    //               title: 'Open Camera',
-    //               onTap: () {
-    //                 Navigator.pop(context);
-    //
-    //                 pickImageFromCamera();
-    //               },
-    //             ),
-    //             20.verticalSpace,
-    //             ButtonWidget(
-    //               title: 'Upload from gallery',
-    //               isInverted: true,
-    //               onTap: () {
-    //                 Navigator.pop(context);
-    //
-    //                 pickImageFromGallery();
-    //               },
-    //             ),
-    //           ],
-    //         ),
-    //       );
-    //     },
-    //   );
-    // }
   }
 }

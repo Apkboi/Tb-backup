@@ -58,7 +58,7 @@ class _ChatBottomActionsBarState extends State<ChatBottomActionsBar> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (ref.read(chat_detailsProvider.notifier).replyingMessage !=
+              if (ref.read(chatDetailsProvider.notifier).replyingMessage !=
                   null)
                 Container(
                   color: Pallets.grey.withOpacity(0.1),
@@ -77,7 +77,7 @@ class _ChatBottomActionsBarState extends State<ChatBottomActionsBar> {
                           16.horizontalSpace,
                           TextView(
                               text: ref
-                                      .watch(chat_detailsProvider.notifier)
+                                      .watch(chatDetailsProvider.notifier)
                                       .replyingMessage
                                       ?.message ??
                                   ''),
@@ -87,7 +87,7 @@ class _ChatBottomActionsBarState extends State<ChatBottomActionsBar> {
                         onPressed: () {
                           setState(() {
                             ref
-                                .watch(chat_detailsProvider.notifier)
+                                .watch(chatDetailsProvider.notifier)
                                 .replyingMessage = null;
                           });
                         },

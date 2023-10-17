@@ -1,0 +1,12 @@
+{
+
+  "PROD_BASE_URL":"https://triberly.prodevs.io/api/v1/",
+  "DEV_BASE_URL":"https://triberly.prodevs.io/api/v1/",
+  "DOJAH_APP_ID":"",
+  "DOJAH_PUBLIC_KEY":"",
+  "FACE_PLUS_TEST_API_KEY" : "MJjjV0K5dUJySsbWffI2reYtvensJEuk",
+  "FACE_PLUS_TEST_API_SECRET" : "MwuLglkqoIOVtD0KGgVDzz_o1VJshk76",
+  "FACE_PLUS_PROD_API_KEY" : "xwpWJ1MUbG5EKXZ19ua1NG7vYhnzEGpK",
+  "FACE_PLUS_PROD_API_SECRET" : ""
+
+}

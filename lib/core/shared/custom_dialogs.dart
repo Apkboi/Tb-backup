@@ -21,8 +21,8 @@ class CustomDialogs {
       elevation: 0,
       // child: PulsatingImage(),
 
-      child: const SpinKitThreeBounce(
-        color: Pallets.white,
+      child: const SpinKitRing(
+        color: Pallets.primary,
         size: 50.0,
       ),
     );
@@ -31,7 +31,7 @@ class CustomDialogs {
       context: context,
       builder: (BuildContext context) => dialog,
       barrierDismissible: true,
-      barrierColor: barrierColor ?? Pallets.primary.withOpacity(0.3),
+      barrierColor: barrierColor ?? Pallets.white.withOpacity(0.3),
       // barrierColor: barrierColor,
     );
   }
@@ -155,7 +155,7 @@ class CustomDialogs {
   static Widget getLoading({double size = 10.0}) => Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        child: SpinKitThreeBounce(color: Pallets.primary, size: size),
+        child: SpinKitRing(color: Pallets.primary, size: size),
       );
 
   static void showSnackBar(

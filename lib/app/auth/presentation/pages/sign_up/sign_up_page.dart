@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/sign_up_req_dto.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/services/_services.dart';
@@ -42,13 +45,35 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   TextEditingController email = TextEditingController();
   TextEditingController gender = TextEditingController();
   TextEditingController password = TextEditingController();
-  TextEditingController confrimPassword = TextEditingController();
+  TextEditingController confirmPassword = TextEditingController();
   TextEditingController referral = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
 
   String completeNumber = '';
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(signupProvider, (previous, next) {
+      if (next is SignUpLoading) {
+        CustomDialogs.showLoading(context);
+      }
+
+      if (next is SignUpError) {
+        CustomDialogs.hideLoading(context);
+
+        CustomDialogs.error(next.message);
+      }
+
+      if (next is SignUpSuccess) {
+        CustomDialogs.hideLoading(context);
+        context.pushNamed(
+          PageUrl.otpPage,
+          queryParameters: {
+            PathParam.phoneNumber: completeNumber,
+          },
+        );
+      }
+    });
     return Scaffold(
       key: scaffoldKey,
       appBar: CustomAppBar(
@@ -99,7 +124,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             FilterCustomDropDown(
               hintText: "Gender",
               listItems: ['Male', 'Female'],
-              onTap: (value) {},
+              onTap: (value) {
+                gender.text = value ?? 'N/A';
+              },
               hasValidator: true,
             ),
             16.verticalSpace,
@@ -114,7 +141,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             ),
             TextBoxField(
               label: 'Confirm Password',
-              controller: confrimPassword,
+              controller: confirmPassword,
               isPasswordField: true,
             ),
             TextBoxField(
@@ -132,14 +159,19 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
                 ///
 
-                context.pushNamed(
-                  PageUrl.otpPage,
-                  queryParameters: {
-                    PathParam.phoneNumber: completeNumber,
-                  },
+                ///SignUp
+
+                final data = SignUpReqDto(
+                  firstName: firstName.text,
+                  middleName: 'not_available',
+                  lastName: lastName.text,
+                  phone: phoneNumber.text,
+                  gender: gender.text,
+                  email: email.text,
+                  password: password.text,
+                  passwordConfirmation: confirmPassword.text,
                 );
-                // CustomDialogs.showFlushBar(
-                //     context, 'Phone number verified successfully');
+                ref.read(signupProvider.notifier).signUp(data);
               },
             ),
             16.verticalSpace,
@@ -189,9 +221,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   color: Pallets.primaryDark,
                 ),
                 12.horizontalSpace,
-                ImageWidget(imageUrl: Assets.svgsGoogle),
-                8.horizontalSpace,
-                ImageWidget(imageUrl: Assets.svgsApple),
+                InkWell(
+                  onTap: () {
+                    ref.read(signupProvider.notifier).signInGoogle();
+                  },
+                  child: ImageWidget(imageUrl: Assets.svgsGoogle),
+                ),
+                16.horizontalSpace,
+                if (Platform.isIOS)
+                  InkWell(
+                    onTap: () {
+                      ref.read(signupProvider.notifier).signInApple();
+                    },
+                    child: ImageWidget(imageUrl: Assets.svgsApple),
+                  ),
               ],
             ),
             45.verticalSpace,

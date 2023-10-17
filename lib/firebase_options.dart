@@ -65,6 +65,8 @@ class DefaultFirebaseOptions {
     projectId: 'triberly-app',
     databaseURL: 'https://triberly-app-default-rtdb.firebaseio.com',
     storageBucket: 'triberly-app.appspot.com',
+    androidClientId: '297535846989-ak1f0e1obcrg3hcrinbvrkvq6k2c2duv.apps.googleusercontent.com',
+    iosClientId: '297535846989-kpnpf9p2p5a57cfstcg9dco26ursr1u6.apps.googleusercontent.com',
     iosBundleId: 'com.triberly.triberly',
   );
 }

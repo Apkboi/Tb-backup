@@ -4,7 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/face_plus_plus/face_plus_service.dart';
+import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/services/_services.dart';
+import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
 import 'package:triberly/core/shared/dotted_border.dart';
 
 import 'upload_profile_photo_controller.dart';
@@ -73,8 +76,24 @@ class _UploadProfilePhotoPageState
               title: 'Confirm',
               onTap: photo == null
                   ? null
-                  : () {
-                      context.goNamed(PageUrl.home);
+                  : () async {
+                      CustomDialogs.showLoading(context);
+
+                      try {
+                        await FacePlusService.detectFaces(
+                          photo!,
+                        );
+                      } catch (e, sta) {
+                        logger.e(sta);
+                      } finally {
+                        CustomDialogs.hideLoading(context);
+                        context.goNamed(PageUrl.selfieVerificationPage,
+                            queryParameters: {
+                              PathParam.profilePhoto: photo?.path ?? ''
+                            });
+                      }
+
+                      // context.goNamed(PageUrl.home);
                     },
             ),
             16.verticalSpace,

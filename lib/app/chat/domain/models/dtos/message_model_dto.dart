@@ -46,7 +46,7 @@ class MessageModel {
       'isMe': this.isMe,
       'extraData': this.extraData,
       'type': this.type,
-      'repliedMessage': this.repliedMessage,
+      'repliedMessage': this.repliedMessage?.toMap(),
       'date': this.date,
       'timestamp': this.timestamp,
     };

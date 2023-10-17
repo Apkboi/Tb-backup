@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/sign_up_req_dto.dart';
+import 'package:triberly/app/auth/domain/services/auth_imp_service.dart';
+import 'package:triberly/core/services/di/di.dart';
 
 class SignUpController extends StateNotifier<SignUpState> {
-  SignUpController(this.ref) : super(SignUpInitial());
+  SignUpController(this.ref, this._authImpService) : super(SignUpInitial());
   final StateNotifierProviderRef ref;
+
+  final AuthImpService _authImpService;
 
   String _userEmail = '';
   String _userPhoneNumber = '';
@@ -14,9 +19,35 @@ class SignUpController extends StateNotifier<SignUpState> {
     _userPhoneNumber = phoneNumber;
   }
 
-  Future<void> caller() async {
+  Future<void> signUp(SignUpReqDto data) async {
     try {
       state = SignUpLoading();
+
+      await _authImpService.signUp(data);
+
+      state = SignUpSuccess();
+    } catch (e) {
+      state = SignUpError(e.toString());
+    }
+  }
+
+  Future<void> signInGoogle() async {
+    try {
+      state = SignUpLoading();
+
+      final response = await _authImpService.googleAuth();
+
+      state = SignUpSuccess();
+    } catch (e) {
+      state = SignUpError(e.toString());
+    }
+  }
+
+  Future<void> signInApple() async {
+    try {
+      state = SignUpLoading();
+
+      final response = await _authImpService.appleAuth();
 
       state = SignUpSuccess();
     } catch (e) {
@@ -27,7 +58,7 @@ class SignUpController extends StateNotifier<SignUpState> {
 
 final signupProvider =
     StateNotifierProvider<SignUpController, SignUpState>((ref) {
-  return SignUpController(ref);
+  return SignUpController(ref, sl());
 });
 
 abstract class SignUpState {}

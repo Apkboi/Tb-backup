@@ -13,7 +13,20 @@
           "package_name": "com.triberly.triberly"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "297535846989-ak1f0e1obcrg3hcrinbvrkvq6k2c2duv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.triberly.triberly",
+            "certificate_hash": "05698a056267b612db6c137689acff84a0eeb820"
+          }
+        },
+        {
+          "client_id": "297535846989-8lkodj99la0p5a7nsbvj0ero9d7ujuot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBZjur--I6lPdk5wlE7cyJWldv_rvH8wIQ"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297535846989-8lkodj99la0p5a7nsbvj0ero9d7ujuot.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "297535846989-kpnpf9p2p5a57cfstcg9dco26ursr1u6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.triberly.triberly"
+              }
+            }
+          ]
         }
       }
     }

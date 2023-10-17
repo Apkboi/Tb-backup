@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +80,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
   getChats() {
     Future.delayed(Duration.zero, () {
-      ref.read(chat_detailsProvider.notifier).caller();
+      ref.read(chatDetailsProvider.notifier).caller();
     });
   }
 
@@ -101,7 +105,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Scaffold(
-        key: scaffoldKey,
+        // key: scaffoldKey,
         resizeToAvoidBottomInset: true,
         appBar: const ChatDetailsAppbar(),
         body: Column(
@@ -109,14 +113,14 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
             const CustomDivider(),
             Consumer(
               builder: (context, ref, child) {
-                if (ref.watch(chat_detailsProvider) is ChatDetailsLoading) {
-                  return const SizedBox();
+                if (ref.watch(chatDetailsProvider) is ChatDetailsLoading) {
+                  return CustomDialogs.getLoading(size: 50);
                 }
                 messagesList =
-                    ref.watch(chat_detailsProvider.notifier).messagesList;
+                    ref.watch(chatDetailsProvider.notifier).messagesList;
 
                 messagesList = ref
-                    .read(chat_detailsProvider.notifier)
+                    .read(chatDetailsProvider.notifier)
                     .addDateSeparators(messagesList);
 
                 return Expanded(
@@ -156,7 +160,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                         onRightSwipe: () {
                           setState(() {
                             ref
-                                .read(chat_detailsProvider.notifier)
+                                .read(chatDetailsProvider.notifier)
                                 .replyingMessage = singleItem;
                           });
                         },
@@ -207,7 +211,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
             senderId: testSenderid,
             isMe: true,
             repliedMessage:
-                ref.read(chat_detailsProvider.notifier).replyingMessage,
+                ref.read(chatDetailsProvider.notifier).replyingMessage,
             date: DateTime.now().toString(),
             timestamp: ServerValue.timestamp,
           );
@@ -241,7 +245,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
       message: messageCtrl.text,
       senderId: anotherSenderid,
       isMe: false,
-      repliedMessage: ref.read(chat_detailsProvider.notifier).replyingMessage,
+      repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
       date: DateTime.now().toString(),
       timestamp: ServerValue.timestamp,
     );
@@ -262,6 +266,6 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
     ///Clear textfield
     messageCtrl.clear();
-    ref.read(chat_detailsProvider.notifier).replyingMessage = null;
+    ref.read(chatDetailsProvider.notifier).replyingMessage = null;
   }
 }

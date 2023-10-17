@@ -35,83 +35,7 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
 
   MessageModel? replyingMessage;
 
-  List<MessageModel> messagesList = [
-    MessageModel(
-      message: 'I need help with my homework.',
-      isMe: false,
-      date: DateTime(2023, 1, 10).toString(),
-    ),
-    MessageModel(
-      message: 'Okay',
-      isMe: true,
-      date: DateTime(2023, 1, 10).toString(),
-    ),
-    MessageModel(
-      message: 'What do you need?',
-      isMe: true,
-      date: DateTime(2023, 1, 10).toString(),
-    ),
-    MessageModel(
-      message: 'Good morning!',
-      isMe: false,
-      date: DateTime(2023, 1, 11).toString(),
-    ),
-    MessageModel(
-      message: 'Hi there!',
-      isMe: true,
-      date: DateTime(2023, 1, 11).toString(),
-    ),
-    MessageModel(
-      message: 'How are you today?',
-      isMe: true,
-      date: DateTime(2023, 1, 11).toString(),
-    ),
-    MessageModel(
-      message: 'Happy Wednesday!',
-      isMe: false,
-      date: DateTime(2023, 1, 12).toString(),
-    ),
-    MessageModel(
-      message: 'Hello!',
-      isMe: true,
-      date: DateTime(2023, 1, 12).toString(),
-    ),
-    MessageModel(
-      message: 'Im doing well, thanks!',
-      isMe: true,
-      date: DateTime(2023, 1, 12).toString(),
-    ),
-    MessageModel(
-      message: 'Whats on your mind?',
-      isMe: false,
-      date: DateTime(2023, 1, 13).toString(),
-    ),
-    MessageModel(
-      message: 'Not much, just working on a project.',
-      isMe: true,
-      date: DateTime(2023, 1, 13).toString(),
-    ),
-    MessageModel(
-      message: 'That sounds interesting!',
-      isMe: false,
-      date: DateTime(2023, 1, 13).toString(),
-    ),
-    MessageModel(
-      message: 'Yes, its quite challenging but rewarding.',
-      isMe: true,
-      date: DateTime(2023, 1, 13).toString(),
-    ),
-    MessageModel(
-      message: 'Happy Friday!',
-      isMe: false,
-      date: DateTime(2023, 1, 14).toString(),
-    ),
-    MessageModel(
-      message: 'Hello!',
-      isMe: true,
-      date: DateTime(2023, 1, 14).toString(),
-    ),
-  ];
+  List<MessageModel> messagesList = [];
 
   List<MessageModel> addDateSeparators(List<MessageModel> messagesList) {
     List<MessageModel> updatedMessagesList = [];
@@ -162,6 +86,8 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
   }
 
   Future<void> caller() async {
+    state = ChatDetailsLoading();
+
     try {
       dbRef
           .child("chat_messages")
@@ -199,7 +125,7 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
   }
 }
 
-final chat_detailsProvider =
+final chatDetailsProvider =
     StateNotifierProvider<ChatDetailsController, ChatDetailsState>((ref) {
   return ChatDetailsController(ref);
 });

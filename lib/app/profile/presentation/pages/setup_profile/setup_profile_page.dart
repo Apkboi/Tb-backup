@@ -24,22 +24,15 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
     with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
-  ConfettiController? _controllerCenter;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _controllerCenter =
-        ConfettiController(duration: const Duration(seconds: 10));
-    _controllerCenter?.play();
   }
 
   @override
   void dispose() {
-    _controllerCenter?.dispose();
-
     dialogKey.currentState?.dispose();
     super.dispose();
   }
@@ -78,7 +71,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         key: scaffoldKey,
         appBar: const CustomAppBar(title: 'Build your profile'),
@@ -113,6 +106,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
             24.verticalSpace,
             TabBar(
               indicatorSize: TabBarIndicatorSize.tab,
+              isScrollable: true,
               // indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
               labelPadding: EdgeInsets.symmetric(horizontal: 10),
               padding: EdgeInsets.symmetric(horizontal: 24),
@@ -140,14 +134,19 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                   animateToTargetValue(5);
                   return;
                 }
+                if (currentIndex == 2) {
+                  animateToTargetValue(7);
+                  return;
+                }
 
-                animateToTargetValue(7);
+                animateToTargetValue(10);
                 return;
               },
               tabs: [
                 Tab(text: 'Personal bio'),
                 Tab(text: 'Ethnicity'),
                 Tab(text: 'Interests'),
+                Tab(text: 'Others'),
               ],
             ),
 
@@ -156,6 +155,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                 children: [
                   ProfileTab(images: imagesList),
                   EthnicityTab(),
+                  InterestsTab(),
                   InterestsTab(),
                 ],
               ),

@@ -5,6 +5,7 @@ import 'package:triberly/app/auth/presentation/pages/onboarding/onboarding_page.
 import 'package:triberly/app/auth/presentation/pages/otp/otp_page.dart';
 import 'package:triberly/app/auth/presentation/pages/password_reset/complete_password_reset_page.dart';
 import 'package:triberly/app/auth/presentation/pages/password_reset/password_reset_page.dart';
+import 'package:triberly/app/auth/presentation/pages/selfie_verification/selfie_verification_page.dart';
 import 'package:triberly/app/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:triberly/app/auth/presentation/pages/sign_up/sign_up_page.dart';
 import 'package:triberly/app/auth/presentation/pages/upload_profile_photo/upload_profile_photo_page.dart';
@@ -20,6 +21,7 @@ import 'package:triberly/app/profile/presentation/pages/profile_details/profile_
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_intro_page.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_page.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/upload_photos_page.dart';
+import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/navigation/route_url.dart';
 
@@ -32,7 +34,8 @@ final _shellNavigatorDKey = GlobalKey<NavigatorState>(debugLabel: 'shellD');
 
 class CustomRoutes {
   static final goRouter = GoRouter(
-    initialLocation: '/chat/details',
+    initialLocation: '/splash',
+    // initialLocation: '/profile/setupProfileIntroPage/setupProfilePage',
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
@@ -57,7 +60,10 @@ class CustomRoutes {
         path: '/otpPage',
         name: PageUrl.otpPage,
         builder: (context, state) => OtpPage(
-          phoneNumber: state.uri.queryParameters[PathParam.phoneNumber] ?? '',
+          otpType: state.uri.queryParameters[PathParam.otpType] ??
+              OtpType.passwordReset.value,
+          phoneNumber: state.uri.queryParameters[PathParam.phoneNumber],
+          email: state.uri.queryParameters[PathParam.email],
         ),
       ),
       GoRoute(
@@ -79,6 +85,13 @@ class CustomRoutes {
         path: '/uploadProfilePhoto',
         name: PageUrl.uploadProfilePhoto,
         builder: (context, state) => const UploadProfilePhotoPage(),
+      ),
+      GoRoute(
+        path: '/selfieVerificationPage',
+        name: PageUrl.selfieVerificationPage,
+        builder: (context, state) => SelfieVerificationPage(
+          profilePhoto: state.uri.queryParameters[PathParam.profilePhoto] ?? '',
+        ),
       ),
       GoRoute(
         path: '/onBoardingPage',

@@ -1,7 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/resend_otp_req_dto.dart';
+import 'package:triberly/app/auth/domain/models/dtos/verify_otp_req_dto.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 
 import 'otp_controller.dart';
@@ -9,10 +12,15 @@ import 'otp_controller.dart';
 class OtpPage extends ConsumerStatefulWidget {
   const OtpPage({
     super.key,
-    required this.phoneNumber,
+    required this.otpType,
+    this.email,
+    this.phoneNumber,
   });
 
-  final String phoneNumber;
+  final String? phoneNumber;
+  final String? email;
+  final String otpType;
+
   @override
   ConsumerState createState() => _OtpPageState();
 }
@@ -33,6 +41,49 @@ class _OtpPageState extends ConsumerState<OtpPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(otpProvider, (previous, next) {
+      if ((next is ResendOtpLoading) || (next is OtpLoading)) {
+        CustomDialogs.showLoading(context);
+      }
+      // if (next is OtpLoading) {
+      //   CustomDialogs.showLoading(context);
+      // }
+
+      if (next is ResendOtpError) {
+        CustomDialogs.hideLoading(context);
+        CustomDialogs.error(next.message);
+        return;
+      }
+
+      if (next is ResendOtpSuccess) {
+        CustomDialogs.hideLoading(context);
+        CustomDialogs.success(next.message ?? 'Successful');
+        return;
+      }
+
+      if (next is OtpError) {
+        CustomDialogs.hideLoading(context);
+        CustomDialogs.error(next.message);
+
+        return;
+      }
+
+      if (next is OtpSuccess) {
+        CustomDialogs.hideLoading(context);
+        CustomDialogs.success(
+          'Phone number verified successfully',
+        );
+        if (widget.otpType == OtpType.accountSetup.value) {
+          context.pushNamed(PageUrl.locationAccessPage);
+        }
+
+        if (widget.otpType == OtpType.passwordReset.value) {
+          context.pushNamed(PageUrl.completePasswordReset);
+        }
+
+        return;
+      }
+    });
     return Scaffold(
       key: scaffoldKey,
       appBar: CustomAppBar(
@@ -48,7 +99,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                   32.verticalSpace,
                   TextView(
                     text:
-                        'Enter the verification code sent to \n${widget.phoneNumber}',
+                        'Enter the verification code sent to \n${widget.email ?? widget.phoneNumber}',
                     align: TextAlign.center,
                     fontWeight: FontWeight.w500,
                     style: ref
@@ -85,15 +136,13 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                             TextSpan(
                               text: 'Resend',
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  ///Add resend Function
-                                },
+                                ..onTap = _resendOtp,
                               style: ref
                                   .watch(themeProvider)
                                   .selectedTextTheme
                                   .bodyMedium
                                   ?.copyWith(
-                                    color: Pallets.maybeBlack,
+                                    color: Pallets.primary,
                                   ),
                             ),
                           ]),
@@ -129,21 +178,42 @@ class _OtpPageState extends ConsumerState<OtpPage> {
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: ButtonWidget(
               title: 'Confirm',
-              onTap: otpCtrl.text.length != otpLength
-                  ? null
-                  : () {
-                      context.pushNamed(PageUrl.locationAccessPage);
-                      CustomDialogs.success(
-                        'Phone number verified successfully',
-                      );
-
-                      ///Add confirm Function
-                    },
+              onTap: otpCtrl.text.length != otpLength ? null : _verifyOtp,
+              //
+              //   () {
+              //
+              //
+              // _verifyOtp
+              //       context.pushNamed(PageUrl.locationAccessPage);
+              //       CustomDialogs.success(
+              //         'Phone number verified successfully',
+              //       );
+              //
+              //       ///Add confirm Function
+              //     },
             ),
           ),
           45.verticalSpace,
         ],
       ),
     );
+  }
+
+  void _resendOtp() {
+    final data = ResendOtpReqDto(
+      email: widget.email,
+      type: widget.otpType,
+    );
+
+    ref.read(otpProvider.notifier).resendOtp(data);
+  }
+
+  void _verifyOtp() {
+    final data = VerifyOtpReqDto(
+      code: otpCtrl.text,
+      type: widget.otpType,
+    );
+
+    ref.read(otpProvider.notifier).verifyOtp(data);
   }
 }

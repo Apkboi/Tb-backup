@@ -14,8 +14,6 @@ import 'url_config.dart';
 ///
 /// Using this class automatically handle, token management, logging, global
 
-ValueNotifier<String?> _deviceName = ValueNotifier(null);
-
 void printWrapped(String text) {
   final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
   pattern.allMatches(text).forEach((match) => print(match.group(0)));
@@ -23,7 +21,7 @@ void printWrapped(String text) {
 
 /// A top level function to print dio logs
 void printDioLogs(Object object) {
-  if (UrlConfig.environment == Environment.staging) {
+  if (kDebugMode) {
     printWrapped(object.toString());
   }
 }
@@ -51,6 +49,7 @@ class NetworkService {
     authToken ??= SessionManager.instance.authToken;
     dio!.interceptors.add(LogInterceptor(
       requestBody: true,
+      responseBody: true,
       logPrint: printDioLogs,
     ));
     // dio!.interceptors.add(AppInterceptor(authToken ?? ''));
@@ -137,7 +136,7 @@ class NetworkService {
       if (response.data is List) {
         return response;
       } else {
-        if (response.data['error'] == true) {
+        if (response.data['errors'] != null) {
           logger.i(response.data.toString());
           var apiError = ApiError.fromResponse(response);
 
@@ -165,6 +164,8 @@ class NetworkService {
         return Future.error(apiError, stackTrace);
       }
 
+      logger.e(error.toString());
+
       var apiError = ApiError.unknown(error);
       if (apiError.errorType == 401) {}
 
@@ -173,7 +174,7 @@ class NetworkService {
   }
 
   _getOptions() {
-    return Options(contentType: Headers.formUrlEncodedContentType, headers: {
+    return Options(contentType: Headers.jsonContentType, headers: {
       HttpHeaders.authorizationHeader:
           "Bearer ${SessionManager.instance.authToken}",
       'Accept': 'application/json',

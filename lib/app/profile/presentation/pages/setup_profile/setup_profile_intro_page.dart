@@ -68,7 +68,7 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
               ],
             ),
             Positioned(
-              bottom: 0,
+              bottom: -45,
               left: 0,
               right: 0,
               child: SafeArea(
@@ -127,6 +127,9 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
                         fontWeight: FontWeight.w500,
                         align: TextAlign.center,
                         color: Pallets.grey,
+                        onTap: () {
+                          context.goNamed(PageUrl.home);
+                        },
                       ),
                     ],
                   ),

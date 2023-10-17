@@ -43,18 +43,14 @@ class NotificationService {
 
   /// Initialize notification
   Future<void> initializeNotification() async {
-    // If you're going to use other Firebase services in the background, such as Firestore,
-    // make sure you call `initializeApp` before using other Firebase services.
-    // await Firebase.initializeApp();
-    // Set the background messaging handler early on, as a named top-level function
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    ///Fix on heads up tap
-    ///
-    // flutterLocalNotificationsPlugin.initialize(InitializationSettings(
-    //   android: AndroidInitializationSettings('@drawable/launch'),
-    // ));
-    ///
+    flutterLocalNotificationsPlugin.initialize(
+      InitializationSettings(
+        android: AndroidInitializationSettings('@drawable/launch'),
+        iOS: DarwinInitializationSettings(),
+      ),
+    );
 
     if (!kIsWeb) {
       channel = const AndroidNotificationChannel(
@@ -99,6 +95,10 @@ class NotificationService {
 
     // await FirebaseMessaging.instance.subscribeToTopic('kusnap');
     _triggerAllSetUp();
+  }
+
+  static void onNotificationTap(NotificationResponse notificationResponse) {
+    ///
   }
 
   /// Triggers all notification

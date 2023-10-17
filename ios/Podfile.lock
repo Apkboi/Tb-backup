@@ -1,4 +1,10 @@
 PODS:
+  - AppAuth (1.6.2):
+    - AppAuth/Core (= 1.6.2)
+    - AppAuth/ExternalUserAgent (= 1.6.2)
+  - AppAuth/Core (1.6.2)
+  - AppAuth/ExternalUserAgent (1.6.2):
+    - AppAuth/Core
   - audio_waveforms (0.0.1):
     - Flutter
   - device_info_plus (0.0.1):
@@ -135,10 +141,17 @@ PODS:
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
+  - google_sign_in_ios (0.0.1):
+    - Flutter
+    - GoogleSignIn (~> 6.2)
   - GoogleDataTransport (9.2.5):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleSignIn (6.2.4):
+    - AppAuth (~> 1.5)
+    - GTMAppAuth (~> 1.3)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
   - GoogleUtilities/AppDelegateSwizzler (7.11.5):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -156,6 +169,10 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.11.5):
     - GoogleUtilities/Logger
+  - GTMAppAuth (1.3.1):
+    - AppAuth/Core (~> 1.6)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
+  - GTMSessionFetcher/Core (2.3.0)
   - image_cropper (0.0.4):
     - Flutter
     - TOCropViewController (~> 2.6.1)
@@ -206,6 +223,8 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - sign_in_with_apple (0.0.1):
+    - Flutter
   - smart_auth (0.0.1):
     - Flutter
   - sqflite (0.0.3):
@@ -237,6 +256,7 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - local_auth_ios (from `.symlinks/plugins/local_auth_ios/ios`)
@@ -245,12 +265,14 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - smart_auth (from `.symlinks/plugins/smart_auth/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
+    - AppAuth
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -264,7 +286,10 @@ SPEC REPOS:
     - FirebaseSessions
     - FMDB
     - GoogleDataTransport
+    - GoogleSignIn
     - GoogleUtilities
+    - GTMAppAuth
+    - GTMSessionFetcher
     - leveldb-library
     - libwebp
     - Mantle
@@ -317,6 +342,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geocoding_ios/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
+  google_sign_in_ios:
+    :path: ".symlinks/plugins/google_sign_in_ios/ios"
   image_cropper:
     :path: ".symlinks/plugins/image_cropper/ios"
   image_picker_ios:
@@ -333,6 +360,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  sign_in_with_apple:
+    :path: ".symlinks/plugins/sign_in_with_apple/ios"
   smart_auth:
     :path: ".symlinks/plugins/smart_auth/ios"
   sqflite:
@@ -341,6 +370,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   audio_waveforms: cd736909ebc6b6a164eb74701d8c705ce3241e1c
   device_info_plus: 7545d84d8d1b896cb16a4ff98c19f07ec4b298ea
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
@@ -372,8 +402,12 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
+  google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
+  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
+  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
+  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   image_cropper: a3291c624a953049bc6a02e1f8c8ceb162a24b25
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
@@ -391,6 +425,7 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: af09429398d99d524cae2fe00f6f0f6e491ed102
   share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   smart_auth: 4bedbc118723912d0e45a07e8ab34039c19e04f2
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
