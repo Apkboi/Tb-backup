@@ -1,0 +1,11 @@
+
+-----------------------------
+Feature Updates
+
+- Login
+- Signup
+- Updating user profile data
+- Ethnicity | intrests | others PENDING
+- Updload profile photos
+- Face++ photo validation
+- User data persistance
