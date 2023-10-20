@@ -14,7 +14,7 @@ class SignInController extends StateNotifier<SignInState> {
 
   final AuthImpService _authImpService;
 
-  User? userData = User();
+  UserDto? userData = UserDto();
 
   Future<void> signIn(SignInReqDto data) async {
     try {

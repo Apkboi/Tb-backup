@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/sign_up_req_dto.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/locale_service/local_notifier.dart';
@@ -69,6 +70,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         context.pushNamed(
           PageUrl.otpPage,
           queryParameters: {
+            PathParam.otpType: OtpType.accountSetup.value,
             PathParam.phoneNumber: completeNumber,
           },
         );

@@ -15,17 +15,17 @@ class GetProfile {
 
   GetProfile.fromJson(dynamic json) {
     msg = json['msg'];
-    data = json['data'] != null ? User.fromJson(json['data']) : null;
+    data = json['data'] != null ? UserDto.fromJson(json['data']) : null;
     success = json['success'];
     code = json['code'];
   }
   String? msg;
-  User? data;
+  UserDto? data;
   bool? success;
   num? code;
   GetProfile copyWith({
     String? msg,
-    User? data,
+    UserDto? data,
     bool? success,
     num? code,
   }) =>

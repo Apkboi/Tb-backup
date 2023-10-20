@@ -30,9 +30,10 @@ class UploadPhotosWidget extends StatelessWidget {
           ImageWidget(
             imageUrl: imageUrl ?? Assets.svgsAddPhotos,
             size: 150,
+
             borderRadius: BorderRadius.circular(10),
-            imageType:
-                imageUrl != null ? ImageWidgetType.file : ImageWidgetType.asset,
+            imageType: ImageWidgetType.file,
+            // imageUrl != null ? ImageWidgetType.file : ImageWidgetType.asset,
           ),
           Positioned(
             right: -10,

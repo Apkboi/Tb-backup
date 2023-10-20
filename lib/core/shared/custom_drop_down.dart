@@ -41,17 +41,32 @@ class _FilterCustomDropDownState extends State<FilterCustomDropDown> {
   bool hasValue = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (selectedValue != widget.selectedValue) {
+      setState(() {
+        selectedValue = widget.selectedValue;
+      });
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant FilterCustomDropDown oldWidget) {
     if (selectedValue != widget.selectedValue) {
       setState(() {
         selectedValue = widget.selectedValue;
       });
     }
+
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -154,7 +169,8 @@ class _FilterCustomDropDownState extends State<FilterCustomDropDown> {
                     ),
                   ))
               .toList(),
-          value: widget.selectedValue,
+          value:
+              widget.selectedValue?.length == 0 ? null : widget.selectedValue,
           validator: (value) {
             if (value == null && widget.hasValidator) {
               return 'Please select an option.';

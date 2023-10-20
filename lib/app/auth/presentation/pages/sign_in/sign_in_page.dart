@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/resend_otp_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/sign_in_req_dto.dart';
+import 'package:triberly/app/auth/presentation/pages/otp/otp_controller.dart';
+import 'package:triberly/core/constants/enums/otp_type.dart';
+import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 
 import '../../../../../core/_core.dart';
@@ -28,8 +33,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     email.text = widget.email ?? '';
+
+    if (kDebugMode) {
+      email.text = 'qw@mailinator.com';
+      password.text = 'password';
+    }
   }
 
   @override
@@ -71,10 +80,38 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         CustomDialogs.hideLoading(context);
 
         final userData = ref.watch(signInProvider.notifier).userData;
+
+        if (userData?.emailVerification == false) {
+          ref.read(otpProvider.notifier).resendOtp(ResendOtpReqDto(
+              email: userData?.email, type: OtpType.accountSetup.value));
+
+          context.pushNamed(
+            PageUrl.otpPage,
+            queryParameters: {
+              PathParam.otpType: OtpType.accountSetup.value,
+              PathParam.phoneNumber: userData?.phoneNo,
+            },
+          );
+          return;
+        }
         if (userData?.profileImage == null) {
           context.pushNamed(PageUrl.uploadProfilePhoto);
           return;
         }
+        // if (userData?.longitude == null) {
+        //   context.pushNamed(PageUrl.locationAccessPage);
+        //   return;
+        // }
+        if (userData?.otherImages == null) {
+          context.pushNamed(PageUrl.uploadPhotos);
+          return;
+        }
+        if (userData?.dob == null) {
+          context.pushNamed(PageUrl.setupProfilePage);
+          return;
+        }
+
+        context.goNamed(PageUrl.home);
       }
     });
     return Scaffold(

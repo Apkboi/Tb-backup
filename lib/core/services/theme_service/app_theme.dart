@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/constants/pallets.dart';
 
 class AppTheme extends ChangeNotifier {
@@ -34,19 +35,19 @@ class AppTheme extends ChangeNotifier {
         size: 24,
       ),
     ),
-    textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 96.0, fontWeight: FontWeight.bold),
-      displayMedium: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
-      displaySmall: TextStyle(fontSize: 48.0, fontWeight: FontWeight.bold),
-      headlineMedium: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
-      headlineSmall: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-      titleLarge:
-          TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, height: 1.5),
-      titleMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
-      titleSmall: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
-      bodyLarge: TextStyle(fontSize: 16.0),
-      bodyMedium: TextStyle(fontSize: 14.0),
-      bodySmall: TextStyle(fontSize: 12.0),
+    textTheme: TextTheme(
+      displayLarge: TextStyle(fontSize: 96.0.sp, fontWeight: FontWeight.bold),
+      displayMedium: TextStyle(fontSize: 60.0.sp, fontWeight: FontWeight.bold),
+      displaySmall: TextStyle(fontSize: 48.0.sp, fontWeight: FontWeight.bold),
+      headlineMedium: TextStyle(fontSize: 34.0.sp, fontWeight: FontWeight.bold),
+      headlineSmall: TextStyle(fontSize: 24.0.sp, fontWeight: FontWeight.bold),
+      titleLarge: TextStyle(
+          fontSize: 20.0.sp, fontWeight: FontWeight.w600, height: 1.5),
+      titleMedium: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.normal),
+      titleSmall: TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.normal),
+      bodyLarge: TextStyle(fontSize: 16.0.sp),
+      bodyMedium: TextStyle(fontSize: 14.0.sp),
+      bodySmall: TextStyle(fontSize: 12.sp),
     ),
     buttonTheme: ButtonThemeData(
       buttonColor: Pallets.primary,

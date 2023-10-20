@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_other_photos_req_dto.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
 import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
+import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
@@ -23,22 +28,15 @@ class UploadPhotosPage extends ConsumerStatefulWidget {
 class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
-  late ConfettiController _controllerCenter;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _controllerCenter =
-        ConfettiController(duration: const Duration(seconds: 10));
-    _controllerCenter.play();
   }
 
   @override
   void dispose() {
-    _controllerCenter.dispose();
-
     dialogKey.currentState?.dispose();
     super.dispose();
   }
@@ -58,6 +56,26 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
   double sliderValue = 1;
   @override
   Widget build(BuildContext context) {
+    ref.listen(setupProfileProvider, (previous, next) {
+      if (next is UploadOtherPhotosLoading) {
+        CustomDialogs.showLoading(context);
+      }
+
+      if (next is UploadOtherPhotosError) {
+        CustomDialogs.hideLoading(context);
+
+        CustomDialogs.error(next.message);
+      }
+
+      if (next is UploadOtherPhotosSuccess) {
+        CustomDialogs.hideLoading(context);
+        CustomDialogs.showFlushBar(
+          context,
+          'Photos uploaded successfully',
+        );
+        context.pushNamed(PageUrl.setupProfilePage);
+      }
+    });
     return Scaffold(
       key: scaffoldKey,
       appBar: const CustomAppBar(title: 'Build your profile'),
@@ -147,17 +165,47 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
                       57.verticalSpace,
                       ButtonWidget(
                         title: 'Next',
-                        onTap: () {
-                          context.pushNamed(PageUrl.setupProfilePage);
-                        },
-                        // onTap: (imagesList.contains(null))
-                        //     ? null
-                        //     : () {
-                        //         CustomDialogs.showFlushBar(
-                        //           context,
-                        //           'Photos uploaded successfully',
-                        //         );
-                        //       },
+                        // onTap: () {
+
+                        // },
+                        onTap: (imagesList.contains(null))
+                            ? null
+                            : () async {
+                                ///UPload Photos
+                                ///
+
+                                CustomDialogs.showLoading(context);
+
+                                try {
+                                  await Future.wait(
+                                    List.generate(
+                                      imagesList.length,
+                                      (index) => CloudinaryManager.uploadFile(
+                                        filePath: imagesList[index]!,
+                                        file: File(
+                                          imagesList[index]!,
+                                        ),
+                                      ),
+                                    ),
+                                  ).then(
+                                    (value) {
+                                      CustomDialogs.hideLoading(context);
+
+                                      ref
+                                          .read(setupProfileProvider.notifier)
+                                          .uploadOtherPhotos(
+                                            UpdateOtherPhotosReqDto(
+                                                images: value),
+                                          );
+                                    },
+                                  );
+                                } catch (e) {
+                                  CustomDialogs.hideLoading(context);
+
+                                  CustomDialogs.error(e.toString());
+                                  logger.e('message');
+                                }
+                              },
                       ),
                     ],
                   ),

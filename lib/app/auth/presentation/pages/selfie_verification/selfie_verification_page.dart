@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/face_plus_plus/detect_face_data.dart';
 import 'package:triberly/core/face_plus_plus/face_plus_service.dart';
@@ -37,12 +38,31 @@ class _SelfieVerificationPageState
     dialogKey.currentState?.dispose();
   }
 
-  File? photo;
+  ValueNotifier<File?> photo = ValueNotifier(null);
 
   DetectFaceData detectedFaceData = DetectFaceData();
 
+  String? profilePhotoUrl;
+  String? verificationPhotoUrl;
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(selfieVerificationProvider, (previous, next) {
+      if (next is SelfieVerificationLoading) {
+        CustomDialogs.showLoading(context);
+      }
+
+      if (next is SelfieVerificationError) {
+        CustomDialogs.hideLoading(context);
+
+        CustomDialogs.error(next.message);
+      }
+
+      if (next is SelfieVerificationSuccess) {
+        CustomDialogs.hideLoading(context);
+        context.goNamed(PageUrl.setupProfileIntroPage);
+      }
+    });
     return Scaffold(
       key: scaffoldKey,
       appBar: const CustomAppBar(
@@ -62,45 +82,65 @@ class _SelfieVerificationPageState
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
-                  24.verticalSpace,
-                  PhotoQualityCheckTile(detectedFaceData: detectedFaceData),
-                  24.verticalSpace,
-                  if (photo == null)
-                    InkWell(
-                        onTap: () async {
-                          await _uploadPhoto(context);
-                        },
-                        child: const EmptyPhotoCard())
-                  else
-                    ImageWidget(
-                      imageUrl: photo?.path ?? '',
-                      imageType: ImageWidgetType.file,
-                      width: 1.sw,
-                      height: 250,
-                      fit: BoxFit.cover,
-                    ),
+                  ValueListenableBuilder(
+                      valueListenable: photo,
+                      builder: (context, photoValue, child) {
+                        return Column(
+                          children: [
+                            24.verticalSpace,
+                            PhotoQualityCheckTile(
+                                detectedFaceData: detectedFaceData),
+                            24.verticalSpace,
+                            Builder(builder: (context) {
+                              if (photoValue == null) {
+                                return InkWell(
+                                    onTap: () async {
+                                      await _uploadPhoto(context);
+                                    },
+                                    child: const EmptyPhotoCard());
+                              } else {
+                                return ImageWidget(
+                                  imageUrl: photo.value?.path ?? '',
+                                  imageType: ImageWidgetType.file,
+                                  width: 1.sw,
+                                  height: 250,
+                                  fit: BoxFit.cover,
+                                );
+                              }
+                            }),
+                          ],
+                        );
+                      }),
                 ],
               ),
             ),
-            ButtonWidget(
-              title: 'Confirm',
-              onTap: photo == null
-                  ? null
-                  : () async {
-                      // if (detectedFaceData.facePassed) {
-                      context.goNamed(PageUrl.setupProfileIntroPage);
-                      // }
-                    },
-            ),
+            ValueListenableBuilder(
+                valueListenable: photo,
+                builder: (context, value, child) {
+                  return ButtonWidget(
+                    title: 'Confirm',
+                    onTap: value == null
+                        ? null
+                        : () async {
+                            if (detectedFaceData.facePassed) {
+                              await _uploadPhotosToCloud(context).then(
+                                (value) => _updateProfile(),
+                              );
+                            } else {
+                              CustomDialogs.error('Please add a valid photo');
+                            }
+                          },
+                  );
+                }),
             16.verticalSpace,
             TextView(
               text: 'Upload another photo',
-              color: (photo == null)
+              color: (photo.value == null)
                   ? Pallets.grey.withOpacity(0.2)
                   : Pallets.grey,
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              onTap: photo == null
+              onTap: photo.value == null
                   ? null
                   : () async => await _uploadPhoto(context),
             ),
@@ -111,16 +151,48 @@ class _SelfieVerificationPageState
     );
   }
 
+  Future<void> _uploadPhotosToCloud(BuildContext context) async {
+    CustomDialogs.showLoading(context);
+
+    try {
+      await Future.wait([
+        CloudinaryManager.uploadFile(
+            filePath: widget.profilePhoto, file: File(widget.profilePhoto)),
+        CloudinaryManager.uploadFile(
+          filePath: photo.value?.path ?? '',
+          file: photo.value!,
+        ),
+      ]).then((value) {
+        profilePhotoUrl = value[0];
+        verificationPhotoUrl = value[1];
+      });
+    } catch (e) {
+      logger.e(e);
+    } finally {
+      CustomDialogs.hideLoading(context);
+    }
+  }
+
+  void _updateProfile() {
+    final data = UpdateProfileReqDto(
+      verificationImage: verificationPhotoUrl,
+      profileImage: profilePhotoUrl,
+    );
+
+    ref.read(selfieVerificationProvider.notifier).caller(data);
+  }
+
   Future<void> _detectFace(BuildContext context) async {
     CustomDialogs.showLoading(context);
 
     try {
       detectedFaceData = await FacePlusService.detectFaces(
-        photo!,
+        photo.value!,
       );
     } catch (e, sta) {
       logger.e(sta);
     } finally {
+      setState(() {});
       CustomDialogs.hideLoading(context);
     }
   }
@@ -128,12 +200,10 @@ class _SelfieVerificationPageState
   Future<void> _uploadPhoto(BuildContext context) async {
     await ImageManager().pickImageFromGallery().then((value) async {
       if (value != null) {
-        photo = value;
+        photo.value = value;
         await _detectFace(context);
       }
     });
-
-    setState(() {});
   }
 }
 

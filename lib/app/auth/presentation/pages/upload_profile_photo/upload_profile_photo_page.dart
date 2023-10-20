@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/face_plus_plus/detect_face_data.dart';
 import 'package:triberly/core/face_plus_plus/face_plus_service.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/services/_services.dart';
@@ -77,20 +78,29 @@ class _UploadProfilePhotoPageState
               onTap: photo == null
                   ? null
                   : () async {
+                      DetectFaceData detectedFace = DetectFaceData();
                       CustomDialogs.showLoading(context);
 
                       try {
-                        await FacePlusService.detectFaces(
+                        detectedFace = await FacePlusService.detectFaces(
                           photo!,
                         );
                       } catch (e, sta) {
                         logger.e(sta);
                       } finally {
                         CustomDialogs.hideLoading(context);
-                        context.goNamed(PageUrl.selfieVerificationPage,
+
+                        if (!detectedFace.isFaceInFrame) {
+                          CustomDialogs.error(
+                              'Face not found, Please try again');
+                        } else {
+                          context.goNamed(
+                            PageUrl.selfieVerificationPage,
                             queryParameters: {
                               PathParam.profilePhoto: photo?.path ?? ''
-                            });
+                            },
+                          );
+                        }
                       }
 
                       // context.goNamed(PageUrl.home);

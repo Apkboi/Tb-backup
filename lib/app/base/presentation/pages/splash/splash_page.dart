@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/constants/package_exports.dart';
+import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/shared/text_view.dart';
 
 import 'splash_controller.dart';
@@ -37,9 +39,13 @@ class _SplashPageState extends ConsumerState<SplashPage>
     );
 
     animationCtrl?.forward();
-    animation?.addListener(() {
+    animation?.addListener(() async {
       if (animation?.isCompleted ?? false) {
-        context.pushReplacementNamed(PageUrl.onBoardingPage);
+        if (SessionManager.instance.doesUserDataExists()) {
+          context.goNamed(PageUrl.home);
+        } else {
+          context.pushReplacementNamed(PageUrl.onBoardingPage);
+        }
       }
     });
   }

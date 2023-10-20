@@ -25,10 +25,10 @@ class MessageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SwipeTo(
       onRightSwipe: () {
+        logger.e(message?.message);
         if (onRightSwipe != null) {
           onRightSwipe!();
         }
-        // CustomDialogs.showFlushBar(context, 'Swiping right');
       },
       child: Align(
         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -63,17 +63,18 @@ class MessageItem extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   decoration: BoxDecoration(
-                    color: Pallets.grey.withOpacity(.2),
+                    color: Pallets.white.withOpacity(.8),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  width: double.infinity,
+                  // width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 5),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         height: 40,
                         width: 3,
-                        color: isMe ? Pallets.white : Pallets.primary,
+                        color: isMe ? Pallets.primaryLight : Pallets.primary,
                       ),
                       16.horizontalSpace,
                       Column(
@@ -81,16 +82,17 @@ class MessageItem extends StatelessWidget {
                         children: [
                           TextView(
                             text: message?.repliedMessage?.message ?? '',
-                            color: Pallets.white,
+                            color: Pallets.maybeBlack,
                           ),
                           5.verticalSpace,
                           TextView(
-                            text: message?.repliedMessage?.message ?? '',
-                            color: Pallets.white,
+                            text: message?.repliedMessage?.senderName ?? '',
+                            color: Pallets.maybeBlack,
                             fontSize: 12,
                           ),
                         ],
                       ),
+                      32.horizontalSpace,
                     ],
                   ),
                 ),

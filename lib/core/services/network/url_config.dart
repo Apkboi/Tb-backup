@@ -29,4 +29,8 @@ class UrlConfig {
   static const String register = '/auth/register';
   static const String oauthLogin = '/auth/oauth-login';
   static const String resendOtp = '/auth/resend-otp';
+
+  ///ACCOUNT
+  static const String updateProfile = '/general/account/update';
+  static const String updateOtherPhotos = 'general/account/upload-images';
 }

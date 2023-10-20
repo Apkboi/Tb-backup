@@ -24,33 +24,31 @@ class AudioDaoImpDatasource implements AudioDaoDatasource {
     await Hive.openBox<String>(_hiveBoxName);
   }
 
-  // Download and save audio if not already cached, returns the local file path
   Future<String> getAudioFilePath(String url) async {
     final audioBox = await Hive.openBox<String>(_hiveBoxName);
 
     String? cachedPath = audioBox.get(url);
 
-    // if (cachedPath == null) {
-    // URL not found in Hive, download and save the audio
-    final response = await http.get(Uri.parse(url));
+    if (cachedPath == null) {
+      final response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      final fileName = url.split('/').last;
-      final file =
-          File('${(await getApplicationDocumentsDirectory()).path}/$fileName');
-      await file.writeAsBytes(response.bodyBytes);
-      final localPath = file.path;
+      if (response.statusCode == 200) {
+        final fileName = url.split('/').last;
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$fileName');
+        await file.writeAsBytes(response.bodyBytes);
+        final localPath = file.path;
 
-      // Save the local path in Hive
-      audioBox.put(url, localPath);
+        // Save the local path in Hive
+        audioBox.put(url, localPath);
 
-      return localPath;
-    } else {
-      throw Exception('Failed to download audio');
+        return localPath;
+      } else {
+        throw Exception('Failed to download audio');
+      }
     }
-    // }
 
-    // return cachedPath;
+    return cachedPath;
   }
 
   void close() {

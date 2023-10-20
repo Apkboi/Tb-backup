@@ -64,17 +64,17 @@ class Data {
     token = json['token'];
     tokenType = json['token_type'];
     expiresIn = json['expires_in'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    user = json['user'] != null ? UserDto.fromJson(json['user']) : null;
   }
   String? token;
   String? tokenType;
   num? expiresIn;
-  User? user;
+  UserDto? user;
   Data copyWith({
     String? token,
     String? tokenType,
     num? expiresIn,
-    User? user,
+    UserDto? user,
   }) =>
       Data(
         token: token ?? this.token,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,8 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
   final ScrollController listViewScrollController = ScrollController();
   List<MessageModel> messagesList = [];
 
+  late PlayerController playerController;
+
   ///Audio
   ///
   late RecorderController recorderController;
@@ -63,6 +66,8 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
     messageCtrl.addListener(() {
       setState(() {});
     });
+
+    playerController = PlayerController();
     getChats();
     _getDir();
     _initialiseControllers();
@@ -80,7 +85,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
   getChats() {
     Future.delayed(Duration.zero, () {
-      ref.read(chatDetailsProvider.notifier).caller();
+      ref.read(chatDetailsProvider.notifier).caller(widget.chatId);
     });
   }
 
@@ -114,7 +119,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
             Consumer(
               builder: (context, ref, child) {
                 if (ref.watch(chatDetailsProvider) is ChatDetailsLoading) {
-                  return CustomDialogs.getLoading(size: 50);
+                  return Expanded(child: CustomDialogs.getLoading(size: 50));
                 }
                 messagesList =
                     ref.watch(chatDetailsProvider.notifier).messagesList;
@@ -130,9 +135,10 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                     itemCount: messagesList.length,
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     itemBuilder: (context, index) {
-                      final normalList = messagesList.reversed.toList();
+                      List<MessageModel> normalList =
+                          messagesList.reversed.toList();
 
-                      final singleItem = normalList[index];
+                      MessageModel singleItem = normalList[index];
 
                       if (singleItem.message == null &&
                           singleItem.type == 'text') {
@@ -144,24 +150,38 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                           ),
                         );
                       }
+                      singleItem = normalList[index];
 
                       if (singleItem.type == 'audio') {
                         return WaveBubble(
-                          // key: ValueKey(index),
+                          // controller: playerController,
                           index: index,
                           isSender: singleItem.isMe,
                           audioUrl: singleItem.message ?? '',
                         );
                       }
+                      singleItem = normalList[index];
 
                       return MessageItem(
                         message: singleItem,
                         isMe: singleItem.isMe,
                         onRightSwipe: () {
+                          // logger.e(singleItem.message);
                           setState(() {
                             ref
                                 .read(chatDetailsProvider.notifier)
-                                .replyingMessage = singleItem;
+                                .replyingMessage = RepliedMessageModel(
+                              senderName: 'mc_olumo',
+                              isMe: true,
+                              date: singleItem.date,
+                              message: singleItem.message,
+                              type: singleItem.type,
+                            );
+
+                            logger.e(ref
+                                .read(chatDetailsProvider.notifier)
+                                .replyingMessage
+                                ?.message);
                           });
                         },
                       );
@@ -173,6 +193,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
           ],
         ),
         bottomNavigationBar: ValueListenableBuilder(
+          valueListenable: isRecording,
           builder: (context, value, child) {
             return ChatBottomActionsBar(
               messageCtrl: messageCtrl,
@@ -182,7 +203,6 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                   (messageCtrl.text.isEmpty) ? _startOrStopRecording : onSend,
             );
           },
-          valueListenable: isRecording,
         ),
       ),
     );
@@ -218,7 +238,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
           dbRef
               .child("chat_messages")
-              .child('test_chat_id_1')
+              .child(widget.chatId)
               .push()
               .set(data.toMap())
               .then(
@@ -244,7 +264,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
     final data = MessageModel(
       message: messageCtrl.text,
       senderId: anotherSenderid,
-      isMe: false,
+      isMe: true,
       repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
       date: DateTime.now().toString(),
       timestamp: ServerValue.timestamp,
@@ -257,7 +277,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
     dbRef
         .child("chat_messages")
-        .child('test_chat_id_1')
+        .child(widget.chatId)
         .push()
         .set(data.toMap())
         .then(

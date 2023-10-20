@@ -5,8 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:logger/logger.dart';
+import 'package:triberly/app/auth/data/datasources/user_dao.dart';
+import 'package:triberly/app/auth/domain/services/account_imp_service.dart';
 import 'package:triberly/app/auth/domain/services/auth_imp_service.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/app/chat/external/datasources/audio_dao_imp_datasource.dart';
+import 'package:triberly/core/services/data/hive/hive_store.dart';
 import 'package:triberly/core/services/firebase/crashlytics.dart';
 import 'package:triberly/firebase_options.dart';
 
@@ -29,8 +33,9 @@ Future<void> initializeApp({required Environment environment}) async {
   await initFirebaseServices();
   await initCore();
   await initializeDB();
-  await initServices();
   await initDao();
+
+  await initServices();
 
   // await initializeCountriesList();
 }
@@ -72,9 +77,9 @@ Future<void> initFirebaseServices() async {
 
 Future<void> initializeDB() async {
   await Hive.initFlutter();
+  await HiveBoxes.openAllBox();
 
   await AudioDaoImpDatasource().init();
-  await HiveBoxes.openAllBox();
 }
 
 Future<void> initializeCountriesList() async {
@@ -83,11 +88,12 @@ Future<void> initializeCountriesList() async {
 
 Future<void> initDao() async {
   // sl.registerLazySingleton<HiveStore>(() => HiveStore());
-  // sl.registerLazySingleton<UserDatasource>(() => UserDatasource());
+  sl.registerLazySingleton<UserImpDao>(() => UserImpDao());
 }
 
 Future<void> initServices() async {
   sl.registerLazySingleton<NetworkService>(
       () => NetworkService(baseUrl: UrlConfig.coreBaseUrl));
   sl.registerLazySingleton<AuthImpService>(() => AuthImpService(sl()));
+  sl.registerLazySingleton<AccountImpService>(() => AccountImpService(sl()));
 }

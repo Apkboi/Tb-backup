@@ -33,7 +33,7 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
 
   final StateNotifierProviderRef ref;
 
-  MessageModel? replyingMessage;
+  RepliedMessageModel? replyingMessage;
 
   List<MessageModel> messagesList = [];
 
@@ -85,21 +85,25 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
     return updatedMessagesList;
   }
 
-  Future<void> caller() async {
+  Future<void> caller(String chatId) async {
     state = ChatDetailsLoading();
 
     try {
       dbRef
           .child("chat_messages")
-          .child("test_chat_id_1")
+          .child(chatId)
           .orderByChild(
             'timestamp',
           )
+          .limitToLast(25)
           .onValue
           .listen((data) {
         state = ChatDetailsLoading();
 
         if (!data.snapshot.exists) {
+          messagesList = [];
+
+          state = ChatDetailsSuccess();
           return;
         }
 

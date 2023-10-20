@@ -14,6 +14,12 @@ class TimeUtil {
     return DateFormat("yyyy-MM-dd").format(dt);
   }
 
+  static String formatDateDDMMYYY(String date) {
+    if (date.isEmpty) return 'N/A';
+    DateTime dt = DateTime.parse(date);
+    return DateFormat("dd-MM-yyyy").format(dt);
+  }
+
   static String formatOperationsDate(String? date, int type) {
     final now = DateTime.parse(date ?? DateTime.now().toString());
 

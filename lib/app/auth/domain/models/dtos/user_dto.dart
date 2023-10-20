@@ -1,42 +1,5 @@
-/// id : 4
-/// first_name : "Tamun"
-/// middle_name : "Tas"
-/// last_name : "das"
-/// email : "f@mailinator.com"
-/// phone_no : null
-/// gender : "Male"
-/// username : "tamund"
-/// ref_code : "hmHlyQiT"
-/// email_verification : false
-/// selfie_verification : false
-/// dob : null
-/// profession : null
-/// relationship_status : null
-/// intent : null
-/// home_address : null
-/// origin_city_id : null
-/// origin_state_id : null
-/// origin_country_id : null
-/// residence_country_id : null
-/// tribes : null
-/// education : null
-/// family_status : null
-/// other_languages : null
-/// bio : null
-/// interests : null
-/// religion : null
-/// have_kids : null
-/// instagram_link : null
-/// tiktok_link : null
-/// linkedin_link : null
-/// profile_image : null
-/// email_verified : null
-/// status : "Active"
-/// latitude : 0
-/// longitude : 0
-
-class User {
-  User({
+class UserDto {
+  UserDto({
     this.id,
     this.firstName,
     this.middleName,
@@ -69,13 +32,14 @@ class User {
     this.tiktokLink,
     this.linkedinLink,
     this.profileImage,
+    this.otherImages,
     this.emailVerified,
     this.status,
     this.latitude,
     this.longitude,
   });
 
-  User.fromJson(dynamic json) {
+  UserDto.fromJson(dynamic json) {
     id = json['id'];
     firstName = json['first_name'];
     middleName = json['middle_name'];
@@ -108,6 +72,12 @@ class User {
     tiktokLink = json['tiktok_link'];
     linkedinLink = json['linkedin_link'];
     profileImage = json['profile_image'];
+    if (json['other_images'] != null) {
+      otherImages = [];
+      json['other_images'].forEach((v) {
+        otherImages?.add(OtherImages.fromJson(v));
+      });
+    }
     emailVerified = json['email_verified'];
     status = json['status'];
     latitude = json['latitude'];
@@ -118,7 +88,7 @@ class User {
   String? middleName;
   String? lastName;
   String? email;
-  dynamic phoneNo;
+  String? phoneNo;
   String? gender;
   String? username;
   String? refCode;
@@ -145,17 +115,18 @@ class User {
   dynamic tiktokLink;
   dynamic linkedinLink;
   dynamic profileImage;
-  dynamic emailVerified;
+  List<OtherImages>? otherImages;
+  String? emailVerified;
   String? status;
   num? latitude;
   num? longitude;
-  User copyWith({
+  UserDto copyWith({
     num? id,
     String? firstName,
     String? middleName,
     String? lastName,
     String? email,
-    dynamic phoneNo,
+    String? phoneNo,
     String? gender,
     String? username,
     String? refCode,
@@ -182,12 +153,13 @@ class User {
     dynamic tiktokLink,
     dynamic linkedinLink,
     dynamic profileImage,
-    dynamic emailVerified,
+    List<OtherImages>? otherImages,
+    String? emailVerified,
     String? status,
     num? latitude,
     num? longitude,
   }) =>
-      User(
+      UserDto(
         id: id ?? this.id,
         firstName: firstName ?? this.firstName,
         middleName: middleName ?? this.middleName,
@@ -220,6 +192,7 @@ class User {
         tiktokLink: tiktokLink ?? this.tiktokLink,
         linkedinLink: linkedinLink ?? this.linkedinLink,
         profileImage: profileImage ?? this.profileImage,
+        otherImages: otherImages ?? this.otherImages,
         emailVerified: emailVerified ?? this.emailVerified,
         status: status ?? this.status,
         latitude: latitude ?? this.latitude,
@@ -259,10 +232,51 @@ class User {
     map['tiktok_link'] = tiktokLink;
     map['linkedin_link'] = linkedinLink;
     map['profile_image'] = profileImage;
+    if (otherImages != null) {
+      map['other_images'] = otherImages?.map((v) => v.toJson()).toList();
+    }
     map['email_verified'] = emailVerified;
     map['status'] = status;
     map['latitude'] = latitude;
     map['longitude'] = longitude;
+    return map;
+  }
+}
+
+/// id : 1
+/// url : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDWj9w21gJI5mcQ4yTwg6cG1fgI9YGmMqSKA&usqp=CAU"
+/// type : "Photo"
+
+class OtherImages {
+  OtherImages({
+    this.id,
+    this.url,
+    this.type,
+  });
+
+  OtherImages.fromJson(dynamic json) {
+    id = json['id'];
+    url = json['url'];
+    type = json['type'];
+  }
+  num? id;
+  String? url;
+  String? type;
+  OtherImages copyWith({
+    num? id,
+    String? url,
+    String? type,
+  }) =>
+      OtherImages(
+        id: id ?? this.id,
+        url: url ?? this.url,
+        type: type ?? this.type,
+      );
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['url'] = url;
+    map['type'] = type;
     return map;
   }
 }

@@ -29,6 +29,15 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
   void initState() {
     // TODO: implement initState
     super.initState();
+    _getProfile();
+  }
+
+  _getProfile() async {
+    await Future.delayed(Duration.zero, () async {
+      await ref.read(setupProfileProvider.notifier).getProfile().then((value) {
+        setState(() {});
+      });
+    });
   }
 
   @override
@@ -50,7 +59,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
   ]);
   ValueNotifier<double> sliderValue = ValueNotifier(1);
 
-  void animateToTargetValue(double targetValue) {
+  void _animateToTargetValue(double targetValue) {
     if (sliderValue.value != targetValue) {
       final controller = AnimationController(
         duration: const Duration(milliseconds: 500),
@@ -70,11 +79,45 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(setupProfileProvider, (previous, next) {
+      if (next is SetupProfileLoading) {
+        CustomDialogs.showLoading(context);
+      }
+
+      if (next is SetupProfileError) {
+        CustomDialogs.hideLoading(context);
+
+        CustomDialogs.error(next.message);
+      }
+
+      if (next is SetupProfileSuccess) {
+        CustomDialogs.hideLoading(context);
+        CustomDialogs.showFlushBar(
+          context,
+          'Profile saved successfully',
+        );
+      }
+    });
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         key: scaffoldKey,
-        appBar: const CustomAppBar(title: 'Build your profile'),
+        appBar: CustomAppBar(
+          title: 'Edit profile',
+          trailing: Padding(
+            padding: const EdgeInsets.only(top: 16.0, right: 20),
+            child: TextView(
+              text: 'Skip',
+              color: Pallets.maybeBlack,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              onTap: () {
+                context.goNamed(PageUrl.home);
+              },
+            ),
+          ),
+        ),
         body: Column(
           children: [
             ValueListenableBuilder(
@@ -126,24 +169,26 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
               ),
               onTap: (currentIndex) {
                 if (currentIndex == 0) {
-                  animateToTargetValue(2.toDouble());
+                  _animateToTargetValue(2.toDouble());
 
                   return;
                 }
                 if (currentIndex == 1) {
-                  animateToTargetValue(5);
+                  _animateToTargetValue(5);
                   return;
                 }
                 if (currentIndex == 2) {
-                  animateToTargetValue(7);
+                  _animateToTargetValue(7);
                   return;
                 }
 
-                animateToTargetValue(10);
+                _animateToTargetValue(10);
                 return;
               },
               tabs: [
-                Tab(text: 'Personal bio'),
+                Tab(
+                  text: 'Personal bio',
+                ),
                 Tab(text: 'Ethnicity'),
                 Tab(text: 'Interests'),
                 Tab(text: 'Others'),
@@ -153,7 +198,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
             Expanded(
               child: TabBarView(
                 children: [
-                  ProfileTab(images: imagesList),
+                  ProfileTab(),
                   EthnicityTab(),
                   InterestsTab(),
                   InterestsTab(),

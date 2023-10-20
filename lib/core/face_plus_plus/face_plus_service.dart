@@ -126,7 +126,6 @@ class FacePlusService {
     String url = 'https://api-us.faceplusplus.com/facepp/v3/detect';
 
     final another = await compressImage(imageFile, maxSizeInBytes);
-    // final another = await compressImage(imageFile, maxSizeInBytes);
     FormData formData = FormData.fromMap({
       'api_key': apiKey,
       'api_secret': apiSecret,
@@ -150,15 +149,17 @@ class FacePlusService {
             faceData.first['attributes']['facequality']['threshold'];
         final faceValue = faceData.first['attributes']['facequality']['value'];
 
-        final isTooBlurred = blurValue < blurThreshold;
+        final isTooBlurred = blurValue > blurThreshold;
         final isFaceBad = faceValue < faceThreshold;
 
         detectFaceData.isFaceInFrame = true;
         detectFaceData.isBlurred = isTooBlurred;
         detectFaceData.isFaceUseful = !isFaceBad;
 
-        logger.i("Blur status $isTooBlurred");
-        logger.i("Face Status $isFaceBad");
+        logger.i("Blur blurThreshold $blurThreshold");
+        logger.i("Blur blurValue $blurValue");
+        logger.i("Face faceThreshold $faceThreshold");
+        logger.i("Face faceValue $faceValue");
       }
 
       logger.e(detectFaceData);

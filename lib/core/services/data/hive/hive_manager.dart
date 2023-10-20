@@ -7,7 +7,7 @@ import 'package:hive_flutter/adapters.dart';
 class HiveBoxes {
   static const cart = 'cart';
   static const storeBox = 'storeBox';
-  static const userBox = 'UserdataImpDatasource';
+  static const userBox = 'user_box';
 
   static Future openAllBox() async {
     // myCartDao = MyCartDao();

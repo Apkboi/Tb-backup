@@ -1,19 +1,25 @@
+import 'dart:io';
+
 import 'package:confetti/confetti.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_other_photos_req_dto.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
 import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
+import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
 import '../pages/setup_profile/setup_profile_page.dart';
 
 class ProfileTab extends ConsumerStatefulWidget {
-  const ProfileTab({super.key, required this.images});
+  const ProfileTab({super.key});
 
-  final List<String?> images;
   @override
   ConsumerState createState() => _ProfileTabState();
 }
@@ -32,6 +38,57 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   TextEditingController referral = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
   String completeNumber = '';
+  List<String?> otherImages = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    firstName = TextEditingController();
+    lastName = TextEditingController();
+    email = TextEditingController();
+    dob = TextEditingController();
+    occupation = TextEditingController();
+    bio = TextEditingController();
+    gender = TextEditingController();
+    password = TextEditingController();
+    confrimPassword = TextEditingController();
+    referral = TextEditingController();
+    phoneNumber = TextEditingController();
+    otherImages = [null, null, null, null];
+    // _prefillTab();
+    // Future.delayed(Duration.zero, () {
+    // });
+  }
+
+  @override
+  void didUpdateWidget(covariant ProfileTab oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    _prefillTab();
+    // setState(() {});
+  }
+
+  _prefillTab() {
+    final userProfile =
+        ref.watch(setupProfileProvider.notifier).userProfile.data;
+    firstName.text = userProfile?.firstName ?? '';
+    lastName.text = userProfile?.lastName ?? '';
+    email.text = userProfile?.email ?? '';
+    dob.text = userProfile?.dob ?? '';
+    occupation.text = userProfile?.profession ?? '';
+    bio.text = userProfile?.bio ?? '';
+    gender.text = userProfile?.gender ?? '';
+    referral.text = userProfile?.refCode ?? '';
+    phoneNumber.text = userProfile?.phoneNo ?? '';
+
+    otherImages = List.generate(userProfile?.otherImages?.length ?? 0,
+        (index) => userProfile!.otherImages?[index].url);
+
+    setState(() {
+      gender.text = userProfile?.gender ?? '';
+    });
+  }
 
   @override
   void dispose() {
@@ -51,6 +108,8 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    //
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -82,6 +141,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
               FilterCustomDropDown(
                 label: 'Gender',
                 hintText: "Gender",
+                selectedValue: gender.text,
                 listItems: const ['Male', 'Female'],
                 onTap: (value) {
                   gender.text = value ?? '';
@@ -94,6 +154,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                 controller: phoneNumber,
                 initialCountryCode: 'NG',
                 onChanged: (number) {
+                  gender.text = "Female";
                   completeNumber = number.completeNumber;
                   // print(number.completeNumber);
                 },
@@ -103,11 +164,27 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                 label: 'Email Address',
                 controller: email,
               ),
-              TextBoxField(
-                topLabel: true,
-                label: 'Date of birth',
-                controller: dob,
-                hasBottomPadding: false,
+              InkWell(
+                onTap: () async {
+                  final value = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(3000),
+                  );
+
+                  if (value != null) {
+                    dob.text = TimeUtil.formatDateDDMMYYY(
+                        value?.toIso8601String() ?? '');
+                  }
+                },
+                child: TextBoxField(
+                  topLabel: true,
+                  isEnabled: false,
+                  label: 'Date of birth',
+                  controller: dob,
+                  hasBottomPadding: false,
+                ),
               ),
               5.verticalSpace,
               const TextView(
@@ -147,18 +224,23 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                 shrinkWrap: true,
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.images.length,
+                itemCount: otherImages.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 20.0.dg,
                   mainAxisSpacing: 20.0.dg,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  final singleItem = widget.images[index];
+                  final singleItem = otherImages[index];
                   return UploadPhotosWidget(
                     imageUrl: singleItem,
-                    delete: () {
-                      widget.images[index] = null;
+                    delete: () async {
+                      try {
+                        // await CloudinaryManager.deleteFile(otherImages[index]!);
+                        otherImages[index] = null;
+                      } catch (e) {
+                        logger.e(e);
+                      }
                       setState(() {});
                     },
                     onTap: () async {
@@ -167,9 +249,41 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                       final imageFile =
                           await imageManger.showPhotoSourceDialog(context);
 
-                      widget.images[index] = imageFile?.path;
-
+                      otherImages[index] = imageFile?.path;
                       setState(() {});
+
+                      ///Upload to cloud and Update image url
+                      Future.delayed(Duration.zero, () async {
+                        CustomDialogs.showLoading(context);
+
+                        try {
+                          if (otherImages[index] != null) {
+                            await CloudinaryManager.uploadFile(
+                              filePath: imageFile?.path ?? '',
+                              file: File(otherImages[index] ?? ''),
+                            ).then((value) {
+                              otherImages[index] = value;
+
+                              if (!(otherImages.contains(null))) {
+                                ref
+                                    .read(setupProfileProvider.notifier)
+                                    .uploadOtherPhotos(
+                                      UpdateOtherPhotosReqDto(
+                                        images: List.generate(
+                                          otherImages.length,
+                                          (index) => otherImages[index]!,
+                                        ),
+                                      ),
+                                    );
+                              }
+                            });
+                          }
+                        } catch (e) {
+                          logger.e(e.toString());
+                        } finally {
+                          CustomDialogs.hideLoading(context);
+                        }
+                      });
                     },
                   );
                 },
@@ -177,17 +291,25 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
               57.verticalSpace,
               ButtonWidget(
                 title: 'Save',
-                onTap: () {
-                  context.pushNamed(PageUrl.setupProfilePage);
-                },
-                // onTap: (imagesList.contains(null))
-                //     ? null
-                //     : () {
-                //         CustomDialogs.showFlushBar(
-                //           context,
-                //           'Photos uploaded successfully',
-                //         );
-                //       },
+                onTap: (otherImages.contains(null))
+                    ? null
+                    : () {
+                        final data = UpdateProfileReqDto(
+                          firstName: firstName.text,
+                          lastName: lastName.text,
+                          profession: occupation.text,
+                          bio: bio.text,
+                          dob: dob.text,
+                          phone: phoneNumber.text,
+                        );
+                        ref
+                            .read(setupProfileProvider.notifier)
+                            .updateProfile(data);
+                        // CustomDialogs.showFlushBar(
+                        //   context,
+                        //   'Profile updated successfully',
+                        // );
+                      },
               ),
               45.verticalSpace,
             ],
@@ -198,6 +320,5 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

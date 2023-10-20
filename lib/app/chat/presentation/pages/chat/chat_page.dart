@@ -69,14 +69,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       context.pushNamed(
                         PageUrl.chatDetails,
                         queryParameters: {
-                          PathParam.chatId: '1',
+                          PathParam.chatId: "$index",
                         },
                       );
                     },
                   );
                 },
-                separatorBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.all(10.0),
+                separatorBuilder: (context, index) => const Padding(
+                  padding: EdgeInsets.all(10.0),
                   child: CustomDivider(),
                 ),
                 itemCount: 17,

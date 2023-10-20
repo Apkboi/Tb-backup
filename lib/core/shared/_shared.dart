@@ -24,5 +24,6 @@ export 'otp_field.dart';
 export 'summary_row.dart';
 export 'text_box.dart';
 export 'text_view.dart';
+export 'text_with_underline.dart';
 export 'typeahead_field.dart';
 export 'with_blur.dart';

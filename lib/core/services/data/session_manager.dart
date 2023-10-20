@@ -5,7 +5,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 final sessionProvider = Provider<SessionManager>((ref) {
   SessionManager().init();
   final sessionManager = SessionManager.instance;
@@ -46,7 +45,7 @@ class SessionManager {
       sharedPreferences!.setString(KEY_USERS_DATA, json.encode(map));
 
   bool doesUserDataExists() {
-    return sharedPreferences!.containsKey(KEY_USERS_DATA);
+    return sharedPreferences!.containsKey(KEY_AUTH_TOKEN);
   }
 
   set arrivedHome(bool allowed) {

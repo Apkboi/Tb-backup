@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/generated/assets.dart';
 
 import '../../../../../core/constants/package_exports.dart';
@@ -38,10 +40,12 @@ class _BasePageState extends ConsumerState<BasePage> {
   }
 
   void _goBranch(int index) {
-    widget.navigationShell.goBranch(
-      index,
-      initialLocation: index == widget.navigationShell.currentIndex,
-    );
+    if (index != 2) {
+      widget.navigationShell.goBranch(
+        index,
+        initialLocation: index == widget.navigationShell.currentIndex,
+      );
+    }
   }
 
   @override
@@ -149,13 +153,13 @@ class _DrawerWidgetState extends State<DrawerWidget>
     );
   }
 
-  bool selected = false;
-
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
+
+  final user = sl<UserImpDao>().user;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +194,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ImageWidget(
-                imageUrl: Assets.pngsMale,
+                imageUrl: user?.profileImage ?? '',
                 size: 48.dm,
                 borderRadius: BorderRadius.circular(24),
               ),
@@ -200,12 +204,13 @@ class _DrawerWidgetState extends State<DrawerWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextView(
-                      text: 'Bukio sunkeye',
+                      text:
+                          "${user?.lastName ?? 'N/A'} ${user?.firstName ?? 'N/A'} ",
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                     TextView(
-                      text: 'Bukiosunkeye@gmail.com',
+                      text: '${user?.email ?? 'N/A'}',
                       fontSize: 12,
                       color: Pallets.grey,
                       fontWeight: FontWeight.w500,
@@ -280,6 +285,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
             title: 'Log Out',
             isLogout: true,
             icon: Assets.svgsLogout,
+            onTap: () {
+              _list.clear();
+              context.goNamed(PageUrl.signIn);
+            },
           ),
         ],
       ),
