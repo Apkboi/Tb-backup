@@ -38,24 +38,4 @@ class CloudinaryManager {
       throw Exception('Error uploading to Cloudinary: $e');
     }
   }
-
-  static Future<bool> deleteFile(String url) async {
-    try {
-      final response = await cloudinary.destroy(
-        url,
-        url: url,
-        resourceType: CloudinaryResourceType.auto,
-      );
-
-      if (response.isResultOk) {
-        logger.e(response.secureUrl);
-        return true;
-      } else {
-        throw Exception(
-            'Cloudinary upload failed: ${response.error ?? "Unknown error"}');
-      }
-    } catch (e) {
-      throw Exception('Error uploading to Cloudinary: $e');
-    }
-  }
 }

@@ -112,7 +112,7 @@ class AuthImpService implements AccountService {
 
       final signInData = SignInResDto.fromJson(response.data);
 
-      logger.e(signInData.data?.user);
+      // logger.e(signInData.data?.user);
       sl<UserImpDao>().storeUser(signInData.data?.user);
 
       return signInData;

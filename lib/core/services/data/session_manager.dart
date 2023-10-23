@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:triberly/core/services/data/hive/hive_manager.dart';
+import 'package:triberly/core/services/di/di.dart';
 
 final sessionProvider = Provider<SessionManager>((ref) {
   SessionManager().init();
@@ -90,29 +93,27 @@ class SessionManager {
   bool get isLoggedIn => sharedPreferences!.getBool(KEY_IS_LOGIN) ?? false;
 
   Future<bool> logOut() async {
-    final holdEmail = sharedPreferences?.getString(KEY_USER_EMAIL);
-    final holdPass = sharedPreferences?.getString(KEY_BALANCE);
-    final holdUseBio = sharedPreferences?.getBool(KEY_USE_BIO);
-
-    await sharedPreferences!.clear();
-
-    sharedPreferences?.setString(KEY_USER_EMAIL, holdEmail ?? '');
-    sharedPreferences?.setString(KEY_BALANCE, holdPass ?? '');
-    sharedPreferences?.setBool(KEY_USE_BIO, holdUseBio ?? false);
+    // final holdEmail = sharedPreferences?.getString(KEY_USER_EMAIL);
+    // final holdPass = sharedPreferences?.getString(KEY_BALANCE);
+    // final holdUseBio = sharedPreferences?.getBool(KEY_USE_BIO);
+    //
+    // await sharedPreferences!.clear();
+    //
+    // sharedPreferences?.setString(KEY_USER_EMAIL, holdEmail ?? '');
+    // sharedPreferences?.setString(KEY_BALANCE, holdPass ?? '');
+    // sharedPreferences?.setBool(KEY_USE_BIO, holdUseBio ?? false);
 
     await secureStorage?.deleteAll();
-    // await HiveBoxes.clearAllBox();
+    await sharedPreferences?.clear();
+    await HiveBoxes.clearAllBox();
     try {
-      final cacheDir = await getTemporaryDirectory();
-      if (cacheDir.existsSync()) {
-        cacheDir.deleteSync(recursive: true);
-      }
+      DefaultCacheManager().emptyCache();
       final appDir = await getApplicationSupportDirectory();
       if (appDir.existsSync()) {
         appDir.deleteSync(recursive: true);
       }
     } catch (e) {
-      print("error clearing cache");
+      logger.e(e);
     }
     return true;
   }

@@ -157,7 +157,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 /// Set user data
                 ref
                     .read(signupProvider.notifier)
-                    .setUserData(email.text, phoneNumber.text);
+                    .setUserData(email.text, completeNumber);
 
                 ///
 
@@ -167,7 +167,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   firstName: firstName.text,
                   middleName: 'not_available',
                   lastName: lastName.text,
-                  phone: phoneNumber.text,
+                  phone: completeNumber,
                   gender: gender.text,
                   email: email.text,
                   password: password.text,

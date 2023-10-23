@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:triberly/app/auth/data/datasources/user_dao.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
+import 'package:triberly/core/services/di/di.dart';
 
 /// initialize local data storage
 
@@ -23,11 +26,13 @@ class HiveBoxes {
   static Future clearAllBox() async {
     // await myCartDao!.truncate();
 
-    await Future.wait([
-      closeBox(cart),
-      closeBox(storeBox),
-      closeBox(userBox),
-    ]);
+    sl<UserImpDao>().truncate();
+
+    // await Future.wait([
+    //   closeBox(cart),
+    //   closeBox(storeBox),
+    //   closeBox(userBox),
+    // ]);
   }
 
   static Future<Box<T>> openBox<T>(String boxName) async {

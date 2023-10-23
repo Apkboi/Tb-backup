@@ -10,7 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../domain/models/dtos/user_dto.dart';
 
-UserImpDao? userImpDao;
+// UserImpDao? userImpDao;
 
 class UserImpDao implements UserDao {
   @override
@@ -23,13 +23,8 @@ class UserImpDao implements UserDao {
 
   final Box<dynamic> _box = Hive.box(HiveBoxes.userBox);
 
-  // Box<Map>? get box => _box;
   UserDto? get user {
     return getUser();
-  }
-
-  UserImpDao() {
-    // openBox().then((value) => _box = value);
   }
 
   Future<Box<Map>> openBox() async =>
@@ -41,7 +36,6 @@ class UserImpDao implements UserDao {
 
       final map = user.toJson();
 
-      // logger.i(map);
       await _box.put(userStorageKey, map);
     }
   }
@@ -49,11 +43,8 @@ class UserImpDao implements UserDao {
   UserDto? getUser() {
     final userMap = _box.get(userStorageKey);
     if (userMap != null) {
-      // logger.e(userMap);
       return UserDto.fromJson(userMap);
     }
-    // logger.e(userMap);
-
     return null;
   }
 

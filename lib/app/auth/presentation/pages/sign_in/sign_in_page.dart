@@ -82,14 +82,19 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         final userData = ref.watch(signInProvider.notifier).userData;
 
         if (userData?.emailVerification == false) {
-          ref.read(otpProvider.notifier).resendOtp(ResendOtpReqDto(
-              email: userData?.email, type: OtpType.accountSetup.value));
+          ref.read(otpProvider.notifier).resendOtp(
+                ResendOtpReqDto(
+                  email: userData?.email,
+                  type: OtpType.accountSetup.value,
+                ),
+              );
 
           context.pushNamed(
             PageUrl.otpPage,
             queryParameters: {
               PathParam.otpType: OtpType.accountSetup.value,
               PathParam.phoneNumber: userData?.phoneNo,
+              PathParam.email: userData?.email,
             },
           );
           return;
@@ -98,10 +103,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           context.pushNamed(PageUrl.uploadProfilePhoto);
           return;
         }
-        // if (userData?.longitude == null) {
-        //   context.pushNamed(PageUrl.locationAccessPage);
-        //   return;
-        // }
         if (userData?.otherImages == null) {
           context.pushNamed(PageUrl.uploadPhotos);
           return;
@@ -116,7 +117,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     });
     return Scaffold(
       key: scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Log in',
       ),
       body: SingleChildScrollView(
@@ -127,7 +128,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               16.verticalSpace,
-              TextView(
+              const TextView(
                 text: 'Log in to your account',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -190,23 +191,23 @@ class _SignInPageState extends ConsumerState<SignInPage> {
               32.verticalSpace,
               Row(
                 children: [
-                  Expanded(child: CustomDivider()),
+                  const Expanded(child: CustomDivider()),
                   15.horizontalSpace,
-                  TextView(
+                  const TextView(
                     text: 'OR',
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Pallets.primaryDark,
                   ),
                   15.horizontalSpace,
-                  Expanded(child: CustomDivider()),
+                  const Expanded(child: CustomDivider()),
                 ],
               ),
               19.verticalSpace,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextView(
+                  const TextView(
                     text: 'Sign in with',
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -217,7 +218,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     onTap: () {
                       ref.read(signInProvider.notifier).signInGoogle();
                     },
-                    child: ImageWidget(imageUrl: Assets.svgsGoogle),
+                    child: const ImageWidget(imageUrl: Assets.svgsGoogle),
                   ),
                   16.horizontalSpace,
                   if (Platform.isIOS)
@@ -225,7 +226,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                       onTap: () {
                         ref.read(signInProvider.notifier).signInApple();
                       },
-                      child: ImageWidget(imageUrl: Assets.svgsApple),
+                      child: const ImageWidget(imageUrl: Assets.svgsApple),
                     ),
                 ],
               ),

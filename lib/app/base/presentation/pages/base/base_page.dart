@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_cropper/image_cropper.dart';
+
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
-import 'package:triberly/generated/assets.dart';
 
-import '../../../../../core/constants/package_exports.dart';
 import 'base_controller.dart';
 
 List<int> _list = [];
@@ -52,7 +49,7 @@ class _BasePageState extends ConsumerState<BasePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: baseScaffoldKey,
-      drawer: DrawerWidget(),
+      drawer: const DrawerWidget(),
       extendBody: true,
       body: widget.navigationShell,
       bottomNavigationBar: Container(
@@ -90,7 +87,7 @@ class _BasePageState extends ConsumerState<BasePage> {
               items: [
                 BottomNavigationBarItem(
                   label: 'Home',
-                  icon: ImageWidget(imageUrl: Assets.svgsHome, size: 30),
+                  icon: const ImageWidget(imageUrl: Assets.svgsHome, size: 30),
                   activeIcon: ImageWidget(
                       imageUrl: Assets.svgsHomeSelected, size: 58.w),
                 ),
@@ -122,7 +119,7 @@ class _BasePageState extends ConsumerState<BasePage> {
 }
 
 class DrawerWidget extends StatefulWidget {
-  DrawerWidget({
+  const DrawerWidget({
     Key? key,
   }) : super(key: key);
 
@@ -177,11 +174,11 @@ class _DrawerWidgetState extends State<DrawerWidget>
                 child: Container(
                   width: 52.w,
                   height: 52.w,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Pallets.primaryLight,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     CupertinoIcons.xmark,
                     size: 20,
                   ),
@@ -210,7 +207,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                       fontWeight: FontWeight.w600,
                     ),
                     TextView(
-                      text: '${user?.email ?? 'N/A'}',
+                      text: user?.email ?? 'N/A',
                       fontSize: 12,
                       color: Pallets.grey,
                       fontWeight: FontWeight.w500,
@@ -233,49 +230,49 @@ class _DrawerWidgetState extends State<DrawerWidget>
               width: 20.w,
               alignment: Alignment.center,
               height: 20.w,
-              child: TextView(
+              child: const TextView(
                 text: '2',
                 color: Pallets.primary,
               ),
             ),
             onTap: () {},
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 1,
             title: 'My Tribers',
             icon: Assets.svgsCategory,
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 2,
             title: 'My Tribers',
             icon: Assets.svgsCategory,
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 3,
             title: 'Community Boards',
             icon: Assets.svgsCategory,
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 4,
             title: 'Find a Host',
             icon: Assets.svgsGlobalSearch,
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 5,
             title: 'Find a Service',
             icon: Assets.svgsSearchStatus,
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 6,
             title: 'Refer a Friend',
             icon: Assets.svgsProfile2user,
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 7,
             title: 'Upgrade my Account',
             icon: Assets.svgsCrown,
           ),
-          DrawerTile(
+          const DrawerTile(
             index: 8,
             title: 'Contact Us',
             icon: Assets.svgsCall,
@@ -287,6 +284,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             icon: Assets.svgsLogout,
             onTap: () {
               _list.clear();
+              SessionManager.instance.logOut();
               context.goNamed(PageUrl.signIn);
             },
           ),

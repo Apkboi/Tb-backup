@@ -45,9 +45,6 @@ class _OtpPageState extends ConsumerState<OtpPage> {
       if ((next is ResendOtpLoading) || (next is OtpLoading)) {
         CustomDialogs.showLoading(context);
       }
-      // if (next is OtpLoading) {
-      //   CustomDialogs.showLoading(context);
-      // }
 
       if (next is ResendOtpError) {
         CustomDialogs.hideLoading(context);
@@ -64,15 +61,16 @@ class _OtpPageState extends ConsumerState<OtpPage> {
       if (next is OtpError) {
         CustomDialogs.hideLoading(context);
         CustomDialogs.error(next.message);
-
         return;
       }
 
       if (next is OtpSuccess) {
         CustomDialogs.hideLoading(context);
+
         CustomDialogs.success(
           'Phone number verified successfully',
         );
+
         if (widget.otpType == OtpType.accountSetup.value) {
           context.pushNamed(PageUrl.locationAccessPage);
         }
@@ -86,7 +84,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
     });
     return Scaffold(
       key: scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'OTP Verification',
       ),
       body: Column(
@@ -153,7 +151,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextView(
+                      const TextView(
                         text: 'Request a new code in ',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -175,7 +173,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ButtonWidget(
               title: 'Confirm',
               onTap: otpCtrl.text.length != otpLength ? null : _verifyOtp,
