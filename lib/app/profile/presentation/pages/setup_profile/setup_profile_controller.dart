@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/config_res_dto.dart';
+import 'package:triberly/app/auth/domain/models/dtos/countries_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/get_profile.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_other_photos_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
@@ -12,6 +14,12 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
   final AccountImpService _accountImpService;
 
   GetProfile userProfile = GetProfile();
+
+  List<Hashtags> hashtags = [];
+  List<Interests> interests = [];
+  List<Languages> languages = [];
+  List<Tribes> tribes = [];
+  List<CountriesData> countries = [];
 
   Future<void> uploadOtherPhotos(UpdateOtherPhotosReqDto data) async {
     try {
@@ -42,6 +50,40 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
 
       state = SetupProfileSuccess();
     } catch (e) {
+      state = SetupProfileError(e.toString());
+    }
+  }
+
+  Future<void> getDataConfigs() async {
+    try {
+      state = SetupProfileLoading();
+
+      ConfigResDto? configs;
+      CountriesResDto? countriesResDto;
+
+      await Future.wait([
+        _accountImpService.getProfile(),
+        _accountImpService.getConfigs(),
+        _accountImpService.getCountries(),
+      ]).then((value) {
+        userProfile = value[0] as GetProfile;
+        configs = value[1] as ConfigResDto?;
+        countriesResDto = value[2] as CountriesResDto?;
+      });
+
+      hashtags = configs?.data?.hashtags ?? [];
+      interests = configs?.data?.interests ?? [];
+      languages = configs?.data?.languages ?? [];
+      tribes = configs?.data?.tribes ?? [];
+      countries = countriesResDto?.callData?.data ?? [];
+
+      // logger.e(tribes);
+
+      state = SetupProfileSuccess();
+    } catch (e, stac) {
+      logger.e(stac);
+      logger.e(e);
+
       state = SetupProfileError(e.toString());
     }
   }

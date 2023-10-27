@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'dart:math';
 
 import 'package:dart_ipify/dart_ipify.dart';
 
@@ -23,6 +24,30 @@ class Helpers {
       name = "$prefix.${name.split(".").last}";
     }
     return name;
+  }
+
+  static num? calculateDistance(num? lat1, num? lon1, num? lat2, num? lon2) {
+    if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) {
+      return null;
+    }
+
+    const double earthRadius = 6371;
+
+    double degreesToRadians(num degrees) {
+      return degrees * pi / 180;
+    }
+
+    num dLat = degreesToRadians(lat2 - lat1);
+    num dLon = degreesToRadians(lon2 - lon1);
+
+    num a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(degreesToRadians(lat1)) *
+            cos(degreesToRadians(lat2)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+    num c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    return earthRadius * c;
   }
 
   static launchUrl(String? data) async {
@@ -103,6 +128,21 @@ class Helpers {
     return ipv4;
   }
 
+  static String calculateAge(String dateOfBirth) {
+    if (dateOfBirth.isEmpty) {
+      return 'N/A';
+    }
+    DateTime dob = DateTime.parse(dateOfBirth);
+
+    DateTime now = DateTime.now();
+
+    Duration difference = now.difference(dob);
+
+    int age = (difference.inDays / 365).floor();
+
+    return age.toString();
+  }
+
   static void launchTelegram(String groupName) async {
     String url = "https://t.me/$groupName";
 
@@ -112,13 +152,5 @@ class Helpers {
         mode: launch.LaunchMode.externalApplication,
       );
     }
-  }
-
-  static String getTimeAgo(String date) {
-    final duration =
-        DateTime.now().difference(DateTime.tryParse(date) ?? DateTime.now());
-    final fifteenAgo = DateTime.now().subtract(duration);
-
-    return timeago.format(fifteenAgo);
   }
 }

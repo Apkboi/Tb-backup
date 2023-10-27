@@ -34,7 +34,10 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
   _getProfile() async {
     await Future.delayed(Duration.zero, () async {
-      await ref.read(setupProfileProvider.notifier).getProfile().then((value) {
+      await ref
+          .read(setupProfileProvider.notifier)
+          .getDataConfigs()
+          .then((value) {
         setState(() {});
       });
     });
@@ -100,23 +103,26 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
     });
 
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         key: scaffoldKey,
         appBar: CustomAppBar(
           title: 'Edit profile',
           trailing: Padding(
-            padding: const EdgeInsets.only(top: 16.0, right: 20),
-            child: TextView(
-              text: 'Skip',
-              color: Pallets.maybeBlack,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              onTap: () {
-                context.goNamed(PageUrl.home);
-              },
-            ),
-          ),
+              padding: const EdgeInsets.only(top: 16.0, right: 20),
+              child: ValueListenableBuilder(
+                  valueListenable: sliderValue,
+                  builder: (context, sliderValue, child) {
+                    return TextView(
+                      text: sliderValue == 7 ? 'Done' : 'Skip',
+                      color: Pallets.maybeBlack,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      onTap: () {
+                        context.goNamed(PageUrl.home);
+                      },
+                    );
+                  })),
         ),
         body: Column(
           children: [
@@ -191,7 +197,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                 ),
                 Tab(text: 'Ethnicity'),
                 Tab(text: 'Interests'),
-                Tab(text: 'Others'),
+                // Tab(text: 'Others'),
               ],
             ),
 
@@ -201,7 +207,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                   ProfileTab(),
                   EthnicityTab(),
                   InterestsTab(),
-                  InterestsTab(),
+                  // InterestsTab(),
                 ],
               ),
             ),

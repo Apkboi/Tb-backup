@@ -7,8 +7,10 @@ import 'package:triberly/core/_core.dart';
 class ChatDetailsAppbar extends StatelessWidget implements PreferredSizeWidget {
   const ChatDetailsAppbar({
     super.key,
+    required this.name,
   });
 
+  final String name;
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(
@@ -16,7 +18,7 @@ class ChatDetailsAppbar extends StatelessWidget implements PreferredSizeWidget {
       titleWidget: Column(
         children: [
           TextView(
-            text: 'Bruno Chevallier',
+            text: name,
             color: Pallets.maybeBlack,
             fontWeight: FontWeight.w500,
             fontSize: 20,

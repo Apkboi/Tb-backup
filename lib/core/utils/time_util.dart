@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class TimeUtil {
   /// format date
@@ -59,5 +60,16 @@ class TimeUtil {
   static String _returnUpcomingTime(Duration difference) {
     if (difference.inHours > 24) return 'OPENS IN: ${difference.inDays} DAYS';
     return 'OPENS IN: ${difference.inHours}H : ${difference.inMinutes}M : ${difference.inSeconds}S';
+  }
+
+  static String getTimeAgo(String? date) {
+    if (date == null || date.isEmpty) {
+      return '0';
+    }
+    final duration =
+        DateTime.now().difference(DateTime.tryParse(date) ?? DateTime.now());
+    final fifteenAgo = DateTime.now().subtract(duration);
+
+    return timeago.format(fifteenAgo);
   }
 }

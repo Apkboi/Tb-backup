@@ -50,6 +50,7 @@ class _ImageWidgetState extends State<ImageWidget> {
       );
     }
     if ((widget.imageUrl.split('.').firstOrNull?.contains('http') == true) ||
+        widget.imageUrl == '' ||
         widget.imageType == ImageWidgetType.network) {
       if (widget.imageUrl == '') {
         return _ErrorWidget();
@@ -114,7 +115,7 @@ class _ImageWidgetState extends State<ImageWidget> {
         shape: widget.shape ?? BoxShape.rectangle,
         border: widget.border,
         image: DecorationImage(
-            image: const AssetImage(Assets.pngsLogo2),
+            image: const AssetImage(Assets.pngsLogoMain),
             fit: BoxFit.cover,
             onError: (error, trace) {
               // logger.e(trace);

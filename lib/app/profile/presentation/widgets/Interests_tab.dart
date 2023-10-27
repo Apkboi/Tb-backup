@@ -2,7 +2,10 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:triberly/app/auth/domain/models/dtos/config_res_dto.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/home/presentation/pages/home/home_page.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
 import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
 import 'package:triberly/core/_core.dart';
@@ -20,30 +23,11 @@ class InterestsTab extends ConsumerStatefulWidget {
 class _InterestsTabState extends ConsumerState<InterestsTab>
     with AutomaticKeepAliveClientMixin {
   TextEditingController intentCtrl = TextEditingController();
-  TextEditingController lastName = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController dob = TextEditingController();
-  TextEditingController occupation = TextEditingController();
-  TextEditingController bio = TextEditingController();
-  TextEditingController gender = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController confrimPassword = TextEditingController();
-  TextEditingController referral = TextEditingController();
-  TextEditingController phoneNumber = TextEditingController();
-  String completeNumber = '';
 
   @override
   void dispose() {
     intentCtrl.dispose();
 
-    lastName.dispose();
-    email.dispose();
-    gender.dispose();
-    password.dispose();
-    dob.dispose();
-    occupation.dispose();
-    bio.dispose();
-    referral.dispose();
     super.dispose();
   }
 
@@ -151,7 +135,13 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
               ButtonWidget(
                 title: 'Save',
                 onTap: () {
-                  context.pushNamed(PageUrl.setupProfilePage);
+                  final data = UpdateProfileReqDto(
+                    ///TODO: Get Feedback on how to sent intents and others
+                    // interests: '',
+                    intent: intentCtrl.text,
+                    // lookingToConnect:
+                  );
+                  ref.read(setupProfileProvider.notifier).updateProfile(data);
                 },
                 // onTap: (imagesList.contains(null))
                 //     ? null
@@ -185,54 +175,89 @@ class LifeChipsList extends StatefulWidget {
 
 class _LifeChipsListState extends State<LifeChipsList> {
   List<String> selectedChips = [];
-  List<String> availableChips = [
-    'Exercise',
-    'Reading',
-    'Cooking',
-    'Hiking',
-    'Traveling',
-    'Yoga',
-    'Meditation',
-    'Gardening',
-    'Painting',
-    'Photography',
-    'Dancing',
-    'Singing',
-    'Playing an instrument',
-    'Swimming',
-    'Cycling',
-    'Watching movies',
-    'Gaming',
-    'Volunteering',
-    'Writing',
-    'Fishing',
-    'Camping',
-    'Skiing',
-    'Snowboarding',
-    'Birdwatching',
-  ];
+  List<String> availableChips = [];
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: List.generate(
-        availableChips.length,
-        (index) => CustomChip(
-          title: availableChips[index],
-          selected: selectedChips.contains(availableChips[index]),
-          onTap: () {
-            if (selectedChips.contains(availableChips[index])) {
-              setState(() {
-                selectedChips.remove(availableChips[index]);
-              });
-              return;
-            }
-            setState(() {
-              selectedChips.add(availableChips[index]);
-            });
-          },
-        ),
-      ),
+    return Consumer(
+      builder: (context, ref, child) {
+        availableChips = ref
+            .watch(setupProfileProvider.notifier)
+            .hashtags
+            .map((e) => e.name ?? '')
+            .toList();
+
+        return Wrap(
+          children: List.generate(
+            availableChips.take(10).length,
+            (index) => CustomChip(
+              title: availableChips[index],
+              selected: selectedChips.contains(availableChips[index]),
+              onTap: () {
+                if (selectedChips.contains(availableChips[index])) {
+                  setState(() {
+                    selectedChips.remove(availableChips[index]);
+                  });
+                  return;
+                }
+                setState(() {
+                  selectedChips.add(availableChips[index]);
+                });
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class InterestsChipsList extends StatefulWidget {
+  const InterestsChipsList({
+    super.key,
+  });
+
+  @override
+  State<InterestsChipsList> createState() => _InterestsChipsListState();
+}
+
+class _InterestsChipsListState extends State<InterestsChipsList> {
+  List<Interests> selectedChips = [];
+  List<Interests> availableChips = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        availableChips = ref.watch(setupProfileProvider.notifier).interests;
+
+        return Wrap(
+          children: List.generate(
+            availableChips.take(10).length,
+            (index) => CustomChip(
+              title: availableChips[index].name ?? '',
+              selected: selectedChips.contains(availableChips[index]),
+              onTap: () {
+                if (selectedChips.contains(availableChips[index])) {
+                  setState(() {
+                    selectedChips.remove(availableChips[index]);
+                  });
+                  return;
+                }
+                setState(() {
+                  selectedChips.add(availableChips[index]);
+                });
+
+                logger.e(selectedChips.map((e) => e.name));
+                final data = UpdateProfileReqDto(
+                  interests: selectedChips.map((e) => e.id).toString(),
+                );
+                ref.read(setupProfileProvider.notifier).updateProfile(data);
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

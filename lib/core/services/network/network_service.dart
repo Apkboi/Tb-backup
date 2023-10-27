@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:triberly/core/_core.dart';
 
 import '../data/session_manager.dart';
 import '../firebase/notifiactions.dart';
@@ -161,6 +162,7 @@ class NetworkService {
         }
 
         var apiError = ApiError.fromDio(error);
+
         return Future.error(apiError, stackTrace);
       }
 

@@ -20,8 +20,12 @@ class ApiError {
   factory ApiError.fromDio(DioException dioError) {
     switch (dioError.type) {
       case DioExceptionType.cancel:
+        logger.e('unknown');
+
         return ApiError('Request to API was cancelled');
       case DioExceptionType.connectionTimeout:
+        logger.e('unknown');
+
         return ApiError('Connection timeout with API');
       case DioExceptionType.sendTimeout:
         return ApiError('Send timeout in connection with API');
@@ -99,6 +103,12 @@ class ApiErrorModel {
 }
 
 String _setCustomErrorMessage(Response error) {
+  if (error.statusCode == 401) {
+    CustomDialogs.error('Unauthorized');
+    CustomRoutes.goRouter.goNamed(PageUrl.signIn);
+    return 'Unauthorized';
+  }
+
   final errorMessageList = <String>[];
 
   if (error.data['msg'] is String) {

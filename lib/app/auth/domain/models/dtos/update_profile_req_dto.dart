@@ -190,7 +190,6 @@ class UpdateProfileReqDto {
     if (linkedinLink != null) map['linkedin_link'] = linkedinLink;
     if (latitude != null) map['latitude'] = latitude;
     if (longitude != null) map['longitude'] = longitude;
-
     return map;
   }
 }

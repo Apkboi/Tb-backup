@@ -24,13 +24,28 @@ class UrlConfig {
 
   static const String login = '/auth/login';
   static const String me = '/auth/me';
+  static String getUser(String userId) => '/auth/user/$userId';
   static const String forgotPassword = '/auth/forgot-password';
   static const String verifyOtp = '/auth/verify-otp';
   static const String register = '/auth/register';
   static const String oauthLogin = '/auth/oauth-login';
   static const String resendOtp = '/auth/resend-otp';
 
+  ///CONFIGS
+  ///
+  static const String getConfigs = '/general/configs';
+  static const String getCountries = '/location/countries';
+
+  ///CONNECTIONS
+  static const String searchConnections = '/general/connections/search';
+  static const String saveConnection = '/general/connections/save';
+  static const String getConnections = '/general/connections';
+
   ///ACCOUNT
   static const String updateProfile = '/general/account/update';
   static const String updateOtherPhotos = 'general/account/upload-images';
+
+  ///Chat
+  static const String getChats = '/chats/list';
+  static const String initiateChat = 'chats/initiate';
 }

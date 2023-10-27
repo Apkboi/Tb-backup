@@ -203,7 +203,9 @@ class CustomDialogs {
             SizedBox(width: 12.w),
             Expanded(
               child: TextView(
-                text: message.isEmpty ? 'An error occurred' : message,
+                text: message.isEmpty
+                    ? 'An error occurred, please try again'
+                    : message,
                 fontSize: 14,
                 color: Pallets.primary,
                 fontWeight: FontWeight.w500,
@@ -243,7 +245,9 @@ class CustomDialogs {
             SizedBox(width: 12.w),
             Expanded(
               child: TextView(
-                text: message.isEmpty ? 'An error occurred' : message,
+                text: message.isEmpty
+                    ? 'An error occurred, please try again'
+                    : message,
                 fontSize: 14,
                 color: Pallets.red,
                 fontWeight: FontWeight.w500,
@@ -292,7 +296,9 @@ class CustomDialogs {
               SizedBox(width: 12.w),
               Expanded(
                 child: TextView(
-                  text: message.isEmpty ? 'An error occurred' : message,
+                  text: message.isEmpty
+                      ? 'An error occurred, please try again'
+                      : message,
                   fontSize: 14,
                   color: Pallets.primary,
                   fontWeight: FontWeight.w500,

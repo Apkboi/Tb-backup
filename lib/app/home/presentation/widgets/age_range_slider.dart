@@ -8,9 +8,11 @@ import 'package:triberly/core/_core.dart';
 import 'package:triberly/generated/l10n.dart';
 
 class CustomRangeSlider extends StatefulWidget {
-  const CustomRangeSlider({super.key, this.start = 30.0, this.end = 50.0});
+  const CustomRangeSlider(
+      {super.key, this.start = 0.0, this.end = 100.0, this.onChanged});
   final double start;
   final double end;
+  final void Function(RangeValues)? onChanged;
 
   @override
   State<CustomRangeSlider> createState() => _CustomRangeSliderState();
@@ -36,27 +38,29 @@ class _CustomRangeSliderState extends State<CustomRangeSlider> {
       children: [
         RangeSlider(
           activeColor: Pallets.primary,
-          values: RangeValues(_start, _end),
+          values: RangeValues(widget.start, widget.end),
           // labels: RangeLabels(
           //     "${_start.toInt()} Yrs", '${_end.toInt().toString()} Yrs'),
-          onChanged: (value) {
-            setState(() {
-              _start = value.start;
-              _end = value.end;
-            });
-          },
+
+          onChanged: widget.onChanged,
+          // onChanged: (value) {
+          //   setState(() {
+          //     _start = value.start;
+          //     _end = value.end;
+          //   });
+          // },
           min: 0.0,
           max: 100.0,
         ),
         Positioned(
-          left: (_start * 3.1),
+          left: (widget.start * 3.1),
           top: -10,
-          child: Text("${_start.toInt()} Yrs"),
+          child: Text("${widget.start.toInt()} Yrs"),
         ),
         Positioned(
           top: -10,
-          left: (_end * 3.1),
-          child: Text("${_end.toInt()} Yrs"),
+          left: (widget.end * 3.1),
+          child: Text("${widget.end.toInt()} Yrs"),
         ),
       ],
     );

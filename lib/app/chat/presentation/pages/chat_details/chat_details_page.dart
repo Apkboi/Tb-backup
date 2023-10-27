@@ -32,9 +32,14 @@ const String testSenderid = 'asdadsa-1233-sdas332-2sasd';
 const String anotherSenderid = 'another-1233-sender-1234';
 
 class ChatDetailsPage extends ConsumerStatefulWidget {
-  const ChatDetailsPage({super.key, required this.chatId});
+  const ChatDetailsPage({
+    super.key,
+    required this.chatId,
+    this.userName,
+  });
 
   final String chatId;
+  final String? userName;
 
   @override
   ConsumerState createState() => _ChatDetailsPageState();
@@ -112,7 +117,9 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
       body: Scaffold(
         // key: scaffoldKey,
         resizeToAvoidBottomInset: true,
-        appBar: const ChatDetailsAppbar(),
+        appBar: ChatDetailsAppbar(
+          name: widget.userName ?? '',
+        ),
         body: Column(
           children: [
             const CustomDivider(),

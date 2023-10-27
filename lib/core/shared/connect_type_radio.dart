@@ -14,7 +14,7 @@ class ConnectTypeRadio extends StatelessWidget {
   });
 
   final String title;
-  final String value;
+  final String? value;
   final VoidCallback? onTap;
 
   @override

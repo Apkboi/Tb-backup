@@ -59,7 +59,10 @@ class ConnectionsCard extends StatelessWidget {
       builder: (context, ref, child) {
         return InkWell(
           onTap: () {
-            context.pushNamed(PageUrl.profileDetails);
+            context.pushNamed(
+              PageUrl.profileDetails,
+              // queryParameters: {PathParam.userId: user.id},
+            );
           },
           child: Stack(
             children: [

@@ -1,29 +1,42 @@
-
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
 import 'package:triberly/app/base/presentation/pages/base/base_page.dart';
 import 'package:triberly/app/home/presentation/widgets/filter_widget.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/generated/l10n.dart';
-
 
 class ExploreCard extends StatelessWidget {
   const ExploreCard({
     super.key,
     required this.name,
     required this.age,
+    required this.intent,
+    required this.tribe,
+    required this.country,
+    this.image,
+    required this.user,
   });
 
+  final UserDto user;
   final String name;
   final String age;
+  final String? image;
+  final String intent;
+  final String tribe;
+  final String country;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.pushNamed(PageUrl.profileDetails);
+        context.pushNamed(
+          PageUrl.profileDetails,
+          queryParameters: {PathParam.userId: user.id.toString()},
+        );
       },
       child: Stack(
         children: [
@@ -31,7 +44,7 @@ class ExploreCard extends StatelessWidget {
             height: 470.h,
           ),
           ImageWidget(
-            imageUrl: Assets.pngsMale,
+            imageUrl: image ?? '',
             height: .6.sh,
             width: 1.sw,
             fit: BoxFit.cover,
@@ -83,7 +96,7 @@ class ExploreCard extends StatelessWidget {
                         ),
                         6.horizontalSpace,
                         TextView(
-                          text: 'Nigeria',
+                          text: country,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Pallets.white,
@@ -97,7 +110,7 @@ class ExploreCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextView(
-                      text: 'Searching for: Travel buddies',
+                      text: 'Searching for: $intent',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Pallets.white,
@@ -111,7 +124,7 @@ class ExploreCard extends StatelessWidget {
                         ),
                         6.horizontalSpace,
                         TextView(
-                          text: 'Igbo',
+                          text: tribe,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Pallets.white,

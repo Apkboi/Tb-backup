@@ -1,5 +1,6 @@
 import 'package:cloudinary/cloudinary.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,9 +10,11 @@ import 'package:triberly/app/auth/data/datasources/user_dao.dart';
 import 'package:triberly/app/auth/domain/services/account_imp_service.dart';
 import 'package:triberly/app/auth/domain/services/auth_imp_service.dart';
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
+import 'package:triberly/app/chat/domain/services/chat_imp_service.dart';
 import 'package:triberly/app/chat/external/datasources/audio_dao_imp_datasource.dart';
 import 'package:triberly/core/services/data/hive/hive_store.dart';
 import 'package:triberly/core/services/firebase/crashlytics.dart';
+import 'package:triberly/core/services/location_service/location_service.dart';
 import 'package:triberly/firebase_options.dart';
 
 import '../../_core.dart';
@@ -71,7 +74,7 @@ Future<void> initFirebaseServices() async {
   CrashlyticsService.onCrash();
 
   await notificationService.initializeNotification();
-
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
   await FirebaseMessaging.instance.getInitialMessage();
 }
 
@@ -83,7 +86,7 @@ Future<void> initializeDB() async {
 }
 
 Future<void> initializeCountriesList() async {
-  final util = CountryUtil();
+  // final util = CountryUtil();
 }
 
 Future<void> initDao() async {
@@ -94,6 +97,8 @@ Future<void> initDao() async {
 Future<void> initServices() async {
   sl.registerLazySingleton<NetworkService>(
       () => NetworkService(baseUrl: UrlConfig.coreBaseUrl));
+  sl.registerLazySingleton<LocationService>(() => LocationService());
   sl.registerLazySingleton<AuthImpService>(() => AuthImpService(sl()));
+  sl.registerLazySingleton<ChatImpService>(() => ChatImpService(sl()));
   sl.registerLazySingleton<AccountImpService>(() => AccountImpService(sl()));
 }

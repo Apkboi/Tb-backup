@@ -94,7 +94,7 @@ class UserDto {
   String? refCode;
   bool? emailVerification;
   bool? selfieVerification;
-  dynamic dob;
+  String? dob;
   dynamic profession;
   dynamic relationshipStatus;
   dynamic intent;

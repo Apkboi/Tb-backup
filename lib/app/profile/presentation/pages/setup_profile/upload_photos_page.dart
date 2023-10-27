@@ -165,9 +165,6 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
                       57.verticalSpace,
                       ButtonWidget(
                         title: 'Next',
-                        // onTap: () {
-
-                        // },
                         onTap: (imagesList.contains(null))
                             ? null
                             : () async {
@@ -195,7 +192,8 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
                                           .read(setupProfileProvider.notifier)
                                           .uploadOtherPhotos(
                                             UpdateOtherPhotosReqDto(
-                                                images: value),
+                                              images: value,
+                                            ),
                                           );
                                     },
                                   );

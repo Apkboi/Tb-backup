@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
+import 'package:triberly/app/chat/domain/models/dtos/get_chats_res_dto.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 
@@ -17,6 +19,26 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
 
   @override
+  void didUpdateWidget(covariant ChatPage oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+
+    getOngoingChats();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getOngoingChats();
+  }
+
+  getOngoingChats() {
+    Future.delayed(Duration.zero, () {
+      ref.read(chatProvider.notifier).getChats();
+    });
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -27,64 +49,85 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Chats',
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 10),
-                  child: ImageWidget(
-                    imageUrl: Assets.svgsSearchNormal,
-                    size: 24,
+      body: Builder(builder: (context) {
+        final state = ref.watch(chatProvider);
+
+        if (state is ChatLoading) {
+          return CustomDialogs.getLoading(size: 50);
+        }
+
+        final chatsList = ref.watch(chatProvider.notifier).chats;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 10),
+                    child: ImageWidget(
+                      imageUrl: Assets.svgsSearchNormal,
+                      size: 24,
+                    ),
                   ),
-                ),
-                fillColor: Pallets.searchGrey,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                enabledBorder: OutlineInputBorder(
+                  fillColor: Pallets.searchGrey,
+                  filled: true,
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
-                    borderSide: BorderSide.none),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                    borderSide: BorderSide.none),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      borderSide: BorderSide.none),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      borderSide: BorderSide.none),
+                ),
               ),
-            ),
-            17.verticalSpace,
-            Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 150.h),
-                itemBuilder: (contex, index) {
-                  return ChatTile(
-                    onTap: () {
-                      context.pushNamed(
-                        PageUrl.chatDetails,
-                        queryParameters: {
-                          PathParam.chatId: "$index",
+              17.verticalSpace,
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await getOngoingChats();
+                  },
+                  child: ListView.separated(
+                    itemCount: chatsList.length,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 150.h),
+                    itemBuilder: (context, index) {
+                      final singleItem = chatsList[index];
+                      return ChatTile(
+                        chatData: singleItem,
+                        userDto: singleItem.participants?.firstOrNull?.user,
+                        onTap: () {
+                          context.pushNamed(
+                            PageUrl.chatDetails,
+                            queryParameters: {
+                              PathParam.chatId: "${singleItem.id}",
+                              PathParam.userName:
+                                  "${singleItem.participants?.firstOrNull?.user?.lastName} ${singleItem.participants?.firstOrNull?.user?.firstName}",
+                            },
+                          );
                         },
                       );
                     },
-                  );
-                },
-                separatorBuilder: (context, index) => const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: CustomDivider(),
+                    separatorBuilder: (context, index) => const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: CustomDivider(),
+                    ),
+                  ),
                 ),
-                itemCount: 17,
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
@@ -93,9 +136,13 @@ class ChatTile extends StatelessWidget {
   const ChatTile({
     super.key,
     this.onTap,
+    required this.userDto,
+    required this.chatData,
   });
 
   final VoidCallback? onTap;
+  final UserDto? userDto;
+  final ChatData? chatData;
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +152,14 @@ class ChatTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ImageWidget(
-            imageUrl: Assets.pngsMale,
+            imageUrl: userDto?.profileImage ?? '',
             size: 61,
             borderRadius: BorderRadius.circular(12),
           ),
           12.horizontalSpace,
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,12 +167,13 @@ class ChatTile extends StatelessWidget {
                     Row(
                       children: [
                         TextView(
-                          text: 'Bruno Charles, 32',
+                          text:
+                              '${userDto?.lastName ?? ''} ${userDto?.firstName ?? ''}, ${Helpers.calculateAge(userDto?.dob ?? '').toLowerCase() ?? ''}',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                         12.horizontalSpace,
-                        Icon(
+                        const Icon(
                           Icons.circle,
                           color: Pallets.primary,
                           size: 10,
@@ -132,7 +181,7 @@ class ChatTile extends StatelessWidget {
                       ],
                     ),
                     TextView(
-                      text: '15 min',
+                      text: TimeUtil.getTimeAgo(chatData?.timestamp),
                       fontSize: 12,
                       color: Pallets.grey,
                       fontWeight: FontWeight.w400,
@@ -141,8 +190,7 @@ class ChatTile extends StatelessWidget {
                 ),
                 4.verticalSpace,
                 TextView(
-                  text:
-                      'I’m on my way to the restaurant for our date. Keep in touch',
+                  text: chatData?.lastMessage ?? '',
                   fontSize: 12,
                   lineHeight: 1.5,
                   fontWeight: FontWeight.w400,

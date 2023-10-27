@@ -94,7 +94,7 @@ class NotificationTile extends StatelessWidget {
                       ),
                     ),
                     TextView(
-                      text: Helpers.getTimeAgo(
+                      text: TimeUtil.getTimeAgo(
                         DateTime.now().toString(),
                       ),
                       fontWeight: FontWeight.w500,
