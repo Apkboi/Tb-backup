@@ -55,7 +55,7 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
 
     _tribeId = num.tryParse(userProfile?.tribes);
     // _tribeId = userProfile?.tribes;
-    _residenceCountryId = userProfile?.residenceCountryId['id'];
+    _residenceCountryId = userProfile?.residenceCountryId?.id;
     _originalCountry = userProfile?.originCountryId['id'];
     setState(() {});
   }

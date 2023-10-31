@@ -42,6 +42,7 @@ class UpdateProfileReqDto {
     this.familyStatus,
     this.intent,
     this.interests,
+    // this.hashTags,
     this.motherTongue,
     this.otherLanguages,
     this.education,
@@ -70,6 +71,7 @@ class UpdateProfileReqDto {
     dob = json['dob'];
     intent = json['intent'];
     interests = json['interests'];
+    // hashTags = json['hash_tags'];
     motherTongue = json['mother_tongue'];
     otherLanguages = json['other_languages'];
     education = json['education'];

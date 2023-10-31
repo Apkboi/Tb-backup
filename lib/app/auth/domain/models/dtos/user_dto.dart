@@ -1,3 +1,5 @@
+import 'package:triberly/app/auth/domain/models/dtos/update_profile_res_dto.dart';
+
 class UserDto {
   UserDto({
     this.id,
@@ -59,7 +61,9 @@ class UserDto {
     originCityId = json['origin_city_id'];
     originStateId = json['origin_state_id'];
     originCountryId = json['origin_country_id'];
-    residenceCountryId = json['residence_country_id'];
+    residenceCountryId = json['residence_country_id'] != null
+        ? ResidenceCountryId.fromJson(json['residence_country_id'])
+        : null;
     tribes = json['tribes'];
     education = json['education'];
     familyStatus = json['family_status'];
@@ -102,7 +106,7 @@ class UserDto {
   dynamic originCityId;
   dynamic originStateId;
   dynamic originCountryId;
-  dynamic residenceCountryId;
+  ResidenceCountryId? residenceCountryId;
   dynamic tribes;
   dynamic education;
   dynamic familyStatus;

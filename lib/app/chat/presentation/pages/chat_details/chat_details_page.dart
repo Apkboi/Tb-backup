@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:collection/collection.dart';
+import 'package:triberly/app/auth/data/datasources/user_dao.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/app/chat/data/datasources/audio_dao_datasource.dart';
 import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 import 'package:triberly/app/chat/external/datasources/audio_dao_imp_datasource.dart';
@@ -36,10 +38,12 @@ class ChatDetailsPage extends ConsumerStatefulWidget {
     super.key,
     required this.chatId,
     this.userName,
+    // required this.userId,
   });
 
   final String chatId;
   final String? userName;
+  // final String? userId;
 
   @override
   ConsumerState createState() => _ChatDetailsPageState();
@@ -58,6 +62,8 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
   ///Audio
   ///
   late RecorderController recorderController;
+
+  final userDto = sl<UserImpDao>().user;
 
   String? path;
   // String? musicFile;
@@ -113,6 +119,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    logger.e(widget.chatId);
     return Scaffold(
       body: Scaffold(
         // key: scaffoldKey,
@@ -163,7 +170,8 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                         return WaveBubble(
                           // controller: playerController,
                           index: index,
-                          isSender: singleItem.isMe,
+                          isSender:
+                              singleItem.senderId == userDto?.id.toString(),
                           audioUrl: singleItem.message ?? '',
                         );
                       }
@@ -171,7 +179,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
                       return MessageItem(
                         message: singleItem,
-                        isMe: singleItem.isMe,
+                        isMe: singleItem.senderId == userDto?.id.toString(),
                         onRightSwipe: () {
                           // logger.e(singleItem.message);
                           setState(() {
@@ -235,7 +243,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
           final data = MessageModel(
             message: url,
             type: 'audio',
-            senderId: testSenderid,
+            senderId: userDto?.id.toString(),
             isMe: true,
             repliedMessage:
                 ref.read(chatDetailsProvider.notifier).replyingMessage,
@@ -270,7 +278,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
   onSend() {
     final data = MessageModel(
       message: messageCtrl.text,
-      senderId: anotherSenderid,
+      senderId: userDto?.id.toString(),
       isMe: true,
       repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
       date: DateTime.now().toString(),

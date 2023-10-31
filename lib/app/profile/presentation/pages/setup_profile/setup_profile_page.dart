@@ -89,8 +89,8 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
       if (next is SetupProfileError) {
         CustomDialogs.hideLoading(context);
-
         CustomDialogs.error(next.message);
+        return;
       }
 
       if (next is SetupProfileSuccess) {
@@ -99,6 +99,9 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
           context,
           'Profile saved successfully',
         );
+
+        if (sliderValue.value == 7) {}
+        return;
       }
     });
 

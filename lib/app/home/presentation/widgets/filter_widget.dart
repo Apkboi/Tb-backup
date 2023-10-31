@@ -277,12 +277,17 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                                 // withLatLong: data.withLatLong,
                               ));
 
-                          logger.e(
-                              ref.read(homeProvider.notifier).filterData.faith);
+                          logger.e(ref.read(homeProvider.notifier).filterData);
 
                           ///
-                          ref.read(homeProvider.notifier).caller(
-                              ref.read(homeProvider.notifier).filterData);
+                          ref.read(homeProvider.notifier).caller(ref
+                              .read(homeProvider.notifier)
+                              .filterData
+                              .copyWith(
+                                  connectWith: connectWith
+                                      ?.toLowerCase()
+                                      .replaceAll('only', '')
+                                      .trim()));
 
                           context.pop();
                         },

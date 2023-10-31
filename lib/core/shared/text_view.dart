@@ -40,7 +40,7 @@ class TextView extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Text(
-        text.i18n,
+        text,
         key: textKey,
         style: style?.copyWith(inherit: true) ??
             GoogleFonts.plusJakartaSans(

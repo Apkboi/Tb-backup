@@ -59,6 +59,22 @@ class _HomePageState extends ConsumerState<HomePage>
 
     ///
 
+    ref.listen(setupProfileProvider, (previous, next) {
+      if (next is GetConfigsSuccess) {
+        logger.e('SetupProfileSuccess');
+
+        // context.pop();
+        CustomDialogs.hideLoading(context);
+      }
+      if (next is GetConfigsError) {
+        logger.e('SetupProfileError');
+
+        CustomDialogs.error(next.message);
+        // context.pop();
+
+        CustomDialogs.hideLoading(context);
+      }
+    });
     ref.listen(homeProvider, (previous, next) {
       if (next is HomeSuccess) {
         randomUsers = ref.watch(homeProvider.notifier).randomUsers;
@@ -68,10 +84,10 @@ class _HomePageState extends ConsumerState<HomePage>
           CustomDialogs.error(
             'No users fit the current data, try adjusting the filter',
           );
-          CustomDialogs.showBottomSheet(
-            scaffoldKey.currentState!.context,
-            FilterWidget(),
-          );
+          // CustomDialogs.showBottomSheet(
+          //   scaffoldKey.currentState!.context,
+          //   FilterWidget(),
+          // );
         }
       }
     });
@@ -108,14 +124,16 @@ class _HomePageState extends ConsumerState<HomePage>
                   width: 1.sw,
                   child: AppinioSwiper(
                     padding: EdgeInsets.zero,
-                    backgroundCardsCount: 2,
-                    loop: randomUsers.isEmpty ? false : true,
-                    cardsCount: randomUsers.length,
+                    backgroundCardsCount: 1,
+
+                    // loop: false,
+                    loop: latLngUsers.isEmpty ? false : true,
+                    cardsCount: latLngUsers.length,
                     onSwiping: (AppinioSwiperDirection direction) {
                       print(direction.toString());
                     },
                     cardsBuilder: (BuildContext context, int index) {
-                      final singleItem = randomUsers[index];
+                      final singleItem = latLngUsers[index];
                       return SizedBox(
                         child: ExploreCard(
                           user: singleItem,
@@ -125,7 +143,14 @@ class _HomePageState extends ConsumerState<HomePage>
                           intent: '${singleItem.intent ?? 'n/a'}',
                           tribe: '${singleItem.tribes ?? 'n/a'}',
                           image: singleItem.profileImage,
-                          country: 'Nigeria',
+                          country: ref
+                                  .read(
+                                    countryByIdProvider(
+                                      singleItem.residenceCountryId?.id,
+                                    ),
+                                  )
+                                  ?.name ??
+                              'n/a',
                         ),
                       );
                     },

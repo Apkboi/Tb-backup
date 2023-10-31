@@ -23,6 +23,7 @@ class MessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // logger.e(message?.message);
     return SwipeTo(
       onRightSwipe: () {
         logger.e(message?.message);

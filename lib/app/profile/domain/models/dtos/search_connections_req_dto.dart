@@ -76,8 +76,10 @@ class SearchConnectionsReqDto {
     if (connectWith != null && connectWith!.isNotEmpty) {
       map['connect_with'] = connectWith;
     }
-    if (languagues != null) map['languagues'] = languagues;
-    if (tribes != null) map['tribes'] = tribes;
+    if (languagues != null && languagues != "null") {
+      map['languagues'] = languagues;
+    }
+    if (tribes != null && tribes != 'null') map['tribes'] = tribes;
     if (originCountryId != null) map['origin_country_id'] = originCountryId;
     if (residenceCountryId != null) {
       map['residence_country_id'] = residenceCountryId;
@@ -86,5 +88,10 @@ class SearchConnectionsReqDto {
     if (toAge != null) map['to_age'] = toAge;
     if (withLatLong != null) map['with_lat_long'] = withLatLong;
     return map;
+  }
+
+  @override
+  String toString() {
+    return 'SearchConnectionsReqDto{intent: $intent, connectWith: $connectWith, languagues: $languagues, tribes: $tribes, faith: $faith, originCountryId: $originCountryId, residenceCountryId: $residenceCountryId, fromAge: $fromAge, toAge: $toAge, withLatLong: $withLatLong}';
   }
 }

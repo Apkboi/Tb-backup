@@ -1,4 +1,5 @@
 import 'package:cloudinary/cloudinary.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -76,6 +77,24 @@ Future<void> initFirebaseServices() async {
   await notificationService.initializeNotification();
   FirebaseDatabase.instance.setPersistenceEnabled(true);
   await FirebaseMessaging.instance.getInitialMessage();
+  signMessageUser();
+}
+
+void signMessageUser() async {
+  try {
+    final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: 'Maranathatolulope@gmail.com',
+      password: '123456',
+    );
+
+    logger.wtf(credential.user?.email);
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      print('No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      print('Wrong password provided for that user.');
+    }
+  }
 }
 
 Future<void> initializeDB() async {

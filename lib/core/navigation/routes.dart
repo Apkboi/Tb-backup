@@ -34,8 +34,8 @@ final _shellNavigatorDKey = GlobalKey<NavigatorState>(debugLabel: 'shellD');
 
 class CustomRoutes {
   static final goRouter = GoRouter(
-    // initialLocation: '/splash',
-    initialLocation: '/profile/setupProfileIntroPage/setupProfilePage',
+    initialLocation: '/splash',
+    // initialLocation: '/profile/setupProfileIntroPage/setupProfilePage',
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
@@ -149,6 +149,7 @@ class CustomRoutes {
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) => ChatDetailsPage(
                       chatId: state.uri.queryParameters[PathParam.chatId] ?? '',
+                      // userId: state.uri.queryParameters[PathParam.userId] ?? '',
                       userName:
                           state.uri.queryParameters[PathParam.userName] ?? '',
                     ),

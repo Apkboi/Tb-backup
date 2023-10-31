@@ -81,13 +81,17 @@ class ExploreCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextView(
-                      text: '$name, $age',
-                      fontSize: 23,
-                      fontWeight: FontWeight.w700,
-                      color: Pallets.white,
+                    Expanded(
+                      child: TextView(
+                        // text: '',
+                        text: '$name, ${Helpers.calculateAge(user.dob ?? '')}',
+                        fontSize: 23,
+                        fontWeight: FontWeight.w700,
+                        color: Pallets.white,
+                      ),
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ImageWidget(
                           imageUrl: Assets.svgsHome,

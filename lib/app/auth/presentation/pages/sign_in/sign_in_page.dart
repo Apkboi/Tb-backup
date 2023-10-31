@@ -103,7 +103,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           context.pushNamed(PageUrl.uploadProfilePhoto);
           return;
         }
-        if (userData?.otherImages == null) {
+        if (userData?.otherImages == null
+
+            // ||
+            // (userData?.otherImages?.length == 0)
+
+            ) {
           context.pushNamed(PageUrl.uploadPhotos);
           return;
         }

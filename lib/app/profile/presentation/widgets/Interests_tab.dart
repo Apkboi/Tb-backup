@@ -13,6 +13,9 @@ import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
+List<Interests> selectedIntrestChips = [];
+List<String> selectedHastagChips = [];
+
 class InterestsTab extends ConsumerStatefulWidget {
   const InterestsTab({super.key});
 
@@ -134,23 +137,21 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
               32.verticalSpace,
               ButtonWidget(
                 title: 'Save',
-                onTap: () {
+                onTap: () async {
                   final data = UpdateProfileReqDto(
-                    ///TODO: Get Feedback on how to sent intents and others
-                    // interests: '',
+                    interests: selectedIntrestChips
+                        .map((e) => e.id)
+                        .toList()
+                        .toString(),
                     intent: intentCtrl.text,
-                    // lookingToConnect:
                   );
-                  ref.read(setupProfileProvider.notifier).updateProfile(data);
+                  await ref
+                      .read(setupProfileProvider.notifier)
+                      .updateProfile(data)
+                      .then(
+                        (value) => context.goNamed(PageUrl.home),
+                      );
                 },
-                // onTap: (imagesList.contains(null))
-                //     ? null
-                //     : () {
-                //         CustomDialogs.showFlushBar(
-                //           context,
-                //           'Photos uploaded successfully',
-                //         );
-                //       },
               ),
               45.verticalSpace,
             ],
@@ -174,7 +175,6 @@ class LifeChipsList extends StatefulWidget {
 }
 
 class _LifeChipsListState extends State<LifeChipsList> {
-  List<String> selectedChips = [];
   List<String> availableChips = [];
 
   @override
@@ -192,16 +192,16 @@ class _LifeChipsListState extends State<LifeChipsList> {
             availableChips.take(10).length,
             (index) => CustomChip(
               title: availableChips[index],
-              selected: selectedChips.contains(availableChips[index]),
+              selected: selectedHastagChips.contains(availableChips[index]),
               onTap: () {
-                if (selectedChips.contains(availableChips[index])) {
+                if (selectedHastagChips.contains(availableChips[index])) {
                   setState(() {
-                    selectedChips.remove(availableChips[index]);
+                    selectedHastagChips.remove(availableChips[index]);
                   });
                   return;
                 }
                 setState(() {
-                  selectedChips.add(availableChips[index]);
+                  selectedHastagChips.add(availableChips[index]);
                 });
               },
             ),
@@ -222,7 +222,6 @@ class InterestsChipsList extends StatefulWidget {
 }
 
 class _InterestsChipsListState extends State<InterestsChipsList> {
-  List<Interests> selectedChips = [];
   List<Interests> availableChips = [];
 
   @override
@@ -236,23 +235,23 @@ class _InterestsChipsListState extends State<InterestsChipsList> {
             availableChips.take(10).length,
             (index) => CustomChip(
               title: availableChips[index].name ?? '',
-              selected: selectedChips.contains(availableChips[index]),
+              selected: selectedIntrestChips.contains(availableChips[index]),
               onTap: () {
-                if (selectedChips.contains(availableChips[index])) {
+                if (selectedIntrestChips.contains(availableChips[index])) {
                   setState(() {
-                    selectedChips.remove(availableChips[index]);
+                    selectedIntrestChips.remove(availableChips[index]);
                   });
                   return;
                 }
                 setState(() {
-                  selectedChips.add(availableChips[index]);
+                  selectedIntrestChips.add(availableChips[index]);
                 });
 
-                logger.e(selectedChips.map((e) => e.name));
-                final data = UpdateProfileReqDto(
-                  interests: selectedChips.map((e) => e.id).toString(),
-                );
-                ref.read(setupProfileProvider.notifier).updateProfile(data);
+                logger.e(selectedIntrestChips.map((e) => e.name));
+                // final data = UpdateProfileReqDto(
+                //   interests: selectedChips.map((e) => e.id).toString(),
+                // );
+                // ref.read(setupProfileProvider.notifier).updateProfile(data);
               },
             ),
           ),

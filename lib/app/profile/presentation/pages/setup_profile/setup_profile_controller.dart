@@ -56,7 +56,7 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
 
   Future<void> getDataConfigs() async {
     try {
-      state = SetupProfileLoading();
+      state = GetConfigsLoading();
 
       ConfigResDto? configs;
       CountriesResDto? countriesResDto;
@@ -79,12 +79,12 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
 
       // logger.e(tribes);
 
-      state = SetupProfileSuccess();
+      state = GetConfigsSuccess();
     } catch (e, stac) {
       logger.e(stac);
       logger.e(e);
 
-      state = SetupProfileError(e.toString());
+      state = GetConfigsError(e.toString());
     }
   }
 }
@@ -116,3 +116,12 @@ class UploadOtherPhotosError extends SetupProfileState {
   final String message;
   UploadOtherPhotosError(this.message);
 }
+
+
+class GetConfigsLoading extends SetupProfileState {}
+
+class GetConfigsSuccess extends SetupProfileState {}
+
+class GetConfigsError extends SetupProfileState {
+  final String message;
+  GetConfigsError(this.message);}

@@ -1,6 +1,6 @@
 {
 
-  "PROD_BASE_URL":"https://triberly.prodevs.io/api/v1/",
+  "PROD_BASE_URL":"https://api.triberly.app/api/v1/",
   "DEV_BASE_URL":"https://triberly.prodevs.io/api/v1/",
   "DOJAH_APP_ID":"",
   "DOJAH_PUBLIC_KEY":"",
