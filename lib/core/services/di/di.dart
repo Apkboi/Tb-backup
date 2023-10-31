@@ -33,7 +33,7 @@ final logger = Logger();
 
 Future<void> initializeApp({required Environment environment}) async {
   ///Initialize services here
-  ///
+  UrlConfig.environment = environment;
   await initFirebaseServices();
   await initCore();
   await initializeDB();
@@ -48,21 +48,6 @@ Future<void> initCore() async {
   final sessionManager = SessionManager();
   // final objectBox = await BoxManager.create();
   await sessionManager.init();
-
-  // final response = await cloudinary.unsignedUpload(
-  //     file: file.path,
-  //     uploadPreset: somePreset,
-  //     fileBytes: file.readAsBytesSync(),
-  //     resourceType: CloudinaryResourceType.image,
-  //     folder: cloudinaryCustomFolder,
-  //     fileName: 'some-name',
-  //     progressCallback: (count, total) {
-  //       print('Uploading image from file with progress: $count/$total');
-  //     });
-  //
-  // if (response.isSuccessful) {
-  //   print('Get your image from with ${response.secureUrl}');
-  // }
 
   sl.registerLazySingleton<SessionManager>(() => sessionManager);
 }
@@ -83,16 +68,16 @@ Future<void> initFirebaseServices() async {
 void signMessageUser() async {
   try {
     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: 'Maranathatolulope@gmail.com',
-      password: '123456',
+      email: UrlConfig.messageUserEmail,
+      password: UrlConfig.messageUserPassKey,
     );
 
     logger.wtf(credential.user?.email);
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
-      print('No user found for that email.');
+      logger.e('No user found for that email.');
     } else if (e.code == 'wrong-password') {
-      print('Wrong password provided for that user.');
+      logger.e('Wrong password provided for that user.');
     }
   }
 }

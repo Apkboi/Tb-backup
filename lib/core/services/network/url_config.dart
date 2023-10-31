@@ -1,7 +1,7 @@
 enum Environment { development, staging, qa, production }
 
 class UrlConfig {
-  static Environment environment = Environment.staging;
+  static Environment environment = Environment.production;
 
   static const String STAGING_URL = String.fromEnvironment('DEV_BASE_URL');
   static const String PRODUCTION_URL = String.fromEnvironment('PROD_BASE_URL');
@@ -14,6 +14,13 @@ class UrlConfig {
       String.fromEnvironment('FACE_PLUS_TEST_API_KEY');
   static const String facePlusTestApiSecret =
       String.fromEnvironment('FACE_PLUS_TEST_API_SECRET');
+
+  static const String messageUserEmail =
+      String.fromEnvironment('MESSAGE_USER_EMAIL');
+
+  static const String messageUserPassKey =
+      String.fromEnvironment('MESSAGE_USER_PASSKEY');
+
   // static const String facePlusProdApiKey =
   //     String.fromEnvironment('FACE_PLUS_PROD_API_KEY');
   // static const String facePlusProdApiSecret =
