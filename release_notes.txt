@@ -3,6 +3,7 @@
 Feature Updates
 
 - Updating user profile
+- Selfie verification upload from camera only
 - Navigiating to homepage when intrests are saved
 - Sign in Message User for Chat messages
 - Realtime Text based chat |Audio still in progress
