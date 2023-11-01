@@ -8,24 +8,6 @@ import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 import '../../../../../core/services/di/di.dart';
 import 'chat_details_page.dart';
 
-// List<MessageModel> parseMessagesFromJson(Map<String, dynamic> json) {
-//   final List<MessageModel> messagesList = [];
-//
-//   json.forEach((messageKey, messageData) {
-//     if (messageData is Map<String, dynamic>) {
-//       final messageModel = MessageModel(
-//         message: messageData['message'],
-//         isMe: messageData['isMe'],
-//         date: messageData['date'],
-//         senderId: messageData['senderId'],
-//         type: messageData['type'],
-//       );
-//       messagesList.add(messageModel);
-//     }
-//   });
-//   return messagesList;
-// }
-
 class ChatDetailsController extends StateNotifier<ChatDetailsState> {
   ChatDetailsController(this.ref) : super(ChatDetailsInitial());
 

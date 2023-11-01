@@ -198,7 +198,7 @@ class _SelfieVerificationPageState
   }
 
   Future<void> _uploadPhoto(BuildContext context) async {
-    await ImageManager().pickImageFromGallery().then((value) async {
+    await ImageManager().pickImageFromCamera().then((value) async {
       if (value != null) {
         photo.value = value;
         await _detectFace(context);
