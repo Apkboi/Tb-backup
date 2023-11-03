@@ -167,6 +167,7 @@ class _TextBoxFieldState extends State<TextBoxField> {
                   : TextView(
                       text: widget.label ?? '',
                     ),
+              alignLabelWithHint: true,
               floatingLabelStyle: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -224,9 +225,9 @@ class _TextBoxFieldState extends State<TextBoxField> {
               //   borderRadius: BorderRadius.all(Radius.circular(10.0)),
               // ),
 
-              disabledBorder: OutlineInputBorder(
+              disabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(width: 1, color: Pallets.borderGrey),
-                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
               focusedErrorBorder: const OutlineInputBorder(
                 borderSide: BorderSide(

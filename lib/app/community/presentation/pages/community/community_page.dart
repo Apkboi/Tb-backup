@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 
-import 'community_controller.dart';
 
 class CommunityPage extends ConsumerStatefulWidget {
   const CommunityPage({super.key});
@@ -28,20 +27,20 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Connections',
       ),
       body: GridView.builder(
-        padding: EdgeInsets.fromLTRB(20, 16, 20, 150),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 150),
         itemCount: 15,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 12.0,
           mainAxisSpacing: 12.0,
           childAspectRatio: .7,
         ),
         itemBuilder: (BuildContext context, int index) {
-          return ConnectionsCard();
+          return const ConnectionsCard();
         },
       ),
     );
@@ -80,7 +79,7 @@ class ConnectionsCard extends StatelessWidget {
                 child: Container(
                   height: .2.sw,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
+                    borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(15),
                     ),
                     gradient: LinearGradient(
