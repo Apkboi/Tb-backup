@@ -21,6 +21,13 @@ class PageUrl {
   ///PROFILE
   static const profile = 'profile';
   static const profileDetails = 'profileDetails';
+  static const security = 'security';
+  static const helpCenter = 'helpCenter';
+  static const reportIssue = 'reportIssue';
+  static const faq = 'faq';
+  static const referral = 'referral';
+  static const suspendAccount = 'suspendAccount';
+  static const changePassword = 'changePassword';
   static const uploadPhotos = 'uploadPhotos';
   static const setupProfileIntroPage = 'setupProfileIntroPage';
   static const setupProfilePage = 'setupProfilePage';

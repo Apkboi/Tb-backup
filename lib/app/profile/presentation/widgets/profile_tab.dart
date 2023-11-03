@@ -1,21 +1,15 @@
 import 'dart:io';
 
-import 'package:confetti/confetti.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_other_photos_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
-import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
 import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
-import 'package:triberly/core/services/theme_service/app_theme.dart';
-import 'package:triberly/core/utils/color_utils.dart';
 
-import '../pages/setup_profile/setup_profile_page.dart';
 
 class ProfileTab extends ConsumerStatefulWidget {
   const ProfileTab({super.key});
@@ -195,6 +189,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                 topLabel: true,
                 label: 'Occupation',
                 controller: occupation,
+
               ),
               TextBoxField(
                 label: 'Bio',

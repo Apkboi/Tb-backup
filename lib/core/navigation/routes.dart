@@ -16,8 +16,14 @@ import 'package:triberly/app/chat/presentation/pages/chat_details/chat_details_p
 import 'package:triberly/app/community/presentation/pages/community/community_page.dart';
 import 'package:triberly/app/home/presentation/pages/home/home_page.dart';
 import 'package:triberly/app/notifications/presentation/pages/notifications/notifications_page.dart';
+import 'package:triberly/app/profile/presentation/pages/help_center/faq_page.dart';
+import 'package:triberly/app/profile/presentation/pages/help_center/help_center_page.dart';
+import 'package:triberly/app/profile/presentation/pages/help_center/report_issue_page.dart';
 import 'package:triberly/app/profile/presentation/pages/profile/profile_page.dart';
 import 'package:triberly/app/profile/presentation/pages/profile_details/profile_details_page.dart';
+import 'package:triberly/app/profile/presentation/pages/security/change_password_page.dart';
+import 'package:triberly/app/profile/presentation/pages/security/security_page.dart';
+import 'package:triberly/app/profile/presentation/pages/security/suspend_account_page.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_intro_page.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_page.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/upload_photos_page.dart';
@@ -175,6 +181,49 @@ class CustomRoutes {
                       userId: state.uri.queryParameters[PathParam.userId] ?? '',
                     ),
                   ),
+                  GoRoute(
+                    path: 'security',
+                    name: PageUrl.security,
+                    builder: (context, state) => const SecurityPage(),
+                    routes: [
+                      GoRoute(
+                        path: 'suspendAccountPage',
+                        name: PageUrl.suspendAccount,
+                        builder: (context, state) => const SuspendAccountPage(),
+
+                      ),
+                      GoRoute(
+                        path: 'changePassword',
+                        name: PageUrl.changePassword,
+                        builder: (context, state) => const ChangePasswordPage(),
+
+                      ),
+                    ]
+
+                  ),
+
+                  GoRoute(
+                      path: 'helpCenter',
+                      name: PageUrl.helpCenter,
+                      builder: (context, state) => const HelpCenterPage(),
+                      routes: [
+                        GoRoute(
+                          path: 'reportIssue',
+                          name: PageUrl.reportIssue,
+                          builder: (context, state) => const ReportIssuePage(),
+
+                        ),
+                        GoRoute(
+                          path: 'faq',
+                          name: PageUrl.faq,
+                          builder: (context, state) => const FaqPage(),
+
+                        ),
+                      ]
+
+                  ),
+
+
                   GoRoute(
                     path: 'setupProfileIntroPage',
                     name: PageUrl.setupProfileIntroPage,

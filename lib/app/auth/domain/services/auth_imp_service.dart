@@ -1,9 +1,5 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:triberly/app/auth/data/datasources/user_dao.dart';
 import 'package:triberly/app/auth/domain/models/dtos/forgot_password_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/get_profile.dart';
 import 'package:triberly/app/auth/domain/models/dtos/oauth_req_dto.dart';
@@ -15,7 +11,6 @@ import 'package:triberly/app/auth/domain/models/dtos/sign_up_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/verify_otp_req_dto.dart';
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/core/services/_services.dart';
-
 import '../models/dtos/forgot_password_res.dart';
 import '../models/dtos/verify_otp_res_dto.dart';
 import 'auth_service.dart';
@@ -31,6 +26,7 @@ class AuthImpService implements AccountService {
     clientId:
         '297535846989-kpnpf9p2p5a57cfstcg9dco26ursr1u6.apps.googleusercontent.com',
   );
+
   @override
   Future<void> call() {
     // TODO: implement call

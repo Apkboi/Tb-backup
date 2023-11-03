@@ -6,7 +6,6 @@ import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
 
-import 'base_controller.dart';
 
 List<int> _list = [];
 
@@ -22,6 +21,7 @@ class BasePage extends ConsumerStatefulWidget {
   final int passedIndex;
 
   final StatefulNavigationShell navigationShell;
+
   @override
   ConsumerState createState() => _BasePageState();
 }

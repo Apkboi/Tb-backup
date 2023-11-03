@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/constants/pallets.dart';
 
-import 'onboarding_controller.dart';
 
 class OnBoardingPage extends ConsumerStatefulWidget {
   const OnBoardingPage({super.key});
@@ -108,7 +107,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                     children: List.generate(
                       images.length,
                       (index) => AnimatedContainer(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         width: currentIndex == index ? 10 : 7,
                         height: currentIndex == index ? 10 : 7,
                         margin: const EdgeInsets.symmetric(horizontal: 3),

@@ -1,17 +1,12 @@
-import 'dart:math';
 
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
-import 'package:triberly/app/base/presentation/pages/base/base_page.dart';
 import 'package:triberly/app/home/presentation/pages/location/location_controller.dart';
-import 'package:triberly/app/home/presentation/widgets/filter_widget.dart';
 import 'package:triberly/app/profile/domain/models/dtos/search_connections_req_dto.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/core/_core.dart';
-import 'package:triberly/generated/l10n.dart';
 
 import '../../widgets/_home_widgets.dart';
 import 'home_controller.dart';
@@ -52,13 +47,13 @@ class _HomePageState extends ConsumerState<HomePage>
 
   List<UserDto> randomUsers = [];
   List<UserDto> latLngUsers = [];
+
   @override
   Widget build(BuildContext context) {
     ///
     final state = ref.watch(homeProvider);
 
     ///
-
     ref.listen(setupProfileProvider, (previous, next) {
       if (next is GetConfigsSuccess) {
         logger.e('SetupProfileSuccess');

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +131,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
           ];
 
           return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
                 Row(
