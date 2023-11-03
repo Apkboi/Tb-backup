@@ -108,10 +108,6 @@ class SessionManager {
     await HiveBoxes.clearAllBox();
     try {
       DefaultCacheManager().emptyCache();
-      final appDir = await getApplicationSupportDirectory();
-      if (appDir.existsSync()) {
-        appDir.deleteSync(recursive: true);
-      }
     } catch (e) {
       logger.e(e);
     }

@@ -47,7 +47,7 @@ class Helpers {
             sin(dLon / 2);
     num c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-    return earthRadius * c;
+    return (earthRadius * c).floor();
   }
 
   static launchUrl(String? data) async {

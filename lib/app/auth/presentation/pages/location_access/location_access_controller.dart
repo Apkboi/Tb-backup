@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:triberly/core/services/location_service/location_service.dart';
 
 class LocationAccessController extends StateNotifier<LocationAccessState> {
@@ -7,15 +8,17 @@ class LocationAccessController extends StateNotifier<LocationAccessState> {
   final StateNotifierProviderRef ref;
   final LocationService _locationService;
 
-  Future<void> getUserLocation() async {
+  Future<Position?> getUserLocation() async {
     try {
       state = LocationAccessLoading();
 
-      await LocationService().getCurrentPosition();
+      final response = await _locationService.getCurrentPosition();
 
       state = LocationAccessSuccess();
+      return response;
     } catch (e) {
       state = LocationAccessError(e.toString());
+      return null;
     }
   }
 }

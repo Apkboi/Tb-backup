@@ -87,7 +87,7 @@ class UserDto {
     latitude = json['latitude'];
     longitude = json['longitude'];
   }
-  num? id;
+  dynamic? id;
   String? firstName;
   String? middleName;
   String? lastName;
@@ -244,6 +244,11 @@ class UserDto {
     map['latitude'] = latitude;
     map['longitude'] = longitude;
     return map;
+  }
+
+  @override
+  String toString() {
+    return 'UserDto{id: $id, firstName: $firstName, middleName: $middleName, lastName: $lastName, email: $email, phoneNo: $phoneNo, gender: $gender, username: $username, refCode: $refCode, emailVerification: $emailVerification, selfieVerification: $selfieVerification, dob: $dob, profession: $profession, relationshipStatus: $relationshipStatus, intent: $intent, homeAddress: $homeAddress, originCityId: $originCityId, originStateId: $originStateId, originCountryId: $originCountryId, residenceCountryId: $residenceCountryId, tribes: $tribes, education: $education, familyStatus: $familyStatus, otherLanguages: $otherLanguages, bio: $bio, interests: $interests, religion: $religion, haveKids: $haveKids, instagramLink: $instagramLink, tiktokLink: $tiktokLink, linkedinLink: $linkedinLink, profileImage: $profileImage, otherImages: $otherImages, emailVerified: $emailVerified, status: $status, latitude: $latitude, longitude: $longitude}';
   }
 }
 

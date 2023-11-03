@@ -84,9 +84,9 @@ void signMessageUser() async {
 
 Future<void> initializeDB() async {
   await Hive.initFlutter();
-  await HiveBoxes.openAllBox();
-
   await AudioDaoImpDatasource().init();
+
+  await HiveBoxes.openAllBox();
 }
 
 Future<void> initializeCountriesList() async {

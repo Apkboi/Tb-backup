@@ -36,8 +36,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     email.text = widget.email ?? '';
 
     if (kDebugMode) {
-      email.text = 'qw@mailinator.com';
-      password.text = 'password';
+      email.text = 'ma@mailinator.com';
+      password.text = 'Password';
     }
   }
 

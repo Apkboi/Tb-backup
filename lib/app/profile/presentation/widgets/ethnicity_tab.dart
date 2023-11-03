@@ -31,10 +31,16 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
 
-    Future.delayed(Duration.zero, () {
-      prefillFields();
-    });
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+    // Future.delayed(Duration.zero, () {
+    prefillFields();
+    // });
   }
 
   @override

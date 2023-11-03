@@ -1,7 +1,7 @@
 enum Environment { development, staging, qa, production }
 
 class UrlConfig {
-  static Environment environment = Environment.production;
+  static Environment environment = Environment.staging;
 
   static const String STAGING_URL = String.fromEnvironment('DEV_BASE_URL');
   static const String PRODUCTION_URL = String.fromEnvironment('PROD_BASE_URL');

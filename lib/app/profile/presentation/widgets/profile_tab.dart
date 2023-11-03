@@ -56,17 +56,16 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
     referral = TextEditingController();
     phoneNumber = TextEditingController();
     otherImages = [null, null, null, null];
-    // _prefillTab();
-    // Future.delayed(Duration.zero, () {
-    // });
   }
 
   @override
-  void didUpdateWidget(covariant ProfileTab oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    _prefillTab();
-    // setState(() {});
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+    Future.delayed(Duration.zero, () {
+      _prefillTab();
+    });
   }
 
   _prefillTab() {
@@ -80,8 +79,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
     bio.text = userProfile?.bio ?? '';
     gender.text = userProfile?.gender ?? '';
     referral.text = userProfile?.refCode ?? '';
-    phoneNumber.text = userProfile?.phoneNo ?? '';
-
+    phoneNumber.text = userProfile?.phoneNo?.replacePlus234() ?? '';
     otherImages = List.generate(userProfile?.otherImages?.length ?? 0,
         (index) => userProfile!.otherImages?[index].url);
 

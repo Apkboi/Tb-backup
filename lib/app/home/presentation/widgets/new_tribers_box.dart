@@ -37,7 +37,7 @@ class NewTribersBox extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.only(right: 24.w),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         width: 195,
         decoration: BoxDecoration(
           color: Pallets.primaryLight,
@@ -47,7 +47,7 @@ class NewTribersBox extends StatelessWidget {
           children: [
             Stack(
               children: [
-                ImageWidget(imageUrl: Assets.svgsRing),
+                const ImageWidget(imageUrl: Assets.svgsRing),
                 Positioned.fill(
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -75,12 +75,18 @@ class NewTribersBox extends StatelessWidget {
                   7.5.verticalSpace,
                   Row(
                     children: [
-                      ImageWidget(imageUrl: Assets.svgsRouting),
+                      const ImageWidget(imageUrl: Assets.svgsRouting),
                       5.horizontalSpace,
                       Consumer(
                         builder: (context, ref, child) {
                           final location =
                               ref.watch(locationProvider.notifier).userLocation;
+
+                          logger
+                              .e("${userDto?.longitude},${userDto?.latitude}");
+                          logger.e(
+                              "${location?.longitude},${location?.latitude}");
+
                           return Expanded(
                             child: TextView(
                               text:

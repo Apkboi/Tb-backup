@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/auth/presentation/pages/sign_up/sign_up_controller.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 
@@ -54,20 +56,37 @@ class _LocationAccessPageState extends ConsumerState<LocationAccessPage> {
                 ),
               ],
             ),
-            ImageWidget(imageUrl: Assets.svgsLocationAccess),
+            Center(child: ImageWidget(imageUrl: Assets.svgsLocationAccess)),
             Padding(
               padding: const EdgeInsets.only(bottom: 55.0),
               child: ButtonWidget(
                 title: 'Enable location access',
                 onTap: () async {
+                  final userEmail =
+                      ref.read(signupProvider.notifier).getUserData.$1;
+
+                  CustomDialogs.showLoading(context);
+
                   await ref
                       .read(locationAccessProvider.notifier)
                       .getUserLocation()
-                      .then((value) {
-                    /// Pushing New Page using Records
-                    context.goNamed(PageUrl.signIn, queryParameters: {
-                      PathParam.email:
-                          ref.read(signupProvider.notifier).getUserData.$1,
+                      .then((value1) async {
+                    final data = UpdateProfileReqDto(
+                      latitude: value1?.latitude,
+                      longitude: value1?.longitude,
+                    );
+                    await ref
+                        .read(setupProfileProvider.notifier)
+                        .updateProfile(data)
+                        .then((value) {
+                      CustomDialogs.hideLoading(context);
+
+                      CustomDialogs.showToast('Please login to continue');
+
+                      /// Pushing New Page
+                      context.goNamed(PageUrl.signIn, queryParameters: {
+                        PathParam.email: userEmail,
+                      });
                     });
 
                     ///

@@ -21,7 +21,7 @@ class UserImpDao implements UserDao {
 
   static String userStorageKey = 'user';
 
-  final Box<dynamic> _box = Hive.box(HiveBoxes.userBox);
+  Box<dynamic> _box = Hive.box(HiveBoxes.userBox);
 
   UserDto? get user {
     return getUser();
@@ -34,7 +34,7 @@ class UserImpDao implements UserDao {
     if (user != null) {
       await _box.clear();
 
-      final map = user.toJson();
+      final map = jsonEncode(user.toJson());
 
       await _box.put(userStorageKey, map);
     }
@@ -43,7 +43,7 @@ class UserImpDao implements UserDao {
   UserDto? getUser() {
     final userMap = _box.get(userStorageKey);
     if (userMap != null) {
-      return UserDto.fromJson(userMap);
+      return UserDto.fromJson(jsonDecode(userMap));
     }
     return null;
   }

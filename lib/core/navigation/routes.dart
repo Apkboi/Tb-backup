@@ -34,7 +34,7 @@ final _shellNavigatorDKey = GlobalKey<NavigatorState>(debugLabel: 'shellD');
 
 class CustomRoutes {
   static final goRouter = GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/locationAccessPage',
     // initialLocation: '/profile/setupProfileIntroPage/setupProfilePage',
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
