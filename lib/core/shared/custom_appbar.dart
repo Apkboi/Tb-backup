@@ -54,7 +54,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             TextView(
               text: title,
               color: Pallets.maybeBlack,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               fontSize: 20,
             ),
         actions: trailing != null ? [trailing!] : null,

@@ -162,9 +162,11 @@ class _TextBoxFieldState extends State<TextBoxField> {
             cursorWidth: 1.5,
             decoration: InputDecoration(
               filled: true,
-              label: TextView(
-                text: widget.label ?? '',
-              ),
+              label: widget.topLabel
+                  ? null
+                  : TextView(
+                      text: widget.label ?? '',
+                    ),
               floatingLabelStyle: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,

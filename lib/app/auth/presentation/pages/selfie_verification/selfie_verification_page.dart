@@ -104,7 +104,7 @@ class _SelfieVerificationPageState
                                   imageType: ImageWidgetType.file,
                                   width: 1.sw,
                                   height: 250,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 );
                               }
                             }),
@@ -198,7 +198,9 @@ class _SelfieVerificationPageState
   }
 
   Future<void> _uploadPhoto(BuildContext context) async {
-    await ImageManager().pickImageFromCamera().then((value) async {
+    await ImageManager()
+        .pickImageFromCamera(shouldCrop: true)
+        .then((value) async {
       if (value != null) {
         photo.value = value;
         await _detectFace(context);

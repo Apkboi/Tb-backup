@@ -41,7 +41,7 @@ class UrlConfig {
   ///CONFIGS
   ///
   static const String getConfigs = '/general/configs';
-  static const String getCountries = '/location/countries';
+  static const String getCountries = '/location/countries?per_page=300';
 
   ///CONNECTIONS
   static const String searchConnections = '/general/connections/search';

@@ -99,12 +99,13 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                     text:
                         'Enter the verification code sent to \n${widget.email ?? widget.phoneNumber}',
                     align: TextAlign.center,
-                    fontWeight: FontWeight.w500,
-                    style: ref
-                        .watch(themeProvider)
-                        .selectedTheme
-                        .textTheme
-                        .bodyMedium,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    // style: ref
+                    //     .watch(themeProvider)
+                    //     .selectedTheme
+                    //     .textTheme
+                    //     .bodyMedium,
                   ),
                   24.verticalSpace,
                   Form(
@@ -128,6 +129,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                               .selectedTextTheme
                               .bodyMedium
                               ?.copyWith(
+                                fontWeight: FontWeight.w600,
                                 color: Pallets.maybeBlack,
                               ),
                           children: [
@@ -140,6 +142,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                                   .selectedTextTheme
                                   .bodyMedium
                                   ?.copyWith(
+                                    fontWeight: FontWeight.w600,
                                     color: Pallets.primary,
                                   ),
                             ),
@@ -154,7 +157,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                       const TextView(
                         text: 'Request a new code in ',
                         fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         color: Pallets.grey,
                       ),
                       CustomCountDown(
@@ -163,6 +166,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                             .selectedTextTheme
                             .bodySmall
                             ?.copyWith(
+                              fontWeight: FontWeight.w600,
                               color: Pallets.grey,
                             ),
                       ),

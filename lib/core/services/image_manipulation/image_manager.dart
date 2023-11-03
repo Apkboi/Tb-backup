@@ -94,7 +94,8 @@ class ImageManager {
     }
   }
 
-  Future<File?> showPhotoSourceDialog(BuildContext context) {
+  Future<File?> showPhotoSourceDialog(BuildContext context,
+      {bool? shouldCompress, bool? shouldCrop}) {
     return showModalBottomSheet<File?>(
       context: context,
       shape: RoundedRectangleBorder(
@@ -115,7 +116,7 @@ class ImageManager {
                 title: 'Open Camera',
                 onTap: () async {
                   try {
-                    await pickImageFromCamera()
+                    await pickImageFromCamera(shouldCrop: shouldCrop)
                         .then((value) => Navigator.pop(context, value));
                   } catch (e) {
                     logger.e(e.toString());
@@ -128,7 +129,7 @@ class ImageManager {
                 isInverted: true,
                 onTap: () async {
                   try {
-                    await pickImageFromGallery()
+                    await pickImageFromGallery(shouldCrop: shouldCrop)
                         .then((value) => Navigator.pop(context, value));
                   } catch (e) {
                     logger.e(e.toString());

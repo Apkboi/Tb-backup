@@ -68,7 +68,7 @@ class _UploadProfilePhotoPageState
                       imageType: ImageWidgetType.file,
                       width: 1.sw,
                       height: 250,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                 ],
               ),
@@ -126,7 +126,8 @@ class _UploadProfilePhotoPageState
   }
 
   Future<void> _uploadPhoto(BuildContext context) async {
-    photo = await ImageManager().showPhotoSourceDialog(context);
+    photo =
+        await ImageManager().showPhotoSourceDialog(context, shouldCrop: true);
 
     setState(() {});
   }
@@ -172,7 +173,7 @@ class _EmptyPhotoCardState extends State<EmptyPhotoCard> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                 child: TextView(
-                  text: 'Supported format: .jpeg,.png,.jpg less than 5MB',
+                  text: 'Supported format: .jpeg, png ,jpg less than 5MB',
                   color: Pallets.grey,
                   fontSize: 14,
                   align: TextAlign.center,
