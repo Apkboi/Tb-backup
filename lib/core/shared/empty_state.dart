@@ -4,10 +4,12 @@ import '../_core.dart';
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
+    this.title,
     this.subtitle,
     required this.imageUrl,
   });
 
+  final String? title;
   final String? subtitle;
   final String imageUrl;
 
@@ -16,6 +18,7 @@ class EmptyState extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           24.verticalSpace,
           Row(
@@ -25,8 +28,8 @@ class EmptyState extends StatelessWidget {
             ],
           ),
           24.verticalSpace,
-          const TextView(
-            text: 'No activity to show !',
+          TextView(
+            text: title ?? 'No activity to show !',
             fontWeight: FontWeight.w700,
             fontSize: 20,
           ),

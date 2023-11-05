@@ -42,7 +42,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
           PageView.builder(
             controller: pageController,
             itemCount: images.length,
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             onPageChanged: (index) {
               setState(() {
                 currentIndex = index;
@@ -61,7 +61,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                       ),
                     ),
                   ),
-                  Positioned.fill(
+                  const Positioned.fill(
                     child: ImageWidget(
                       imageUrl: Assets.svgsBlurPink,
                       fit: BoxFit.cover,
@@ -77,7 +77,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
-                          stops: [0.0, 0.6, 0.7, 0.72, 0.9],
+                          stops: const [0.0, 0.6, 0.7, 0.72, 0.9],
                           // tileMode: TileMode.decal,
                           colors: [
                             Pallets.white,
@@ -94,10 +94,21 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
               );
             },
           ),
+
+
+
+
+
+
+
+
+
+
           Positioned(
             left: 0,
             right: 0,
-            top: kToolbarHeight + 10,
+            bottom: kToolbarHeight + 100,
+
             child: Column(
               children: [
                 SizedBox(

@@ -8,6 +8,7 @@ class Assets {
   static const String pngsLogo2 = 'assets/images/pngs/logo2.png';
   static const String pngsLogoMain = 'assets/images/pngs/logo_main.png';
   static const String pngsMale = 'assets/images/pngs/male.png';
+  static const String pngsChain = 'assets/images/pngs/chain.png';
   static const String pngsOnboarding1 = 'assets/images/pngs/onboarding1.png';
   static const String pngsOnboarding2 = 'assets/images/pngs/onboarding2.png';
   static const String pngsSplashMain = 'assets/images/pngs/splash_main.png';
@@ -23,6 +24,7 @@ class Assets {
   static const String svgsCard = 'assets/images/svgs/card.svg';
   static const String svgsChat = 'assets/images/svgs/chat.svg';
   static const String svgsChatSelected = 'assets/images/svgs/chat_selected.svg';
+  static const String svgsChain = 'assets/images/svgs/chain.svg';
   static const String svgsConfetti = 'assets/images/svgs/confetti.png';
   static const String svgsCrown = 'assets/images/svgs/crown.svg';
   static const String svgsClipboard = 'assets/images/svgs/crown.svg';

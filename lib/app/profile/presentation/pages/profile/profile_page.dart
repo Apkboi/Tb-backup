@@ -6,6 +6,7 @@ import 'package:triberly/app/profile/domain/models/dtos/profile_option_item_data
 import 'package:triberly/app/profile/presentation/widgets/profile_option_item.dart';
 import 'package:triberly/app/profile/presentation/widgets/user_image_with_status_widget.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/services/data/session_manager.dart';
 
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -158,7 +159,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   child: TextButton(
                     style: TextButton.styleFrom(
                         backgroundColor: Colors.transparent),
-                    onPressed: () {},
+                    onPressed: () {
+                      SessionManager.instance.logOut();
+                      context.goNamed(PageUrl.signIn);
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

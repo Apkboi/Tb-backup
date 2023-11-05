@@ -1,8 +1,9 @@
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:triberly/app/chat/presentation/pages/chat/chat_controller.dart';
+import 'package:triberly/app/community/presentation/widgets/connection_request_dialog.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/shared/left_right_widget.dart';
@@ -80,8 +81,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
       if (next is ChatSuccess) {
         context.pop();
 
-        final userDetails =
-            ref.watch(profileDetailsProvider.notifier).userDetails;
+        final userDetails = ref.watch(profileDetailsProvider.notifier).userDetails;
         final chatId = ref.watch(chatProvider.notifier).initiatedChat?.id;
         context.pushNamed(
           PageUrl.chatDetails,
@@ -119,7 +119,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
               'Relationship Status',
               '${userDetails?.relationshipStatus ?? '-'}'
             ),
-            ('Looking for', 'N/A'),
+            ('Looking for','${userDetails?.relationshipStatus ?? '-'}' ),
             ('Origin Country', userCountry),
             ('Other Nationality', '-'),
             ('Mother Tongue', '${userDetails?.tribes ?? '-'}'),
@@ -142,7 +142,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                       onTap: () {
                         context.pop();
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: Pallets.maybeBlack,
                         opticalSize: 24,
@@ -219,7 +219,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ShadowCircleContainer(
+                    const ShadowCircleContainer(
                       child: ImageWidget(
                         imageUrl: Assets.svgsHeart,
                       ),
@@ -227,17 +227,19 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     ShadowCircleContainer(
                       size: 80,
                       color: Pallets.primary,
-                      child: ImageWidget(
+                      child: const ImageWidget(
                         imageUrl: Assets.svgsLink,
                         color: Pallets.white,
                       ),
                       onTap: () {
-                        ref
-                            .read(chatProvider.notifier)
-                            .initiateChat(widget.userId);
+                        CustomDialogs.showCustomDialog(
+                            ConnectionRequestDialog(userDetails!), context);
+                        // ref
+                        //     .read(chatProvider.notifier)
+                        //     .initiateChat(widget.userId);
                       },
                     ),
-                    ShadowCircleContainer(
+                    const ShadowCircleContainer(
                       child: ImageWidget(
                         imageUrl: Assets.svgsBookmark,
                       ),
@@ -252,7 +254,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
 
                   return Column(
                     children: [
-                      Row(
+                      const Row(
                         children: [
                           TextView(
                             text: 'Photos',
@@ -290,6 +292,8 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                       value: e.$2.join(', '),
                     );
                   }
+                  // logger.log(Level.debug, "${e.$1}${e.$2}");
+                  logger.log(Level.debug, "${e.runtimeType}${e.$2}");
                   return LeftRightWidget(
                     title: e.$1,
                     value: e.$2,

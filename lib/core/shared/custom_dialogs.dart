@@ -129,7 +129,7 @@ class CustomDialogs {
       context: context,
       builder: (BuildContext context) => dialog,
       barrierDismissible: true,
-      barrierColor: Pallets.primary.withOpacity(0.1),
+      barrierColor: Pallets.black.withOpacity(0.1),
     );
   }
 

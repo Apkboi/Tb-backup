@@ -31,6 +31,7 @@ class UrlConfig {
 
   static const String login = '/auth/login';
   static const String me = '/auth/me';
+
   static String getUser(String userId) => '/auth/user/$userId';
   static const String forgotPassword = '/auth/forgot-password';
   static const String verifyOtp = '/auth/verify-otp';

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/locale_service/local_notifier.dart';
@@ -16,7 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   HttpOverrides.global = CustomHttpOverrides();
-  await initializeApp(environment: Environment.production);
+  await initializeApp(environment: Environment.staging);
   runApp(const ProviderScope(child: MyApp()));
 }
 

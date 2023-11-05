@@ -37,12 +37,12 @@ class _BasePageState extends ConsumerState<BasePage> {
   }
 
   void _goBranch(int index) {
-    if (index != 1) {
+    // if (index != 1) {
       widget.navigationShell.goBranch(
         index,
         initialLocation: index == widget.navigationShell.currentIndex,
       );
-    }
+    // }
   }
 
   @override

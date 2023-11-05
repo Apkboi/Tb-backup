@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/community/dormain/models/dtos/get_connections_res_dto.dart';
+import 'package:triberly/app/community/presentation/pages/community/community_controller.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
-
 
 class CommunityPage extends ConsumerStatefulWidget {
   const CommunityPage({super.key});
@@ -22,6 +23,12 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
     super.dispose();
     dialogKey.currentState?.dispose();
   }
+  
+  @override
+  void initState() {
+   _getConnections();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,26 +37,62 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
       appBar: const CustomAppBar(
         title: 'Connections',
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 150),
-        itemCount: 15,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
-          childAspectRatio: .7,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Builder(builder: (context) {
+                final state = ref.watch(communityProvider);
+
+                if (state is ConnectionsLoading) {
+                  return CustomDialogs.getLoading(size: 50);
+                }
+
+                final connectionsList =
+                    ref.watch(communityProvider.notifier).userConnections?.data;
+
+                return (connectionsList?.isNotEmpty ?? false)
+                    ? GridView.builder(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 150),
+                        itemCount: 15,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12.0,
+                          mainAxisSpacing: 12.0,
+                          childAspectRatio: .7,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return  ConnectionsCard(connection: connectionsList![index],);
+                        },
+                      )
+                    : const Center(
+                        child: EmptyState(
+                        imageUrl: "imageUrl",
+                        title: "No connections to show",
+                        subtitle:
+                            "You don’t have any connections yet. Once you connect with someone it will show here.",
+                      ));
+              }),
+            ),
+          ],
         ),
-        itemBuilder: (BuildContext context, int index) {
-          return const ConnectionsCard();
-        },
       ),
     );
+  }
+
+  void _getConnections() {
+
+      Future.delayed(Duration.zero, () {
+        ref.read(communityProvider.notifier).getConnections();
+      });
+    
   }
 }
 
 class ConnectionsCard extends StatelessWidget {
+  final UserConnection connection;
   const ConnectionsCard({
-    super.key,
+    super.key, required this.connection,
   });
 
   @override

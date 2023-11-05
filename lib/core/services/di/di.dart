@@ -1,4 +1,3 @@
-import 'package:cloudinary/cloudinary.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -7,18 +6,16 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:logger/logger.dart';
-import 'package:triberly/app/auth/data/datasources/user_dao.dart';
 import 'package:triberly/app/auth/domain/services/account_imp_service.dart';
 import 'package:triberly/app/auth/domain/services/auth_imp_service.dart';
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/app/chat/domain/services/chat_imp_service.dart';
 import 'package:triberly/app/chat/external/datasources/audio_dao_imp_datasource.dart';
-import 'package:triberly/core/services/data/hive/hive_store.dart';
+import 'package:triberly/app/community/dormain/services/connection_imp_service.dart';
 import 'package:triberly/core/services/firebase/crashlytics.dart';
 import 'package:triberly/core/services/location_service/location_service.dart';
 import 'package:triberly/firebase_options.dart';
 
-import '../../_core.dart';
 import '../data/hive/hive_manager.dart';
 import '../data/session_manager.dart';
 import '../firebase/notifiactions.dart';
@@ -105,4 +102,5 @@ Future<void> initServices() async {
   sl.registerLazySingleton<AuthImpService>(() => AuthImpService(sl()));
   sl.registerLazySingleton<ChatImpService>(() => ChatImpService(sl()));
   sl.registerLazySingleton<AccountImpService>(() => AccountImpService(sl()));
+  sl.registerLazySingleton<ConnectionImpService>(() => ConnectionImpService(sl()));
 }

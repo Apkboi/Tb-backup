@@ -1,18 +1,14 @@
-import 'package:collection/collection.dart';
-import 'package:confetti/confetti.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/config_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/countries_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
-import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
-import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
+
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
-import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'package:triberly/core/shared/custom_type_drop_down_search.dart';
-import 'package:triberly/core/utils/color_utils.dart';
 
 class EthnicityTab extends ConsumerStatefulWidget {
   const EthnicityTab({super.key});
@@ -59,7 +55,7 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
     // townshipCtrl.text = userProfile?. ?? '';
     // motherTongue.text = userProfile?. ?? '';
 
-    _tribeId = num.tryParse(userProfile?.tribes);
+    _tribeId = num.tryParse(userProfile?.tribes ?? "0");
     // _tribeId = userProfile?.tribes;
     _residenceCountryId = userProfile?.residenceCountryId?.id;
     _originalCountry = userProfile?.originCountryId['id'];
