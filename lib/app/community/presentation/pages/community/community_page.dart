@@ -146,7 +146,7 @@ class ConnectionsCard extends StatelessWidget {
                   children: [
                     RichText(
                       text: TextSpan(
-                          text: "Martins ,",
+                          text: "${connection.firstName},",
                           style: ref
                               .read(themeProvider)
                               .selectedTextTheme
@@ -174,12 +174,12 @@ class ConnectionsCard extends StatelessWidget {
                     10.verticalSpace,
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.circle,
                           size: 7,
                         ),
                         7.horizontalSpace,
-                        TextView(
+                        const TextView(
                           text: 'Last seen 4h ago',
                           fontSize: 12,
                           fontWeight: FontWeight.w400,

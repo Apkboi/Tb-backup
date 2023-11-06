@@ -86,8 +86,10 @@ class ConnectionRequestDialog extends ConsumerWidget {
   void _listenToConnectionStates(BuildContext context, WidgetRef ref) {
     ref.listen(communityProvider, (previous, next) {
       if (next is SaveConnectionSuccess) {
-        CustomDialogs.showFlushBar(context, 'Connection request sent.');
+
+        CustomDialogs.showToast( 'Connection request sent.',);
         Navigator.pop(context);
+
       }
       if (next is SaveConnectionError) {
         CustomDialogs.showFlushBar(context, next.message,
