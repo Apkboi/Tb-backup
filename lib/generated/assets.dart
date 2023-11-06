@@ -11,6 +11,7 @@ class Assets {
   static const String pngsChain = 'assets/images/pngs/chain.png';
   static const String pngsOnboarding1 = 'assets/images/pngs/onboarding1.png';
   static const String pngsOnboarding2 = 'assets/images/pngs/onboarding2.png';
+  static const String pngsOnboardingBg = 'assets/images/pngs/onboarding_bg.png';
   static const String pngsSplashMain = 'assets/images/pngs/splash_main.png';
   static const String svgsAddPhotos = 'assets/images/svgs/add_photos.svg';
   static const String svgsApple = 'assets/images/svgs/apple.svg';

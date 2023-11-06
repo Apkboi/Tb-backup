@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:triberly/app/auth/domain/models/onboarding_data.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/constants/pallets.dart';
-
 
 class OnBoardingPage extends ConsumerStatefulWidget {
   const OnBoardingPage({super.key});
@@ -28,6 +29,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
     Assets.pngsOnboarding1,
     Assets.pngsOnboarding2,
   ];
+
   final List<String> texts = [
     'Find people near you and connect as travel buddies, business partners, romantic interests, language swappers or friends.',
     'We speak your language, & chances are, so do millions of others',
@@ -39,181 +41,182 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
       key: scaffoldKey,
       body: Stack(
         children: [
-          PageView.builder(
-            controller: pageController,
-            itemCount: images.length,
-            physics: const ClampingScrollPhysics(),
-            onPageChanged: (index) {
-              setState(() {
-                currentIndex = index;
-              });
-            },
-            itemBuilder: (context, index) {
-              return Stack(
-                children: [
-                  Container(
-                    height: 1.sh,
-                    width: 1.sw,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(images[currentIndex]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const Positioned.fill(
-                    child: ImageWidget(
-                      imageUrl: Assets.svgsBlurPink,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: .75.sh,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          stops: const [0.0, 0.6, 0.7, 0.72, 0.9],
-                          // tileMode: TileMode.decal,
-                          colors: [
-                            Pallets.white,
-                            Pallets.white,
-                            Pallets.white.withOpacity(0.5),
-                            Pallets.white.withOpacity(0.5),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-
-
-
-
-
-
-
-
-
-
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: kToolbarHeight + 100,
-
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      images.length,
-                      (index) => AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        width: currentIndex == index ? 10 : 7,
-                        height: currentIndex == index ? 10 : 7,
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(6),
-                          ),
-                          color: currentIndex == index
-                              ? Pallets.primary
-                              : Pallets.grey,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          Container(
+            height: double.infinity,
+            width: 1.sw,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xffBD0077),
+                    Color(0xff7C0965),
+                    Color(0xff470239),
+                    Color(0xff170112),
+                  ]),
             ),
           ),
-          if (currentIndex != images.length - 1)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ImageWidget(
+                imageUrl: Assets.pngsOnboardingBg,
+                height: 0.45.sh,
+                // fit: BoxFit.fitHeight,
+                width: double.infinity,
+              ),
+              50.verticalSpace,
+              Expanded(
+                child: PageView.builder(
+                  controller: pageController,
+                  itemCount: OnboardingData.data.length,
+                  physics: const ClampingScrollPhysics(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      currentIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextView(
+                            text: OnboardingData.data[currentIndex].title,
+                            fontSize: 36,
+                            fontWeight: FontWeight.w700,
+                            color: Pallets.onboardingTextWhite,
+                          ),
+                          16.verticalSpace,
+                          TextView(
+                            text: OnboardingData.data[currentIndex].description,
+                            fontSize: 16,
+                            lineHeight: 1.7,
+                            color: Pallets.onboardingTextWhite,
+                          ),
+
+
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 60,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          OnboardingData.data.length,
+                              (index) => AnimatedContainer(
+                            duration: const Duration(milliseconds: 400),
+                            width: currentIndex == index ? 10 : 7,
+                            height: currentIndex == index ? 10 : 7,
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(6),
+                              ),
+                              color: currentIndex == index
+                                  ? Pallets.white
+                                  : Pallets.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                alignment: Alignment.bottomCenter,
+                child:   (currentIndex == images.length)
+                  ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+
+                    35.verticalSpace,
+                    ButtonWidget(
+                      title: 'Create an Account',
+                      buttonColor: Pallets.white,
+                      textColor: Pallets.primary,
+                      onTap: () {
+                        context.pushNamed(PageUrl.signUp);
+                      },
+                    ),
+                    16.verticalSpace,
+                    InkWell(
+                      onTap: (){
+                        context.pushNamed(PageUrl.signIn);
+
+                      },
+                      child: RichText(text:  TextSpan(style:  GoogleFonts.plusJakartaSans(),children: const [
+                        TextSpan(text: "Already have account?",style: TextStyle(fontWeight: FontWeight.w400)),
+                        TextSpan(text: "Login",style: TextStyle(fontWeight: FontWeight.w700)),
+                      ])),
+                    )
+                  ],
+                ),
+              )
+                  : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    35.verticalSpace,
+                    ButtonWidget(
+                      title: 'Next',
+                      buttonColor: Pallets.white,
+                      textColor: Pallets.primary,
+                      onTap: () {
+                        pageController.nextPage(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.linearToEaseOut,
+                        );
+                      },
+                    ),
+                    30.verticalSpace,
+                  ],
+                ),
+              ),),
+
+              45.verticalSpace,
+            ],
+          ),
+          if (currentIndex != images.length)
             Positioned(
               right: 25,
               top: kToolbarHeight,
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
-                child: TextView(
-                  text: 'Skip',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Pallets.white,
-                  onTap: () {
+                child: TextButton(
+                  style: TextButton.styleFrom(backgroundColor: Pallets.white,foregroundColor: Pallets.primary,shape: StadiumBorder()),
+                  onPressed: () {
                     pageController.animateToPage(images.length - 1,
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         curve: Curves.easeInOut);
                   },
+                  child: const TextView(
+                    text: 'Skip',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+
+
+
+                  ),
                 ),
               ),
             ),
-          Positioned(
-            right: 0,
-            left: 0,
-            bottom: 45,
-            child: (currentIndex == images.length - 1)
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      children: [
-                        TextView(
-                          text: texts[currentIndex],
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          lineHeight: 1.5,
-                        ),
-                        56.verticalSpace,
-                        ButtonWidget(
-                          title: 'Create an Account',
-                          onTap: () {
-                            context.pushNamed(PageUrl.signUp);
-                          },
-                        ),
-                        24.verticalSpace,
-                        ButtonWidget(
-                          title: 'Log in ',
-                          isInverted: true,
-                          onTap: () {
-                            context.pushNamed(PageUrl.signIn);
-                          },
-                        ),
-                      ],
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      children: [
-                        TextView(
-                          text: texts[currentIndex],
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          lineHeight: 1.5,
-                        ),
-                        56.verticalSpace,
-                        ButtonWidget(
-                          title: 'Next',
-                          onTap: () {
-                            pageController.nextPage(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.linearToEaseOut,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
         ],
       ),
     );

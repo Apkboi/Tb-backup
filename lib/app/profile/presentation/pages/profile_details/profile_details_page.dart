@@ -119,7 +119,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
               'Relationship Status',
               '${userDetails?.relationshipStatus ?? '-'}'
             ),
-            ('Looking for','${userDetails?.relationshipStatus ?? '-'}' ),
+            ('Looking for', '-' ),
             ('Origin Country', userCountry),
             ('Other Nationality', '-'),
             ('Mother Tongue', '${userDetails?.tribes ?? '-'}'),
