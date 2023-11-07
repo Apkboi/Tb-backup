@@ -5,6 +5,7 @@ import 'package:triberly/app/auth/domain/models/dtos/get_profile.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_other_photos_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/auth/domain/services/account_imp_service.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/core/services/di/di.dart';
 
 class SetupProfileController extends StateNotifier<SetupProfileState> {
@@ -35,7 +36,12 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
   Future<void> updateProfile(UpdateProfileReqDto data) async {
     try {
       state = SetupProfileLoading();
-      await _accountImpService.updateProfile(data);
+      var res = await _accountImpService.updateProfile(data);
+
+      userProfile.data = res?.data?.toUserModel;
+
+      sl<UserImpDao>().storeUser(res?.data?.toUserModel);
+      sl<UserImpDao>().getUser();
 
       state = SetupProfileSuccess();
     } catch (e) {
@@ -114,9 +120,9 @@ class UploadOtherPhotosSuccess extends SetupProfileState {}
 
 class UploadOtherPhotosError extends SetupProfileState {
   final String message;
+
   UploadOtherPhotosError(this.message);
 }
-
 
 class GetConfigsLoading extends SetupProfileState {}
 
@@ -124,4 +130,6 @@ class GetConfigsSuccess extends SetupProfileState {}
 
 class GetConfigsError extends SetupProfileState {
   final String message;
-  GetConfigsError(this.message);}
+
+  GetConfigsError(this.message);
+}

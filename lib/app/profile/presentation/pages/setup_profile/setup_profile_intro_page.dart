@@ -2,10 +2,8 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
-import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
-import 'setup_profile_controller.dart';
 
 class SetupProfileIntroPage extends ConsumerStatefulWidget {
   const SetupProfileIntroPage({super.key});
@@ -99,7 +97,7 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
                         shouldLoop: false,
                       ),
                       16.verticalSpace,
-                      TextView(
+                      const TextView(
                         text: 'Welcome to Triberly!',
                         fontSize: 24,
                         fontWeight: FontWeight.w700,

@@ -65,6 +65,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   _prefillTab() {
     final userProfile =
         ref.watch(setupProfileProvider.notifier).userProfile.data;
+
     firstName.text = userProfile?.firstName ?? '';
     lastName.text = userProfile?.lastName ?? '';
     email.text = userProfile?.email ?? '';
@@ -167,7 +168,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
 
                   if (value != null) {
                     dob.text = TimeUtil.formatDateDDMMYYY(
-                        value?.toIso8601String() ?? '');
+                        value.toIso8601String() ?? '');
                   }
                 },
                 child: TextBoxField(

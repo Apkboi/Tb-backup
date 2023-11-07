@@ -59,7 +59,9 @@ class _HomePageState extends ConsumerState<HomePage>
         logger.e('SetupProfileSuccess');
 
         // context.pop();
-        CustomDialogs.hideLoading(context);
+
+          // CustomDialogs.hideLoading(context);
+
       }
       if (next is GetConfigsError) {
         logger.e('SetupProfileError');
@@ -67,7 +69,7 @@ class _HomePageState extends ConsumerState<HomePage>
         CustomDialogs.error(next.message);
         // context.pop();
 
-        CustomDialogs.hideLoading(context);
+        // CustomDialogs.hideLoading(context);
       }
     });
     ref.listen(homeProvider, (previous, next) {
@@ -93,66 +95,68 @@ class _HomePageState extends ConsumerState<HomePage>
         onRefresh: () async {
           getConnections();
         },
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const TextWithUndeline(
-                text: 'New Trybers near you',
-              ),
-              18.verticalSpace,
-              if (state is HomeLoading)
-                CustomDialogs.getLoading(size: 20)
-              else
-                NewTribersRow(users: latLngUsers),
-              21.verticalSpace,
-              const TextWithUndeline(
-                text: 'Explore',
-              ),
-              16.verticalSpace,
-              if (state is HomeLoading)
-                CustomDialogs.getLoading(size: 50)
-              else
-                SizedBox(
-                  height: .6.sh,
-                  width: 1.sw,
-                  child: AppinioSwiper(
-                    padding: EdgeInsets.zero,
-                    backgroundCardsCount: 1,
-
-                    // loop: false,
-                    loop: latLngUsers.isEmpty ? false : true,
-                    cardsCount: latLngUsers.length,
-                    onSwiping: (AppinioSwiperDirection direction) {
-                      print(direction.toString());
-                    },
-                    cardsBuilder: (BuildContext context, int index) {
-                      final singleItem = latLngUsers[index];
-                      return SizedBox(
-                        child: ExploreCard(
-                          user: singleItem,
-                          name:
-                              "${singleItem.firstName ?? ''} ${singleItem.lastName ?? ''}",
-                          age: singleItem.dob ?? 'n/a',
-                          intent: '${singleItem.intent ?? 'n/a'}',
-                          tribe: '${singleItem.tribes ?? 'n/a'}',
-                          image: singleItem.profileImage,
-                          country: ref
-                                  .read(
-                                    countryByIdProvider(
-                                      singleItem.residenceCountryId?.id,
-                                    ),
-                                  )
-                                  ?.name ??
-                              'n/a',
-                        ),
-                      );
-                    },
-                  ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const TextWithUndeline(
+                  text: 'New Trybers near you',
                 ),
-              150.verticalSpace,
-            ],
+                18.verticalSpace,
+                if (state is HomeLoading)
+                  CustomDialogs.getLoading(size: 20)
+                else
+                  NewTribersRow(users: latLngUsers),
+                21.verticalSpace,
+                const TextWithUndeline(
+                  text: 'Explore',
+                ),
+                16.verticalSpace,
+                if (state is HomeLoading)
+                  CustomDialogs.getLoading(size: 50)
+                else
+                  SizedBox(
+                    height: .6.sh,
+                    width: 1.sw,
+                    child: AppinioSwiper(
+                      padding: EdgeInsets.zero,
+                      backgroundCardsCount: 1,
+
+                      // loop: false,
+                      loop: latLngUsers.isEmpty ? false : true,
+                      cardsCount: latLngUsers.length,
+                      onSwiping: (AppinioSwiperDirection direction) {
+                        print(direction.toString());
+                      },
+                      cardsBuilder: (BuildContext context, int index) {
+                        final singleItem = latLngUsers[index];
+                        return SizedBox(
+                          child: ExploreCard(
+                            user: singleItem,
+                            name:
+                                "${singleItem.firstName ?? ''} ${singleItem.lastName ?? ''}",
+                            age: singleItem.dob ?? 'n/a',
+                            intent: '${singleItem.intent ?? 'n/a'}',
+                            tribe: '${singleItem.tribes ?? 'n/a'}',
+                            image: singleItem.profileImage,
+                            country: ref
+                                    .read(
+                                      countryByIdProvider(
+                                        singleItem.residenceCountryId?.id,
+                                      ),
+                                    )
+                                    ?.name ??
+                                'n/a',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                150.verticalSpace,
+              ],
+            ),
           ),
         ),
       ),

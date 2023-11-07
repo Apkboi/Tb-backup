@@ -47,6 +47,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final chatsList = ref.watch(chatProvider.notifier).chatSearchResults;
+
     return Scaffold(
       key: scaffoldKey,
       appBar: const CustomAppBar(
@@ -59,13 +61,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           return CustomDialogs.getLoading(size: 50);
         }
 
-        final chatsList = ref.watch(chatProvider.notifier).chats;
-
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               TextField(
+                onChanged: (val) {
+                  _searchForChat(val, ref);
+                },
                 decoration: InputDecoration(
                   hintText: 'Search',
                   contentPadding:
@@ -130,7 +133,21 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       }),
     );
   }
+
+  void _searchForChat(String val, WidgetRef ref) {
+    Debouncer().call(() {
+      ref.read(chatProvider.notifier).searchForChat(val);
+    });
+  }
 }
+
+// List<ChatData> filteredChatsList(List<ChatData> chatsList ){
+//
+//
+//
+//
+//   return
+// }
 
 class ChatTile extends StatelessWidget {
   const ChatTile({
@@ -164,21 +181,27 @@ class ChatTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        TextView(
-                          text:
-                              '${userDto?.lastName ?? ''} ${userDto?.firstName ?? ''}, ${Helpers.calculateAge(userDto?.dob ?? '').toLowerCase() ?? ''}',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        12.horizontalSpace,
-                        const Icon(
-                          Icons.circle,
-                          color: Pallets.primary,
-                          size: 10,
-                        )
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextView(
+                              text:
+                                  '${userDto?.lastName ?? ''} ${userDto?.firstName ?? ''}, ${Helpers.calculateAge(userDto?.dob ?? '').toLowerCase() ?? ''}',
+                              fontSize: 16,
+                              maxLines: 1,
+                              fontWeight: FontWeight.w500,
+                              textOverflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          12.horizontalSpace,
+                          const Icon(
+                            Icons.circle,
+                            color: Pallets.primary,
+                            size: 10,
+                          )
+                        ],
+                      ),
                     ),
                     TextView(
                       text: TimeUtil.getTimeAgo(chatData?.timestamp),

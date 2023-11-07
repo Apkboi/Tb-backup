@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 
-import '../../../../../core/services/di/di.dart';
-import 'chat_details_page.dart';
 
 class ChatDetailsController extends StateNotifier<ChatDetailsState> {
   ChatDetailsController(this.ref) : super(ChatDetailsInitial());
@@ -27,13 +25,12 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
     }
 
     // Initialize the first date as the date of the first message
-    DateTime? currentDate =
-        DateTime.parse(messagesList[0].date ?? DateTime.now().toString());
+    DateTime? currentDate = DateTime.parse(messagesList[0].date ?? DateTime.now().toString());
 
     for (int i = 0; i < messagesList.length; i++) {
+
       final message = messagesList[i];
-      final messageDate =
-          DateTime.parse(message.date ?? DateTime.now().toString());
+      final messageDate = DateTime.parse(message.date ?? DateTime.now().toString());
 
       // Check if the current message's date is different from the previous one
       if (!DateUtils.isSameDay(currentDate, messageDate)) {

@@ -49,10 +49,11 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xffBD0077),
-                    Color(0xff7C0965),
-                    Color(0xff470239),
-                    Color(0xff170112),
+
+                    Color(0xffEF0096),
+                    Color(0xff800066),
+
+
                   ]),
             ),
           ),
@@ -202,7 +203,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                 child: TextButton(
                   style: TextButton.styleFrom(backgroundColor: Pallets.white,foregroundColor: Pallets.primary,shape: StadiumBorder()),
                   onPressed: () {
-                    pageController.animateToPage(images.length - 1,
+                    pageController.animateToPage(2,
                         duration: const Duration(milliseconds: 400),
                         curve: Curves.easeInOut);
                   },

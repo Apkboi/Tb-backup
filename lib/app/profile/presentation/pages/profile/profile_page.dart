@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/app/profile/domain/models/dtos/profile_option_item_data.dart';
+import 'package:triberly/app/profile/presentation/pages/profile/profile_controller.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/app/profile/presentation/widgets/profile_option_item.dart';
 import 'package:triberly/app/profile/presentation/widgets/user_image_with_status_widget.dart';
 import 'package:triberly/core/_core.dart';
@@ -19,7 +22,7 @@ class ProfilePage extends ConsumerStatefulWidget {
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
-  final user = sl<UserImpDao>().user;
+   late UserDto? user ;
 
   @override
   void dispose() {
@@ -30,6 +33,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(profileProvider);
+    ref.watch(setupProfileProvider);
+    user = sl<UserImpDao>().user;
     return Scaffold(
       key: scaffoldKey,
       appBar: CustomAppBar(
@@ -63,7 +69,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 5.verticalSpace,
-                 Center(child: UserImageWithStatusWidget(imageUrl:user?.profileImage,)),
+                 Center(child: UserImageWithStatusWidget(imageUrl:user?.profileImage,status: user?.profilePercentage(),)),
                 40.verticalSpace,
                  Center(
                   child: TextView(

@@ -85,7 +85,7 @@ class Data {
 }
 
 class _User {
-  final int id;
+  final dynamic id;
   final String firstName;
   final String lastName;
 
@@ -96,7 +96,7 @@ class _User {
   });
 
   _User copyWith({
-    int? id,
+    dynamic? id,
     String? firstName,
     String? lastName,
   }) =>

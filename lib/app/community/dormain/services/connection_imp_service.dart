@@ -1,5 +1,6 @@
 import 'package:triberly/app/community/dormain/models/dtos/get_connections_res_dto.dart';
 import 'package:triberly/app/community/dormain/models/dtos/save_connection_res_dto.dart';
+import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/network/network_service.dart';
 import 'package:triberly/core/services/network/url_config.dart';
 
@@ -43,6 +44,7 @@ class ConnectionImpService implements ConnectionService {
 
       return SaveConnectionResDto.fromJson(response.data);
     } catch (e) {
+      logger.e(e);
       rethrow;
     }
   }

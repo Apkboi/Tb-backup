@@ -1,21 +1,11 @@
-import 'dart:convert';
-import 'dart:math';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:swipe_to/swipe_to.dart';
-import 'package:collection/collection.dart';
-import 'package:triberly/app/auth/data/datasources/user_dao.dart';
+
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
-import 'package:triberly/app/chat/data/datasources/audio_dao_datasource.dart';
 import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
-import 'package:triberly/app/chat/external/datasources/audio_dao_imp_datasource.dart';
 import 'package:triberly/app/chat/presentation/widgets/wave_bubble.dart';
 
 import 'package:triberly/core/_core.dart';
@@ -26,9 +16,7 @@ import 'chat_details_controller.dart';
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 const String testSenderid = 'asdadsa-1233-sdas332-2sasd';
 const String anotherSenderid = 'another-1233-sender-1234';
@@ -43,6 +31,7 @@ class ChatDetailsPage extends ConsumerStatefulWidget {
 
   final String chatId;
   final String? userName;
+
   // final String? userId;
 
   @override
@@ -66,11 +55,13 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
   final userDto = sl<UserImpDao>().user;
 
   String? path;
+
   // String? musicFile;
   ValueNotifier<bool> isRecording = ValueNotifier(false);
   bool isRecordingCompleted = false;
   bool isLoading = true;
   late Directory appDirectory;
+
   @override
   void initState() {
     super.initState();
@@ -135,8 +126,9 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                 if (ref.watch(chatDetailsProvider) is ChatDetailsLoading) {
                   return Expanded(child: CustomDialogs.getLoading(size: 50));
                 }
-                messagesList =
-                    ref.watch(chatDetailsProvider.notifier).messagesList;
+                messagesList = ref
+                    .watch(chatDetailsProvider.notifier)
+                    .messagesList;
 
                 messagesList = ref
                     .read(chatDetailsProvider.notifier)
@@ -150,7 +142,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     itemBuilder: (context, index) {
                       List<MessageModel> normalList =
-                          messagesList.reversed.toList();
+                      messagesList.reversed.toList();
 
                       MessageModel singleItem = normalList[index];
 
@@ -164,14 +156,14 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                           ),
                         );
                       }
-                      singleItem = normalList[index];
 
+                      singleItem = normalList[index];
                       if (singleItem.type == 'audio') {
                         return WaveBubble(
                           // controller: playerController,
                           index: index,
                           isSender:
-                              singleItem.senderId == userDto?.id.toString(),
+                          singleItem.senderId == userDto?.id.toString(),
                           audioUrl: singleItem.message ?? '',
                         );
                       }
@@ -215,7 +207,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
               isRecording: value,
               audioCtrl: recorderController,
               onSend:
-                  (messageCtrl.text.isEmpty) ? _startOrStopRecording : onSend,
+              (messageCtrl.text.isEmpty) ? _startOrStopRecording : onSend,
             );
           },
         ),
@@ -246,7 +238,9 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
             senderId: userDto?.id.toString(),
             isMe: true,
             repliedMessage:
-                ref.read(chatDetailsProvider.notifier).replyingMessage,
+            ref
+                .read(chatDetailsProvider.notifier)
+                .replyingMessage,
             date: DateTime.now().toString(),
             timestamp: ServerValue.timestamp,
           );
@@ -258,7 +252,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
               .set(data.toMap())
               .then(
                 (value) {},
-              );
+          );
           debugPrint("Recorded file size: ${File(path).lengthSync()}");
         }
       } else {
@@ -280,7 +274,9 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
       message: messageCtrl.text,
       senderId: userDto?.id.toString(),
       isMe: true,
-      repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
+      repliedMessage: ref
+          .read(chatDetailsProvider.notifier)
+          .replyingMessage,
       date: DateTime.now().toString(),
       timestamp: ServerValue.timestamp,
     );
@@ -297,10 +293,12 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
         .set(data.toMap())
         .then(
           (value) {},
-        );
+    );
 
     ///Clear textfield
     messageCtrl.clear();
-    ref.read(chatDetailsProvider.notifier).replyingMessage = null;
+    ref
+        .read(chatDetailsProvider.notifier)
+        .replyingMessage = null;
   }
 }

@@ -1,7 +1,11 @@
+
 import 'package:collection/collection.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
+import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 import 'package:triberly/app/chat/presentation/pages/chat/chat_controller.dart';
 import 'package:triberly/app/community/presentation/widgets/connection_request_dialog.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
@@ -42,6 +46,8 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
     ('Hashtags', '#Odogwu'),
   ];
 
+  String? _requestMessage;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -81,8 +87,10 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
       if (next is ChatSuccess) {
         context.pop();
 
-        final userDetails = ref.watch(profileDetailsProvider.notifier).userDetails;
+        final userDetails =
+            ref.watch(profileDetailsProvider.notifier).userDetails;
         final chatId = ref.watch(chatProvider.notifier).initiatedChat?.id;
+        _sendInitialMessage(chatId??0);
         context.pushNamed(
           PageUrl.chatDetails,
           queryParameters: {
@@ -119,7 +127,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
               'Relationship Status',
               '${userDetails?.relationshipStatus ?? '-'}'
             ),
-            ('Looking for', '-' ),
+            ('Looking for', '-'),
             ('Origin Country', userCountry),
             ('Other Nationality', '-'),
             ('Mother Tongue', '${userDetails?.tribes ?? '-'}'),
@@ -129,6 +137,8 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
             ('Education', '-'),
             ('Hashtags', '-'),
           ];
+
+          logger.log(Logger.level, 'TRIBE ${userDetails?.tribes ?? 'N/A'}');
 
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -188,12 +198,14 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                   children: [
                     UserUpDownWidget(
                       title: 'Tribe',
-                      value: '${userDetails?.tribes ?? 'N/A'}',
+                      value: userDetails?.tribes == null
+                          ? "N/A"
+                          : '${ref.watch(tribeByIdProvider(int.parse(userDetails?.tribes)))?.name}',
                     ),
                     Container(
                       width: 1,
                       height: 30,
-                      margin: EdgeInsets.symmetric(horizontal: 32),
+                      margin: const EdgeInsets.symmetric(horizontal: 32),
                       color: Pallets.grey,
                     ),
                     UserUpDownWidget(
@@ -233,7 +245,17 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                       ),
                       onTap: () {
                         CustomDialogs.showCustomDialog(
-                            ConnectionRequestDialog(userDetails!), context);
+                            ConnectionRequestDialog(
+                              userDetails!,
+                              onRequestSent: (String? message) {
+                                _requestMessage = message;
+                                ref
+                                    .read(chatProvider.notifier)
+                                    .initiateChat(userDetails.id.toString());
+                              },
+                            ),
+                            context);
+
                         // ref
                         //     .read(chatProvider.notifier)
                         //     .initiateChat(widget.userId);
@@ -287,13 +309,14 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                 24.verticalSpace,
                 ...records.map((e) {
                   if (e.$2 is List<String>) {
+
                     return LeftRightWidget(
                       title: e.$1,
-                      value: e.$2.join(', '),
+                      value: (e.$2 as List).isNotEmpty ?(e.$2 as List).join(', '):"-",
                     );
                   }
                   // logger.log(Level.debug, "${e.$1}${e.$2}");
-                  logger.log(Level.debug, "${e.runtimeType}${e.$2}");
+
                   return LeftRightWidget(
                     title: e.$1,
                     value: e.$2,
@@ -305,6 +328,34 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
         }),
       ),
     );
+  }
+
+  void _sendInitialMessage(num chatId) {
+    final userDto = sl<UserImpDao>().user;
+    DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+
+    final data = MessageModel(
+      message: _requestMessage,
+      senderId: userDto?.id.toString(),
+      isMe: true,
+      repliedMessage:null,
+      date: DateTime.now().toString(),
+      timestamp: ServerValue.timestamp,
+    );
+
+    if (data.message != '') {
+      dbRef
+          .child("chat_messages")
+          .child(chatId.toString())
+          .push()
+          .set(data.toMap())
+          .then(
+            (value) {},
+      );
+    }
+    _requestMessage = null;
+
+
   }
 }
 

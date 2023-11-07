@@ -1,13 +1,10 @@
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/profile/presentation/widgets/Interests_tab.dart';
 import 'package:triberly/app/profile/presentation/widgets/ethnicity_tab.dart';
 import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
 import 'package:triberly/app/profile/presentation/widgets/profile_tab.dart';
-import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
 import 'package:triberly/core/_core.dart';
-import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
@@ -38,7 +35,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
           .read(setupProfileProvider.notifier)
           .getDataConfigs()
           .then((value) {
-        setState(() {});
+        // setState(() {});
       });
     });
   }
@@ -95,8 +92,8 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
       if (next is SetupProfileSuccess) {
         CustomDialogs.hideLoading(context);
-        CustomDialogs.showFlushBar(
-          context,
+        CustomDialogs.success(
+
           'Profile saved successfully',
         );
 

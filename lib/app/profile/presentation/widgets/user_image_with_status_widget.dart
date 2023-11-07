@@ -8,7 +8,7 @@ class UserImageWithStatusWidget extends StatelessWidget {
       {Key? key, this.imageUrl,  this.status= 50})
       : super(key: key);
   final String? imageUrl;
-  final double? status;
+  final int? status;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,8 @@ class UserImageWithStatusWidget extends StatelessWidget {
         SizedBox(
           height: 100.w,
           width: 100.w,
-          child: const CircularProgressIndicator(
-            value: 0.5,
+          child:  CircularProgressIndicator(
+            value: status!*0.01,
           ),
         ),
         Positioned(

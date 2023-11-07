@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:triberly/core/_core.dart';
 
-import '../constants/pallets.dart';
 
 class OtpField extends StatelessWidget {
   final void Function(String)? onCompleted;
@@ -32,9 +31,9 @@ class OtpField extends StatelessWidget {
       color: Colors.black,
       fontWeight: FontWeight.w500,
     ),
-    decoration: BoxDecoration(
-      color: Pallets.black,
-      border: Border.all(color: Pallets.unselectedGrey, width: 1),
+    decoration: const BoxDecoration(
+      // color: Pallets.black,
+      border: Border(bottom: BorderSide(width: 2,color: Colors.black)),
     ),
   );
 
@@ -45,13 +44,9 @@ class OtpField extends StatelessWidget {
         fontSize: 24.sp,
         fontWeight: FontWeight.w600,
       ),
-      decoration: BoxDecoration(
-        color: Pallets.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Pallets.unselectedGrey, width: 1),
-
-        // border: Border.symmetric(
-        //     vertical: BorderSide.none, horizontal: BorderSide.none),
+      decoration: const BoxDecoration(
+        // color: Pallets.black,
+        border: Border(bottom: BorderSide(width: 2,color: Colors.black)),
       ),
     );
 

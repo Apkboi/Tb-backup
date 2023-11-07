@@ -1,3 +1,5 @@
+import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
+
 /// msg : "User updated successfully"
 /// data : {"id":16,"first_name":"Ned","middle_name":null,"last_name":"Stark","email":"w@mailinator.com","phone_no":null,"gender":"Male","username":"brimlys3","ref_code":"2oV0TSPo","email_verification":true,"selfie_verification":false,"dob":null,"profession":null,"relationship_status":null,"intent":null,"home_address":null,"origin_city_id":null,"origin_state_id":null,"origin_country_id":null,"residence_country_id":{"id":160,"name":"Nigeria"},"tribes":null,"education":null,"family_status":null,"other_languages":null,"bio":null,"interests":null,"religion":null,"have_kids":null,"instagram_link":null,"tiktok_link":null,"linkedin_link":null,"profile_image":null,"other_images":[{"id":1,"url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDWj9w21gJI5mcQ4yTwg6cG1fgI9YGmMqSKA&usqp=CAU","type":"Photo"},{"id":2,"url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDWj9w21gJI5mcQ4yTwg6cG1fgI9YGmMqSKA&usqp=CAU","type":"Photo"},{"id":3,"url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDWj9w21gJI5mcQ4yTwg6cG1fgI9YGmMqSKA&usqp=CAU","type":"Photo"}],"email_verified":"2023-10-20T04:37:25.000000Z","status":"Active","latitude":6,"longitude":4}
 /// success : true
@@ -321,6 +323,8 @@ Data copyWith({  num? id,
     map['longitude'] = longitude;
     return map;
   }
+
+  UserDto get toUserModel=>UserDto.fromJson(toJson());
 
 }
 

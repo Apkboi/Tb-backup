@@ -250,6 +250,18 @@ class UserDto {
   String toString() {
     return 'UserDto{id: $id, firstName: $firstName, middleName: $middleName, lastName: $lastName, email: $email, phoneNo: $phoneNo, gender: $gender, username: $username, refCode: $refCode, emailVerification: $emailVerification, selfieVerification: $selfieVerification, dob: $dob, profession: $profession, relationshipStatus: $relationshipStatus, intent: $intent, homeAddress: $homeAddress, originCityId: $originCityId, originStateId: $originStateId, originCountryId: $originCountryId, residenceCountryId: $residenceCountryId, tribes: $tribes, education: $education, familyStatus: $familyStatus, otherLanguages: $otherLanguages, bio: $bio, interests: $interests, religion: $religion, haveKids: $haveKids, instagramLink: $instagramLink, tiktokLink: $tiktokLink, linkedinLink: $linkedinLink, profileImage: $profileImage, otherImages: $otherImages, emailVerified: $emailVerified, status: $status, latitude: $latitude, longitude: $longitude}';
   }
+
+  int profilePercentage(){
+    var allFields = toJson().values;
+    int totalFields = allFields.length;
+    int nonNullCount = allFields.where((value) => value != null).length;
+
+    double percentage = (nonNullCount / totalFields) * 100.0;
+
+
+
+    return percentage.round();
+  }
 }
 
 /// id : 1

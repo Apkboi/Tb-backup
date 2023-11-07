@@ -5,9 +5,10 @@ import 'package:triberly/app/community/presentation/pages/community/community_co
 import 'package:triberly/core/_core.dart';
 
 class ConnectionRequestDialog extends ConsumerWidget {
-  ConnectionRequestDialog(this.userDetails, {Key? key}) : super(key: key);
+  ConnectionRequestDialog(this.userDetails,  {Key? key,required this.onRequestSent,}) : super(key: key);
   final messageController = TextEditingController();
   final UserDto userDetails;
+  final Function(String? message) onRequestSent;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -19,65 +20,76 @@ class ConnectionRequestDialog extends ConsumerWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.close,
-                color: Pallets.grey,
+          Stack(
+            children: [
+              Positioned(right: -5,top: 10,child:  Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.close,
+                    color: Pallets.grey,
+                  ),
+                ),
+              ),),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  35.verticalSpace,
+
+                  Center(
+                    child: ImageWidget(
+                      imageUrl: Assets.pngsChain,
+                      color: Pallets.pinkLight,
+                      size: 40,
+                      height: 65.h,
+                      width: 58.w,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  18.verticalSpace,
+                  const TextView(
+                    text: "Request to connect?",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  8.verticalSpace,
+                  TextView(
+                    text:
+                        "You are about to send a connection request to ${userDetails.firstName}, you will become Trybers when they accept your request.",
+                    style: const TextStyle(
+                        fontSize: 14, color: Pallets.grey, fontWeight: FontWeight.w500),
+                  ),
+                  24.verticalSpace,
+                  const TextView(
+                    text: "Add a message (optional)",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Pallets.grey,
+                    ),
+                  ),
+                  8.verticalSpace,
+                  TextBoxField(
+                    controller: messageController,
+                    hintText: "Type here",
+                  ),
+                  22.verticalSpace,
+                  ButtonWidget(
+                    onTap: () {
+                      ref.read(communityProvider.notifier).saveConnection(
+                          userDetails.id.toString(), messageController.text);
+                    },
+                    title: 'Send request',
+                    loading: state is SaveConnectionLoading,
+                  ),
+                  22.verticalSpace,
+                ],
               ),
-            ),
+            ],
           ),
-          Center(
-            child: ImageWidget(
-              imageUrl: Assets.pngsChain,
-              color: Pallets.pinkLight,
-              size: 40,
-              height: 65.h,
-              width: 58.w,
-              fit: BoxFit.contain,
-            ),
-          ),
-          18.verticalSpace,
-          const TextView(
-            text: "Request to connect?",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          8.verticalSpace,
-          TextView(
-            text:
-                "You are about to send a connection request to ${userDetails.firstName}, you will become Trybers when they accept your request.",
-            style: const TextStyle(
-                fontSize: 14, color: Pallets.grey, fontWeight: FontWeight.w500),
-          ),
-          24.verticalSpace,
-          const TextView(
-            text: "Add a message (optional)",
-            style: TextStyle(
-              fontSize: 13,
-              color: Pallets.grey,
-            ),
-          ),
-          8.verticalSpace,
-          TextBoxField(
-            controller: messageController,
-            hintText: "Type here",
-          ),
-          22.verticalSpace,
-          ButtonWidget(
-            onTap: () {
-              ref.read(communityProvider.notifier).saveConnection(
-                  userDetails.id.toString(), messageController.text);
-            },
-            title: 'Send request',
-            loading: state is SaveConnectionLoading,
-          ),
-          22.verticalSpace,
         ],
       ),
     );
@@ -87,8 +99,10 @@ class ConnectionRequestDialog extends ConsumerWidget {
     ref.listen(communityProvider, (previous, next) {
       if (next is SaveConnectionSuccess) {
 
-        CustomDialogs.showToast( 'Connection request sent.',);
+        // CustomDialogs.showToast( 'Connection request sent.',);
         Navigator.pop(context);
+        onRequestSent(messageController.text);
+
 
       }
       if (next is SaveConnectionError) {

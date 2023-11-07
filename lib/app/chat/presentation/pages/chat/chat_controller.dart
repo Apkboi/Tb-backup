@@ -14,6 +14,7 @@ class ChatController extends StateNotifier<ChatState> {
   final ChatImpService _chatImpService;
 
   List<ChatData> chats = [];
+  List<ChatData> chatSearchResults = [];
   ChatData? initiatedChat;
   DatabaseReference dbRef = FirebaseDatabase.instance.ref();
 
@@ -24,6 +25,7 @@ class ChatController extends StateNotifier<ChatState> {
       state = ChatLoading();
       final response = await _chatImpService.getChats();
       chats = response?.callData?.data ?? [];
+      chatSearchResults = response?.callData?.data ?? [];
 
       final chatInfo = await Future.wait(chats.map((chat) async {
         final lastMessageData = await getLastMessage(chat.id.toString());
@@ -42,6 +44,25 @@ class ChatController extends StateNotifier<ChatState> {
     } catch (e) {
       state = ChatError(e.toString());
     }
+  }
+
+  Future<void> searchForChat(String text) async {
+
+    state = ChatLoading();
+    if(text.isEmpty){
+      chatSearchResults = chats;
+    }
+
+    final result = chats.where((element) =>
+        "${element.participants?.firstOrNull?.user?.firstName} ${element.participants?.firstOrNull?.user?.lastName}"
+            .toLowerCase()
+            .contains(text.toLowerCase())).toList();
+    logger.e(result.length);
+
+      chatSearchResults = result;
+
+    state = ChatSuccess();
+
   }
 
   Future<Map<String, dynamic>> getLastMessage(String chatId) async {
@@ -188,5 +209,6 @@ class LastMessagesSuccess extends ChatState {}
 
 class LastMessagesError extends ChatState {
   final String message;
+
   LastMessagesError(this.message);
 }

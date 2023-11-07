@@ -1,7 +1,4 @@
-import 'package:intl/intl.dart';
-import 'package:intl/message_lookup_by_library.dart';
-import 'package:triberly/generated/intl/messages_all.dart';
-import 'package:triberly/generated/l10n.dart';
+
 import '_utils.dart';
 
 extension StringExtension on String {
@@ -30,8 +27,14 @@ extension StringExtension on String {
   }
 
   String replacePlus234() {
-    String phoneNumber = replaceRange(0, 4, '0');
-    return phoneNumber;
+    if(substring(0,1)== "+"){
+      String phoneNumber = replaceRange(0, 4, '0');
+      return phoneNumber;
+    }else{
+      return this;
+    }
+
+
   }
 
   bool get isNum => CustomUtils.isNum(this);

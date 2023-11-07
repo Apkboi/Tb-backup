@@ -58,11 +58,14 @@ class HomeController extends StateNotifier<HomeState> {
       state = HomeLoading();
 
       final response = await _accountImpService.searchConnections(data);
-      final responseLatLng = await _accountImpService
-          .searchConnections(data.copyWith(withLatLong: true));
+      final responseLatLng = await _accountImpService.searchConnections(data.copyWith(withLatLong: true));
+
+
 
       randomUsers = response?.callData?.data ?? [];
       latLngUsers = responseLatLng?.callData?.data ?? [];
+
+      // logger.log(Level.debug, randomUsers.map((e) => e.firstName));
 
       state = HomeSuccess();
     } catch (e) {
