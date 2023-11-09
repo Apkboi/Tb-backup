@@ -15,7 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   HttpOverrides.global = CustomHttpOverrides();
-  await initializeApp(environment: Environment.production);
+  await initializeApp(environment: Environment.staging);
   runApp(const ProviderScope(child: MyApp()));
 }
 

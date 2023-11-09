@@ -1,13 +1,7 @@
-import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
-import 'package:triberly/app/base/presentation/pages/base/base_page.dart';
-import 'package:triberly/app/home/presentation/widgets/filter_widget.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/navigation/path_params.dart';
-import 'package:triberly/generated/l10n.dart';
 
 class ExploreCard extends StatelessWidget {
   const ExploreCard({
@@ -23,11 +17,11 @@ class ExploreCard extends StatelessWidget {
 
   final UserDto user;
   final String name;
-  final String age;
+  final String? age;
   final String? image;
-  final String intent;
-  final String tribe;
-  final String country;
+  final String? intent;
+  final String? tribe;
+  final String? country;
 
   @override
   Widget build(BuildContext context) {
@@ -84,23 +78,25 @@ class ExploreCard extends StatelessWidget {
                     Expanded(
                       child: TextView(
                         // text: '',
-                        text: '$name, ${Helpers.calculateAge(user.dob ?? '')}',
+                        text: '$name, ${Helpers.calculateAge(user.dob ?? '') ??""}',
                         fontSize: 23,
                         fontWeight: FontWeight.w700,
                         color: Pallets.white,
                       ),
                     ),
+                    if(country!= null)
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        ImageWidget(
+                        const ImageWidget(
                           imageUrl: Assets.svgsHome,
                           size: 15,
                           color: Pallets.white,
                         ),
                         6.horizontalSpace,
                         TextView(
-                          text: country,
+                          text: country!,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Pallets.white,
@@ -110,25 +106,28 @@ class ExploreCard extends StatelessWidget {
                   ],
                 ),
                 16.verticalSpace,
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    if(intent!= null)
                     TextView(
                       text: 'Searching for: $intent',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Pallets.white,
                     ),
+                    if(tribe!= null)
                     Row(
                       children: [
-                        ImageWidget(
+                        const ImageWidget(
                           imageUrl: Assets.svgsLogoWhite,
                           size: 15,
                           color: Pallets.white,
                         ),
                         6.horizontalSpace,
                         TextView(
-                          text: tribe,
+                          text: tribe!,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Pallets.white,

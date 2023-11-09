@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/face_plus_plus/detect_face_data.dart';
@@ -22,6 +20,7 @@ class SelfieVerificationPage extends ConsumerStatefulWidget {
   });
 
   final String profilePhoto;
+
   @override
   ConsumerState createState() => _SelfieVerificationPageState();
 }
@@ -216,6 +215,7 @@ class PhotoQualityCheckTile extends StatelessWidget {
   });
 
   final DetectFaceData detectedFaceData;
+
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
+import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
+import 'package:triberly/core/shared/custom_dialogs.dart';
 
 
 class ChatDetailsController extends StateNotifier<ChatDetailsState> {
@@ -99,6 +102,7 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
         messagesList = datavalue2;
 
         state = ChatDetailsSuccess();
+
       }).onError((handleError) {
         state = ChatDetailsError(handleError.toString());
       });
@@ -106,7 +110,30 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
       state = ChatDetailsError(e.toString());
     }
   }
+
+  Future<void> sendChatMessage(
+      MessageModel data, String chatId, List<String> files) async {
+    if (data.message == '') {
+      CustomDialogs.showToast('Add a text');
+      return;
+    }
+
+    if (files.isNotEmpty) {
+      var url = await Future.wait(files.map((e) => CloudinaryManager.uploadFile(
+        filePath: e,
+        file: File(e),
+      )));
+
+      data = data.copyWith(message: url.first);
+    }
+
+    dbRef.child("chat_messages").child(chatId).push().set(data.toMap()).then(
+          (value) {},
+    );
+  }
 }
+
+
 
 final chatDetailsProvider =
     StateNotifierProvider<ChatDetailsController, ChatDetailsState>((ref) {

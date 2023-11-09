@@ -129,7 +129,7 @@ class _TextBoxFieldState extends State<TextBoxField> {
             style: TextStyle(
                 color: Pallets.black,
                 fontSize:
-                    (widget.isPasswordField && isTextObscured) ? 14.sp : 16.sp),
+                    (widget.isPasswordField && isTextObscured) ? 12.sp : 16.sp),
             autovalidateMode: widget.autoValidate,
 
             maxLines: widget.maxLines,
@@ -153,6 +153,8 @@ class _TextBoxFieldState extends State<TextBoxField> {
             controller: widget.controller,
             obscureText: widget.isPasswordField && isTextObscured,
             obscuringCharacter: '⬤',
+
+
 
             minLines: widget.minLines,
             cursorColor: Pallets.primary,

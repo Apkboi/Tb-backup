@@ -5,8 +5,8 @@ class OnboardingData {
   OnboardingData(this.title, this.description);
 
   static List<OnboardingData> data = [
-    OnboardingData("Find connections that last", "Triberly is designed to connect you with people across the globe that share your culture, values, and ethnicity."),
-    OnboardingData("Discover & connect", "Find people near you and connect as travel buddies, business partners, romantic interests, language swappers, or friends."),
-    OnboardingData("Connect with your African roots", "We speak your language, and chances are, so do millions of others"),
+    OnboardingData("The best community for diasporans", "Make friends, find roomies, travel buddies or romance."),
+    OnboardingData("Connect, network, build relationships", "Find people near you who share your culture & lifestyle."),
+    OnboardingData("Find African-inspired services", "The place to find R&B DJs, make-up artists, the best jollof rice caterers and more."),
   ];
 }

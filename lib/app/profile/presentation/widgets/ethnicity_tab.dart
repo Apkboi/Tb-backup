@@ -77,12 +77,12 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           21.verticalSpace,
-          const TextView(
-            text: 'Ethnicity',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-          8.verticalSpace,
+          // const TextView(
+          //   text: 'Ethnicity',
+          //   fontSize: 20,
+          //   fontWeight: FontWeight.w600,
+          // ),
+          // 8.verticalSpace,
           const TextView(
             text:
                 'Add a bit more to enable us match with other Tribers with similar background.',
@@ -107,20 +107,20 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
                 },
               ),
               16.verticalSpace,
-              CustomTypeDropDownSearch<CountriesData>(
-                hintText: "Current country of residence",
-                hasValidator: true,
-                selectedItem:
-                    ref.watch(countryByIdProvider(_residenceCountryId)),
-                itemAsString: (CountriesData? data) {
-                  return data?.name ?? '';
-                },
-                listItems: ref.watch(setupProfileProvider.notifier).countries,
-                onTap: (value) {
-                  _residenceCountryId = value?.id;
-                },
-              ),
-              16.verticalSpace,
+              // CustomTypeDropDownSearch<CountriesData>(
+              //   hintText: "Current country of residence",
+              //   hasValidator: true,
+              //   selectedItem:
+              //       ref.watch(countryByIdProvider(_residenceCountryId)),
+              //   itemAsString: (CountriesData? data) {
+              //     return data?.name ?? '';
+              //   },
+              //   listItems: ref.watch(setupProfileProvider.notifier).countries,
+              //   onTap: (value) {
+              //     _residenceCountryId = value?.id;
+              //   },
+              // ),
+              // 16.verticalSpace,
               TextBoxField(
                 label: 'Township/Village name',
                 controller: townshipCtrl,

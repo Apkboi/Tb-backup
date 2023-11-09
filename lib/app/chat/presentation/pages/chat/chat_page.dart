@@ -187,7 +187,7 @@ class ChatTile extends StatelessWidget {
                           Expanded(
                             child: TextView(
                               text:
-                                  '${userDto?.lastName ?? ''} ${userDto?.firstName ?? ''}, ${Helpers.calculateAge(userDto?.dob ?? '').toLowerCase() ?? ''}',
+                                  '${userDto?.firstName ?? ''} ${userDto?.lastName ?? ''}, ${Helpers.calculateAge(userDto?.dob ?? '')?.toLowerCase() ?? ''}',
                               fontSize: 16,
                               maxLines: 1,
                               fontWeight: FontWeight.w500,

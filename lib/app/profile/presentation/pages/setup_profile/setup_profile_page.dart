@@ -22,10 +22,13 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
 
+  late TabController controller;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    controller = TabController(length: 3, vsync: this);
     _getProfile();
   }
 
@@ -69,7 +72,6 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
         begin: sliderValue.value,
         end: targetValue,
       ).animate(controller);
-
       animation.addListener(() {
         sliderValue.value = animation.value;
       });
@@ -93,11 +95,24 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
       if (next is SetupProfileSuccess) {
         CustomDialogs.hideLoading(context);
         CustomDialogs.success(
-
           'Profile saved successfully',
         );
 
+        if (sliderValue.value == 2) {
+          _animateToTargetValue(5);
+          controller.index = 1;
+          return;
+        }
+
+        if (sliderValue.value == 5) {
+          _animateToTargetValue(7);
+          controller.index = 2;
+
+          return;
+        }
+
         if (sliderValue.value == 7) {}
+
         return;
       }
     });
@@ -156,9 +171,10 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
             TabBar(
               indicatorSize: TabBarIndicatorSize.tab,
               isScrollable: true,
+              controller: controller,
               // indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
-              labelPadding: EdgeInsets.symmetric(horizontal: 10),
-              padding: EdgeInsets.symmetric(horizontal: 24),
+              labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               unselectedLabelStyle: ref
                   .read(themeProvider.notifier)
                   .selectedTextTheme
@@ -173,6 +189,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                 borderRadius: BorderRadius.circular(8), // Creates border
                 color: Pallets.primary,
               ),
+
               onTap: (currentIndex) {
                 if (currentIndex == 0) {
                   _animateToTargetValue(2.toDouble());
@@ -191,7 +208,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                 _animateToTargetValue(10);
                 return;
               },
-              tabs: [
+              tabs: const [
                 Tab(
                   text: 'Personal bio',
                 ),
@@ -201,9 +218,10 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
               ],
             ),
 
-            Expanded(
+             Expanded(
               child: TabBarView(
-                children: [
+                controller: controller,
+                children: const [
                   ProfileTab(),
                   EthnicityTab(),
                   InterestsTab(),

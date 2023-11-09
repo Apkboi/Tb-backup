@@ -13,7 +13,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   List<SelectionModel> issues = [
     SelectionModel(index: 1, title: "Payment/subscription issues?"),
     SelectionModel(index: 2, title: "Account hacked or unauthorized access?"),
-    SelectionModel(index: 3, title: "Account hacked or unauthorized access?"),
+
     SelectionModel(index: 4, title: "Others"),
     // Add more reasons as needed
   ];

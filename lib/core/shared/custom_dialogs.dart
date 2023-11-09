@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -130,6 +131,58 @@ class CustomDialogs {
       builder: (BuildContext context) => dialog,
       barrierDismissible: true,
       barrierColor: Pallets.black.withOpacity(0.2),
+    );
+  }
+
+
+  static Future<DateTime?>selectDate(DateTime initialDate,BuildContext context){
+    return showDialog(
+      context: context,
+
+      builder: (BuildContext context) {
+        DateTime? _selectedDate;
+        return Dialog(
+          child: Container(
+
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 200.0,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: initialDate,
+                    onDateTimeChanged: (DateTime newDateTime) {
+
+                      _selectedDate = newDateTime;
+
+                    },
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+
+                    CupertinoButton(
+                      child:  const TextView( text: 'Cancel',),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    CupertinoButton(
+                      child: const TextView( text: 'Select date',),
+                      onPressed: () {
+                        Navigator.of(context).pop(_selectedDate);
+                      },
+                    ),
+                ],),
+                10.verticalSpace
+
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

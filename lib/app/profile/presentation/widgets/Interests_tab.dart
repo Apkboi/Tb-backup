@@ -1,17 +1,10 @@
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:triberly/app/auth/domain/models/dtos/config_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
-import 'package:triberly/app/home/presentation/pages/home/home_page.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
-import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
-import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
-import 'package:triberly/core/services/theme_service/app_theme.dart';
-import 'package:triberly/core/utils/color_utils.dart';
 
 List<Interests> selectedIntrestChips = [];
 List<String> selectedHastagChips = [];
@@ -45,12 +38,12 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           21.verticalSpace,
-          const TextView(
-            text: 'Interests',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-          8.verticalSpace,
+          // const TextView(
+          //   text: 'Interests',
+          //   fontSize: 20,
+          //   fontWeight: FontWeight.w600,
+          // ),
+          // 8.verticalSpace,
           const TextView(
             text:
                 'Add a bit more to enable us match with other Tribers with similar background.',
@@ -61,7 +54,7 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextView(
+              const TextView(
                 text: 'Looking to connect with',
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

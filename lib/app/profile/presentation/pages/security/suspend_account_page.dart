@@ -13,7 +13,7 @@ class SuspendAccountPage extends StatefulWidget {
 class _SuspendAccountPageState extends State<SuspendAccountPage> {
   List<DeleteAccountReason> deleteReasons = [
     DeleteAccountReason(id: 1, title: "I don’t find triberly useful"),
-    DeleteAccountReason(id: 2, title: "I could’nt achieve my aim of using the app"),
+    DeleteAccountReason(id: 2, title: "I couldn’t achieve my aim of using the app"),
     DeleteAccountReason(id: 3, title: "Your charges are too high"),
     DeleteAccountReason(id: 4, title: "Others"),
     // Add more reasons as needed
@@ -31,7 +31,7 @@ class _SuspendAccountPageState extends State<SuspendAccountPage> {
           child: Column(
             children: [
               const   TextView(
-                text: "W’e’re sad to see you go, we will like to know your reason for making this decision (optional)",
+                text: "We’re sad to see you go, we would like to know your reason for making this decision (optional)",
                 style: TextStyle(fontSize: 16, color: Pallets.grey),
               ),
               20.verticalSpace,

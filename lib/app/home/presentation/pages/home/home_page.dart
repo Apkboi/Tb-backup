@@ -7,6 +7,7 @@ import 'package:triberly/app/home/presentation/pages/location/location_controlle
 import 'package:triberly/app/profile/domain/models/dtos/search_connections_req_dto.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/core/_core.dart';
+import 'package:triberly/core/navigation/path_params.dart';
 
 import '../../widgets/_home_widgets.dart';
 import 'home_controller.dart';
@@ -120,43 +121,50 @@ class _HomePageState extends ConsumerState<HomePage>
                   SizedBox(
                     height: .6.sh,
                     width: 1.sw,
-                    child: AppinioSwiper(
-                      padding: EdgeInsets.zero,
-                      backgroundCardsCount: 1,
-
-                      // loop: false,
-                      loop: latLngUsers.isEmpty ? false : true,
-                      cardsCount: latLngUsers.length,
-                      onSwiping: (AppinioSwiperDirection direction) {
-                        print(direction.toString());
-                      },
-                      cardsBuilder: (BuildContext context, int index) {
-                        final singleItem = latLngUsers[index];
-                        return SizedBox(
-                          child: ExploreCard(
-                            user: singleItem,
-                            name:
-                                "${singleItem.firstName ?? ''} ${singleItem.lastName ?? ''}",
-                            age: singleItem.dob ?? 'n/a',
-                            intent: '${singleItem.intent ?? 'n/a'}',
-                            tribe: '${singleItem.tribes ?? 'n/a'}',
-                            image: singleItem.profileImage,
-                            country: ref
-                                    .read(
-                                      countryByIdProvider(
-                                        singleItem.residenceCountryId?.id,
-                                      ),
-                                    )
-                                    ?.name ??
-                                'n/a',
-                          ),
+                    child: InkWell(
+                      onTap: (){
+                        context.pushNamed(
+                          PageUrl.profileDetails,
+                          queryParameters: {PathParam.userId: "1"},
                         );
                       },
+                      child: AppinioSwiper(
+                        padding: EdgeInsets.zero,
+                        backgroundCardsCount: 1,
+
+                        // loop: false,
+                        loop: latLngUsers.isEmpty ? false : true,
+                        cardsCount: latLngUsers.length,
+                        onSwiping: (AppinioSwiperDirection direction) {
+                          print(direction.toString());
+                        },
+                        cardsBuilder: (BuildContext context, int index) {
+                          final singleItem = latLngUsers[index];
+                          return SizedBox(
+                            child: ExploreCard(
+                              user: singleItem,
+                              name:
+                                  singleItem.firstName ??  singleItem.lastName ?? '',
+                              age: singleItem.dob,
+                              intent: singleItem.intent,
+                              tribe: singleItem.tribes ,
+                              image: singleItem.profileImage,
+                              country: ref
+                                      .read(
+                                        countryByIdProvider(
+                                          singleItem.residenceCountryId?.id,
+                                        ),
+                                      )
+                                      ?.name,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 150.verticalSpace,
               ],
-            ),
+            )
           ),
         ),
       ),

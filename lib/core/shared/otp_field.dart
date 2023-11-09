@@ -31,9 +31,14 @@ class OtpField extends StatelessWidget {
       color: Colors.black,
       fontWeight: FontWeight.w500,
     ),
-    decoration: const BoxDecoration(
+    // decoration: const BoxDecoration(
+    //   // color: Pallets.black,
+    //   border: Border(bottom: BorderSide(width: 2,color: Colors.black)),
+    // ),
+    decoration:  BoxDecoration(
       // color: Pallets.black,
-      border: Border(bottom: BorderSide(width: 2,color: Colors.black)),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: Pallets.borderGrey),
     ),
   );
 
@@ -44,9 +49,10 @@ class OtpField extends StatelessWidget {
         fontSize: 24.sp,
         fontWeight: FontWeight.w600,
       ),
-      decoration: const BoxDecoration(
+      decoration:  BoxDecoration(
         // color: Pallets.black,
-        border: Border(bottom: BorderSide(width: 2,color: Colors.black)),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Pallets.borderGrey),
       ),
     );
 

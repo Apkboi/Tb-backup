@@ -1,9 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
 
-import 'password_reset_controller.dart';
 
 class CompletePasswordResetPage extends ConsumerStatefulWidget {
   const CompletePasswordResetPage({super.key});
@@ -98,6 +96,7 @@ class _PasswordResetPageState extends ConsumerState<CompletePasswordResetPage> {
               ButtonWidget(
                 title: 'Reset',
                 onTap: () {
+
                   CustomDialogs.showCustomDialog(
                     Container(
                       padding:
@@ -135,6 +134,7 @@ class _PasswordResetPageState extends ConsumerState<CompletePasswordResetPage> {
                     ),
                     context,
                   );
+
                 },
               ),
               16.verticalSpace,

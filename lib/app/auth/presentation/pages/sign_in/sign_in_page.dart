@@ -171,18 +171,19 @@ class _SignInPageState extends ConsumerState<SignInPage> {
               16.verticalSpace,
               Center(
                 child: RichText(
+
                   textAlign: TextAlign.center,
                   text: TextSpan(
                       text: "You don't have an account? ",
                       style:
-                          ref.read(themeProvider).selectedTextTheme.bodyMedium,
+                          ref.read(themeProvider).selectedTextTheme.titleMedium,
                       children: [
                         TextSpan(
                           text: 'Sign Up',
                           recognizer: TapGestureRecognizer()
                             ..onTap = () =>
                                 context.pushReplacementNamed(PageUrl.signUp),
-                          style: AppTheme.lightTheme.textTheme.bodyMedium
+                          style: AppTheme.lightTheme.textTheme.titleMedium
                               ?.copyWith(
                             color: Pallets.primary,
                           ),

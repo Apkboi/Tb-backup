@@ -237,41 +237,41 @@ class _DrawerWidgetState extends State<DrawerWidget>
             ),
             onTap: () {},
           ),
-          const DrawerTile(
-            index: 1,
-            title: 'My Tribers',
-            icon: Assets.svgsCategory,
-          ),
-          const DrawerTile(
-            index: 2,
-            title: 'Community Boards',
-            icon: Assets.svgsCategory,
-          ),
-          const DrawerTile(
-            index: 3,
-            title: 'Find a Host',
-            icon: Assets.svgsGlobalSearch,
-          ),
-          const DrawerTile(
-            index: 4,
-            title: 'Find a Service',
-            icon: Assets.svgsSearchStatus,
-          ),
-          const DrawerTile(
-            index: 5,
-            title: 'Refer a Friend',
-            icon: Assets.svgsProfile2user,
-          ),
-          const DrawerTile(
-            index: 6,
-            title: 'Upgrade my Account',
-            icon: Assets.svgsCrown,
-          ),
-          const DrawerTile(
-            index: 7,
-            title: 'Contact Us',
-            icon: Assets.svgsCall,
-          ),
+          // const DrawerTile(
+          //   index: 1,
+          //   title: 'My Tribers',
+          //   icon: Assets.svgsCategory,
+          // ),
+          // const DrawerTile(
+          //   index: 2,
+          //   title: 'Community Boards',
+          //   icon: Assets.svgsCategory,
+          // ),
+          // const DrawerTile(
+          //   index: 3,
+          //   title: 'Find a Host',
+          //   icon: Assets.svgsGlobalSearch,
+          // ),
+          // const DrawerTile(
+          //   index: 4,
+          //   title: 'Find a Service',
+          //   icon: Assets.svgsSearchStatus,
+          // ),
+          // const DrawerTile(
+          //   index: 5,
+          //   title: 'Refer a Friend',
+          //   icon: Assets.svgsProfile2user,
+          // ),
+          // const DrawerTile(
+          //   index: 6,
+          //   title: 'Upgrade my Account',
+          //   icon: Assets.svgsCrown,
+          // ),
+          // const DrawerTile(
+          //   index: 7,
+          //   title: 'Contact Us',
+          //   icon: Assets.svgsCall,
+          // ),
           DrawerTile(
             index: 8,
             title: 'Log Out',

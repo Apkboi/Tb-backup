@@ -64,7 +64,29 @@ class MessageModel {
       date: map['date'] as String,
     );
   }
+  MessageModel copyWith({
+    String? message,
+    String? senderId,
+    bool? isMe,
+    String? extraData,
+    String? type,
+    RepliedMessageModel? repliedMessage,
+    String? date,
+    Map? timestamp,
+  }) {
+    return MessageModel(
+      message: message ?? this.message,
+      senderId: senderId ?? this.senderId,
+      isMe: isMe ?? this.isMe,
+      extraData: extraData ?? this.extraData,
+      type: type ?? this.type,
+      repliedMessage: repliedMessage ?? this.repliedMessage,
+      date: date ?? this.date,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
 }
+
 
 class RepliedMessageModel {
   final String? message;

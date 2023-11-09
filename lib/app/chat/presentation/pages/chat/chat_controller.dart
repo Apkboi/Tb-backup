@@ -47,22 +47,22 @@ class ChatController extends StateNotifier<ChatState> {
   }
 
   Future<void> searchForChat(String text) async {
-
     state = ChatLoading();
-    if(text.isEmpty){
+    if (text.isEmpty) {
       chatSearchResults = chats;
     }
 
-    final result = chats.where((element) =>
-        "${element.participants?.firstOrNull?.user?.firstName} ${element.participants?.firstOrNull?.user?.lastName}"
-            .toLowerCase()
-            .contains(text.toLowerCase())).toList();
+    final result = chats
+        .where((element) =>
+            "${element.participants?.firstOrNull?.user?.firstName} ${element.participants?.firstOrNull?.user?.lastName}"
+                .toLowerCase()
+                .contains(text.toLowerCase()))
+        .toList();
     logger.e(result.length);
 
-      chatSearchResults = result;
+    chatSearchResults = result;
 
     state = ChatSuccess();
-
   }
 
   Future<Map<String, dynamic>> getLastMessage(String chatId) async {
@@ -173,16 +173,18 @@ class ChatController extends StateNotifier<ChatState> {
 
   Future<void> initiateChat(String userId) async {
     try {
-      state = ChatLoading();
+      state = InitialiseChatLoading();
 
       final response = await _chatImpService.initiateChat(userId);
       initiatedChat = response?.data;
 
-      state = ChatSuccess();
+      state = InitialiseChatSuccess();
     } catch (e) {
       state = ChatError(e.toString());
     }
   }
+
+
 }
 
 final chatProvider = StateNotifierProvider<ChatController, ChatState>((ref) {
@@ -195,7 +197,13 @@ class ChatInitial extends ChatState {}
 
 class ChatLoading extends ChatState {}
 
+class ChatSearch extends ChatState {}
+
 class ChatSuccess extends ChatState {}
+
+class InitialiseChatLoading extends ChatState {}
+
+class InitialiseChatSuccess extends ChatState {}
 
 class ChatError extends ChatState {
   final String message;

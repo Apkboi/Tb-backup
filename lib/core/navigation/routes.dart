@@ -31,7 +31,7 @@ import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/navigation/route_url.dart';
 
-final _rootNavigatorKey =
+final rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'rootNavigator');
 final _shellNavigatorAKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
 final _shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'shellB');
@@ -42,7 +42,7 @@ class CustomRoutes {
   static final goRouter = GoRouter(
     initialLocation: '/splash',
     // initialLocation: '/profile/setupProfileIntroPage/setupProfilePage',
-    navigatorKey: _rootNavigatorKey,
+    navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
@@ -107,10 +107,11 @@ class CustomRoutes {
       GoRoute(
         path: '/notificationsPage',
         name: PageUrl.notificationsPage,
-        parentNavigatorKey: _rootNavigatorKey,
+        parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const NotificationsPage(),
       ),
       StatefulShellRoute.indexedStack(
+
         builder: (context, state, navigationShell) {
           return BasePage(navigationShell: navigationShell);
         },
@@ -129,6 +130,7 @@ class CustomRoutes {
           ),
           StatefulShellBranch(
             navigatorKey: _shellNavigatorBKey,
+
             routes: [
               GoRoute(
                 path: '/community',
@@ -152,12 +154,11 @@ class CustomRoutes {
                   GoRoute(
                     path: 'details',
                     name: PageUrl.chatDetails,
-                    parentNavigatorKey: _rootNavigatorKey,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => ChatDetailsPage(
                       chatId: state.uri.queryParameters[PathParam.chatId] ?? '',
                       // userId: state.uri.queryParameters[PathParam.userId] ?? '',
-                      userName:
-                          state.uri.queryParameters[PathParam.userName] ?? '',
+                      userName: state.uri.queryParameters[PathParam.userName] ?? '',
                     ),
                   ),
                 ],
@@ -171,6 +172,7 @@ class CustomRoutes {
                 path: '/profile',
                 name: PageUrl.profile,
                 pageBuilder: (context, state) => const NoTransitionPage(
+
                   child: ProfilePage(),
                 ),
                 routes: [
@@ -227,19 +229,19 @@ class CustomRoutes {
                   GoRoute(
                     path: 'setupProfileIntroPage',
                     name: PageUrl.setupProfileIntroPage,
-                    parentNavigatorKey: _rootNavigatorKey,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => SetupProfileIntroPage(),
                     routes: [
                       GoRoute(
                         path: 'uploadPhotos',
                         name: PageUrl.uploadPhotos,
-                        parentNavigatorKey: _rootNavigatorKey,
+                        parentNavigatorKey: rootNavigatorKey,
                         builder: (context, state) => UploadPhotosPage(),
                       ),
                       GoRoute(
                         path: 'setupProfilePage',
                         name: PageUrl.setupProfilePage,
-                        parentNavigatorKey: _rootNavigatorKey,
+                        parentNavigatorKey: rootNavigatorKey,
                         builder: (context, state) => SetupProfilePage(),
                       ),
                     ],

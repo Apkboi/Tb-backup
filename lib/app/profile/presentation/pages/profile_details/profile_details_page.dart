@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +73,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
   @override
   Widget build(BuildContext context) {
     ref.listen(chatProvider, (previous, next) {
-      if (next is ChatLoading) {
+      if (next is InitialiseChatLoading) {
         CustomDialogs.showLoading(context);
       }
 
@@ -84,13 +83,13 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
         return;
       }
 
-      if (next is ChatSuccess) {
+      if (next is InitialiseChatSuccess) {
         context.pop();
 
         final userDetails =
             ref.watch(profileDetailsProvider.notifier).userDetails;
         final chatId = ref.watch(chatProvider.notifier).initiatedChat?.id;
-        _sendInitialMessage(chatId??0);
+        _sendInitialMessage(chatId ?? 0);
         context.pushNamed(
           PageUrl.chatDetails,
           queryParameters: {
@@ -192,41 +191,6 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                 ),
-                23.verticalSpace,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    UserUpDownWidget(
-                      title: 'Tribe',
-                      value: userDetails?.tribes == null
-                          ? "N/A"
-                          : '${ref.watch(tribeByIdProvider(int.parse(userDetails?.tribes)))?.name}',
-                    ),
-                    Container(
-                      width: 1,
-                      height: 30,
-                      margin: const EdgeInsets.symmetric(horizontal: 32),
-                      color: Pallets.grey,
-                    ),
-                    UserUpDownWidget(
-                      title: 'Location',
-                      value:
-                          '${ref.read(setupProfileProvider.notifier).countries.firstWhereOrNull((element) => element.id == userDetails?.residenceCountryId) ?? 'N/A'}',
-                    ),
-                    Container(
-                      width: 1,
-                      height: 30,
-                      margin: EdgeInsets.symmetric(horizontal: 32),
-                      color: Pallets.grey,
-                    ),
-                    UserUpDownWidget(
-                      title: 'Age',
-                      value: '${Helpers.calculateAge(userDetails?.dob ?? '')}',
-                    ),
-                  ],
-                ),
-                24.verticalSpace,
-                CustomDivider(),
                 24.verticalSpace,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -268,6 +232,48 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     ),
                   ],
                 ),
+                26.verticalSpace,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    UserUpDownWidget(
+                      title: 'Tribe',
+                      value: userDetails?.tribes == null
+                          ? "N/A"
+                          : userDetails!.tribes is List
+                              ? (userDetails.tribes as List)
+                                  .map((e) => ref
+                                      .watch(tribeByIdProvider(int.parse(e)))
+                                      ?.name)
+                                  .toList()
+                                  .join(", ")
+                              : userDetails.tribes,
+                    ),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      margin: const EdgeInsets.symmetric(horizontal: 32),
+                      color: Pallets.grey,
+                    ),
+                    UserUpDownWidget(
+                      title: 'Location',
+                      value:
+                          '${ref.read(setupProfileProvider.notifier).countries.firstWhereOrNull((element) => element.id == userDetails?.residenceCountryId) ?? 'N/A'}',
+                    ),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      margin: EdgeInsets.symmetric(horizontal: 32),
+                      color: Pallets.grey,
+                    ),
+                    UserUpDownWidget(
+                      title: 'Age',
+                      value: '${Helpers.calculateAge(userDetails?.dob ?? '')??"N/A"}',
+                    ),
+                  ],
+                ),
+                24.verticalSpace,
+                const CustomDivider(),
                 24.verticalSpace,
                 Builder(builder: (context) {
                   if (userDetails?.otherImages?.length == 0) {
@@ -309,10 +315,11 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                 24.verticalSpace,
                 ...records.map((e) {
                   if (e.$2 is List<String>) {
-
                     return LeftRightWidget(
                       title: e.$1,
-                      value: (e.$2 as List).isNotEmpty ?(e.$2 as List).join(', '):"-",
+                      value: (e.$2 as List).isNotEmpty
+                          ? (e.$2 as List).join(', ')
+                          : "-",
                     );
                   }
                   // logger.log(Level.debug, "${e.$1}${e.$2}");
@@ -331,31 +338,31 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
   }
 
   void _sendInitialMessage(num chatId) {
-    final userDto = sl<UserImpDao>().user;
-    DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+    if (_requestMessage != null) {
+      final userDto = sl<UserImpDao>().user;
+      DatabaseReference dbRef = FirebaseDatabase.instance.ref();
 
-    final data = MessageModel(
-      message: _requestMessage,
-      senderId: userDto?.id.toString(),
-      isMe: true,
-      repliedMessage:null,
-      date: DateTime.now().toString(),
-      timestamp: ServerValue.timestamp,
-    );
-
-    if (data.message != '') {
-      dbRef
-          .child("chat_messages")
-          .child(chatId.toString())
-          .push()
-          .set(data.toMap())
-          .then(
-            (value) {},
+      final data = MessageModel(
+        message: _requestMessage,
+        senderId: userDto?.id.toString(),
+        isMe: true,
+        repliedMessage: null,
+        date: DateTime.now().toString(),
+        timestamp: ServerValue.timestamp,
       );
+
+      if (data.message != '') {
+        dbRef
+            .child("chat_messages")
+            .child(chatId.toString())
+            .push()
+            .set(data.toMap())
+            .then(
+              (value) {},
+            );
+      }
+      _requestMessage = null;
     }
-    _requestMessage = null;
-
-
   }
 }
 
@@ -413,14 +420,14 @@ class UserUpDownWidget extends StatelessWidget {
       children: [
         TextView(
           text: title,
-          fontSize: 12,
+          fontSize: 14,
           color: Pallets.grey,
           fontWeight: FontWeight.w400,
         ),
         TextView(
           text: value,
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
         ),
       ],
     );

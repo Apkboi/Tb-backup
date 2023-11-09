@@ -11,7 +11,6 @@ import 'package:triberly/app/profile/presentation/widgets/user_image_with_status
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/data/session_manager.dart';
 
-
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
@@ -22,7 +21,7 @@ class ProfilePage extends ConsumerStatefulWidget {
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
-   late UserDto? user ;
+  late UserDto? user;
 
   @override
   void dispose() {
@@ -69,11 +68,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 5.verticalSpace,
-                 Center(child: UserImageWithStatusWidget(imageUrl:user?.profileImage,status: user?.profilePercentage(),)),
+                Center(
+                    child: UserImageWithStatusWidget(
+                  imageUrl: user?.profileImage,
+                  status: user?.profilePercentage(),
+                )),
                 40.verticalSpace,
-                 Center(
+                Center(
                   child: TextView(
-                    text: "${user?.lastName ?? ''} ${user?.firstName ?? ''}",
+                    text: "${user?.firstName ?? ''} ${user?.lastName ?? ''}",
                     // text: "Buki Osunkeye, 24",
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -93,7 +96,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         shape: BoxShape.circle,
                       ),
                       2.horizontalSpace,
-                       TextView(
+                      TextView(
                         // text: "${userDetails?.lastName ?? ''} ${userDetails?.firstName ?? ''}",
                         text: "${user?.phoneNo}",
                         fontSize: 14,
@@ -108,56 +111,53 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: CustomDivider()),
                 20.verticalSpace,
-                Builder(
-                  builder: (context) {
-                    if (user?.otherImages?.length == 0) {
-                      return SizedBox();
-                    }
-                    return Column(
-                      children: [
-                        const Row(
-                          children: [
-                            TextView(
-                              text: 'Photos',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ],
-                        ),
-                        8.verticalSpace,
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: List.generate(
+                Builder(builder: (context) {
+                  if (user?.otherImages?.length == 0) {
+                    return SizedBox();
+                  }
+                  return Column(
+                    children: [
+                      const Row(
+                        children: [
+                          TextView(
+                            text: 'Photos',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ],
+                      ),
+                      8.verticalSpace,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
                             user?.otherImages?.length ?? 0,
-                              (index) => Padding(
-                                padding: EdgeInsets.only(right: 24.w),
-                                child: ImageWidget(
-                                  imageUrl:  user?.otherImages?[index].url ?? '',
-                                  size: 134.w,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                            (index) => Padding(
+                              padding: EdgeInsets.only(right: 24.w),
+                              child: ImageWidget(
+                                imageUrl: user?.otherImages?[index].url ?? '',
+                                size: 134.w,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
                         ),
-
-                      ],
-                    );
-                  }
-                ),
+                      ),
+                    ],
+                  );
+                }),
                 20.verticalSpace,
                 const _IncognitoSwitcher(),
                 20.verticalSpace,
                 ...ProfileOptionItemData.profileOptions
                     .map((e) => ProfileOptionItem(
-                    leaadingImage: e.leadingImage,
-                    tittle: e.title,
-                    trailing: e.trailing,
-                    onTap: () {
-                      e.onTap(context);
-                    },
-                    hasArrow: e.hasArrow))
+                        leaadingImage: e.leadingImage,
+                        tittle: e.title,
+                        trailing: e.trailing,
+                        onTap: () {
+                          e.onTap(context);
+                        },
+                        hasArrow: e.hasArrow))
                     .toList(),
                 23.verticalSpace,
                 SizedBox(
@@ -214,7 +214,6 @@ class _IncognitoSwitcher extends StatelessWidget {
             ),
             CupertinoSwitch(
               value: false,
-
               activeColor: Pallets.primary,
               trackColor: Pallets.grey,
               onChanged: (value) {},

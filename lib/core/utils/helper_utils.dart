@@ -4,11 +4,9 @@ import 'dart:math';
 
 import 'package:dart_ipify/dart_ipify.dart';
 
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart' as intl;
 
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as launch;
@@ -128,9 +126,9 @@ class Helpers {
     return ipv4;
   }
 
-  static String calculateAge(String dateOfBirth) {
+  static String? calculateAge(String dateOfBirth) {
     if (dateOfBirth.isEmpty) {
-      return 'N/A';
+      return null;
     }
     DateTime dob = DateTime.parse(dateOfBirth);
 
@@ -139,6 +137,8 @@ class Helpers {
     Duration difference = now.difference(dob);
 
     int age = (difference.inDays / 365).floor();
+
+
 
     return age.toString();
   }

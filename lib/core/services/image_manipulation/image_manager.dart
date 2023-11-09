@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../_core.dart';
 
@@ -95,6 +93,56 @@ class ImageManager {
   }
 
   Future<File?> showPhotoSourceDialog(BuildContext context,
+      {bool? shouldCompress, bool? shouldCrop}) {
+    return showModalBottomSheet<File?>(
+      context: context,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 45.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextView(
+                text: 'Upload Image',
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+              34.verticalSpace,
+              ButtonWidget(
+                title: 'Open Camera',
+                onTap: () async {
+                  try {
+                    await pickImageFromCamera(shouldCrop: shouldCrop)
+                        .then((value) => Navigator.pop(context, value));
+                  } catch (e) {
+                    logger.e(e.toString());
+                  }
+                },
+              ),
+              20.verticalSpace,
+              ButtonWidget(
+                title: 'Upload from gallery',
+                isInverted: true,
+                onTap: () async {
+                  try {
+                    await pickImageFromGallery(shouldCrop: shouldCrop)
+                        .then((value) => Navigator.pop(context, value));
+                  } catch (e) {
+                    logger.e(e.toString());
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+  Future<File?> showDocumentSourceDialog(BuildContext context,
       {bool? shouldCompress, bool? shouldCrop}) {
     return showModalBottomSheet<File?>(
       context: context,

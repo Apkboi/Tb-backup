@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/domain/models/dtos/countries_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_other_photos_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
@@ -9,6 +11,7 @@ import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.da
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
+import 'package:triberly/core/shared/custom_type_drop_down_search.dart';
 
 
 class ProfileTab extends ConsumerStatefulWidget {
@@ -33,6 +36,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   TextEditingController phoneNumber = TextEditingController();
   String completeNumber = '';
   List<String?> otherImages = [];
+  num? _residenceCountryId;
 
   @override
   void initState() {
@@ -74,6 +78,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
     bio.text = userProfile?.bio ?? '';
     gender.text = userProfile?.gender ?? '';
     referral.text = userProfile?.refCode ?? '';
+    _residenceCountryId = userProfile?.residenceCountryId?.id;
     phoneNumber.text = userProfile?.phoneNo?.replacePlus234() ?? '';
     otherImages = List.generate(userProfile?.otherImages?.length ?? 0,
         (index) => userProfile!.otherImages?[index].url);
@@ -109,12 +114,12 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           21.verticalSpace,
-          const TextView(
-            text: 'Profile details',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-          8.verticalSpace,
+          // const TextView(
+          //   text: 'Profile details',
+          //   fontSize: 20,
+          //   fontWeight: FontWeight.w600,
+          // ),
+          // 8.verticalSpace,
           const TextView(
             text:
                 'Add a bit more to enable us match with other Tribers with similar background.',
@@ -131,82 +136,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                 topLabel: true,
                 controller: firstName,
               ),
-              FilterCustomDropDown(
-                label: 'Gender',
-                hintText: "Gender",
-                selectedValue: gender.text,
-                listItems: const ['Male', 'Female'],
-                onTap: (value) {
-                  gender.text = value ?? '';
-                },
-                hasValidator: true,
-              ),
-              16.verticalSpace,
-              CustomPhoneField(
-                topLabel: true,
-                controller: phoneNumber,
-                initialCountryCode: 'NG',
-                onChanged: (number) {
-                  gender.text = "Female";
-                  completeNumber = number.completeNumber;
-                  // print(number.completeNumber);
-                },
-              ),
-              TextBoxField(
-                topLabel: true,
-                label: 'Email Address',
-                controller: email,
-              ),
-              InkWell(
-                onTap: () async {
-                  final value = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(3000),
-                  );
 
-                  if (value != null) {
-                    dob.text = TimeUtil.formatDateDDMMYYY(
-                        value.toIso8601String() ?? '');
-                  }
-                },
-                child: TextBoxField(
-                  topLabel: true,
-                  isEnabled: false,
-                  label: 'Date of birth',
-                  controller: dob,
-                  hasBottomPadding: false,
-                ),
-              ),
-              5.verticalSpace,
-              const TextView(
-                text: "Your age will be public",
-                fontSize: 12,
-                color: Pallets.grey,
-              ),
-              24.verticalSpace,
-              TextBoxField(
-                topLabel: true,
-                label: 'Occupation',
-                controller: occupation,
-
-              ),
-              TextBoxField(
-                label: 'Bio',
-                controller: bio,
-                minLines: 3,
-                maxLines: 4,
-                hasBottomPadding: false,
-              ),
-              5.verticalSpace,
-              const TextView(
-                text:
-                    "At least 160 characters: Don't be shy. Tell us about you.\nWho are you? Your interests, your lifestyle, your beliefs, what you like to do. Or a cool story or what you look forward to. Put your best foot forward.",
-                fontSize: 12,
-                color: Pallets.grey,
-              ),
-              24.verticalSpace,
               const TextView(
                 text: "Photos",
                 fontSize: 16,
@@ -241,7 +171,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                       final imageManger = ImageManager();
 
                       final imageFile =
-                          await imageManger.showPhotoSourceDialog(context);
+                      await imageManger.showPhotoSourceDialog(context);
 
                       otherImages[index] = imageFile?.path;
                       setState(() {});
@@ -262,13 +192,13 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                                 ref
                                     .read(setupProfileProvider.notifier)
                                     .uploadOtherPhotos(
-                                      UpdateOtherPhotosReqDto(
-                                        images: List.generate(
-                                          otherImages.length,
+                                  UpdateOtherPhotosReqDto(
+                                    images: List.generate(
+                                      otherImages.length,
                                           (index) => otherImages[index]!,
-                                        ),
-                                      ),
-                                    );
+                                    ),
+                                  ),
+                                );
                               }
                             });
                           }
@@ -282,6 +212,87 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                   );
                 },
               ),
+              FilterCustomDropDown(
+                label: 'Gender',
+                hintText: "Gender",
+                selectedValue: gender.text,
+                listItems: const ['Male', 'Female'],
+                onTap: (value) {
+                  gender.text = value ?? '';
+                },
+                hasValidator: true,
+              ),
+              16.verticalSpace,
+              CustomPhoneField(
+                topLabel: true,
+                controller: phoneNumber,
+                initialCountryCode: 'NG',
+                onChanged: (number) {
+                  gender.text = "Female";
+                  completeNumber = number.completeNumber;
+                  // print(number.completeNumber);
+                },
+              ),
+              TextBoxField(
+                topLabel: true,
+                label: 'Email Address',
+                controller: email,
+              ),
+              InkWell(
+                onTap: () async {
+               _pickDate(context);
+                },
+                child: TextBoxField(
+                  topLabel: true,
+                  isEnabled: false,
+                  label: 'Date of birth',
+                  controller: dob,
+                  hasBottomPadding: false,
+                ),
+              ),
+              5.verticalSpace,
+              const TextView(
+                text: "Your age will be public",
+                fontSize: 12,
+                color: Pallets.grey,
+              ),
+              24.verticalSpace,
+              TextBoxField(
+                topLabel: true,
+                label: 'Occupation',
+                controller: occupation,
+
+              ),
+
+              CustomTypeDropDownSearch<CountriesData>(
+                hintText: "Current country of residence",
+                hasValidator: true,
+                selectedItem:
+                ref.watch(countryByIdProvider(_residenceCountryId)),
+                itemAsString: (CountriesData? data) {
+                  return data?.name ?? '';
+                },
+                listItems: ref.watch(setupProfileProvider.notifier).countries,
+                onTap: (value) {
+                  _residenceCountryId = value?.id;
+                },
+              ),
+              16.verticalSpace,
+              TextBoxField(
+                label: 'Bio',
+                controller: bio,
+                minLines: 3,
+                maxLines: 4,
+                hasBottomPadding: false,
+              ),
+              5.verticalSpace,
+              const TextView(
+                text:
+                    "At least 160 characters: Don't be shy. Tell us about you.\nWho are you? Your interests, your lifestyle, your beliefs, what you like to do. Or a cool story or what you look forward to. Put your best foot forward.",
+                fontSize: 12,
+                color: Pallets.grey,
+              ),
+
               57.verticalSpace,
               ButtonWidget(
                 title: 'Save',
@@ -315,4 +326,43 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
 
   @override
   bool get wantKeepAlive => true;
+
+  void _pickDate(BuildContext context) async {
+  pickDate(context, DateTime.now());
+
+
+  // }
+    // final value = await showDatePicker(
+    //   context: context,
+    //   initialDate: DateTime.now(),
+    //   firstDate: DateTime(1900),
+    //   lastDate: DateTime(3000),
+    // );
+    //
+    // if (value != null) {
+    //   dob.text = TimeUtil.formatDateDDMMYYY(
+    //       value.toIso8601String() ?? '');
+    // }
+  }
+
+
+  Future<void> pickDate(BuildContext context, DateTime initialDate) async {
+
+    DateTime? pickedDate = await CustomDialogs.selectDate(initialDate, context);
+
+    if (pickedDate != null) {
+      dob.text = TimeUtil.formatDateDDMMYYY(
+          pickedDate.toIso8601String() ?? '');
+    }
+  }
+
 }
+
+
+
+
+
+
+
+
+

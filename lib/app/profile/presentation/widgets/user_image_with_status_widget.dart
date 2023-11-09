@@ -25,8 +25,8 @@ class UserImageWithStatusWidget extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         SizedBox(
-          height: 100.w,
-          width: 100.w,
+          height: 106.w,
+          width: 106.w,
           child:  CircularProgressIndicator(
             value: status!*0.01,
           ),

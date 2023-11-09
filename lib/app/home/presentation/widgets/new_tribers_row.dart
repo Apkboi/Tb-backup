@@ -27,7 +27,7 @@ class NewTribersRow extends StatelessWidget {
                 userDto: users[index],
                 id: users[index].id.toString(),
                 image: users[index].profileImage,
-                name: "${users[index].lastName} ${users[index].firstName}",
+                name: "${users[index].firstName} ${users[index].lastName}",
                 distance: ((index + 1) * 14.23).toStringAsFixed(2),
               ),
         ),

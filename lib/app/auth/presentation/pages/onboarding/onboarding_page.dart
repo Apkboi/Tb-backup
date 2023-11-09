@@ -66,7 +66,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                 // fit: BoxFit.fitHeight,
                 width: double.infinity,
               ),
-              50.verticalSpace,
+              40.verticalSpace,
               Expanded(
                 child: PageView.builder(
                   controller: pageController,
@@ -86,7 +86,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                         children: [
                           TextView(
                             text: OnboardingData.data[currentIndex].title,
-                            fontSize: 36,
+                            fontSize: 30,
                             fontWeight: FontWeight.w700,
                             color: Pallets.onboardingTextWhite,
                           ),
@@ -105,6 +105,7 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                   },
                 ),
               ),
+              5.verticalSpace,
               Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -115,20 +116,22 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
                           OnboardingData.data.length,
-                              (index) => AnimatedContainer(
-                            duration: const Duration(milliseconds: 400),
-                            width: currentIndex == index ? 10 : 7,
-                            height: currentIndex == index ? 10 : 7,
-                            margin: const EdgeInsets.symmetric(horizontal: 3),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(6),
+                              (index) =>
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 400),
+                                width: currentIndex == index ? 10 : 7,
+                                height: currentIndex == index ? 10 : 7,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 3),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(6),
+                                  ),
+                                  color: currentIndex == index
+                                      ? Pallets.white
+                                      : Pallets.grey,
+                                ),
                               ),
-                              color: currentIndex == index
-                                  ? Pallets.white
-                                  : Pallets.grey,
-                            ),
-                          ),
                         ),
                       ),
                     ),
@@ -138,57 +141,59 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
 
               Container(
                 alignment: Alignment.bottomCenter,
-                child:   (currentIndex == images.length)
-                  ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(mainAxisAlignment: MainAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+                child: (currentIndex == images.length)
+                    ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
 
-                    35.verticalSpace,
-                    ButtonWidget(
-                      title: 'Create an Account',
-                      buttonColor: Pallets.white,
-                      textColor: Pallets.primary,
-                      onTap: () {
-                        context.pushNamed(PageUrl.signUp);
-                      },
-                    ),
-                    16.verticalSpace,
-                    InkWell(
-                      onTap: (){
-                        context.pushNamed(PageUrl.signIn);
-
-                      },
-                      child: RichText(text:  TextSpan(style:  GoogleFonts.plusJakartaSans(),children: const [
-                        TextSpan(text: "Already have account?",style: TextStyle(fontWeight: FontWeight.w400)),
-                        TextSpan(text: "Login",style: TextStyle(fontWeight: FontWeight.w700)),
-                      ])),
-                    )
-                  ],
-                ),
-              )
-                  : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    35.verticalSpace,
-                    ButtonWidget(
-                      title: 'Next',
-                      buttonColor: Pallets.white,
-                      textColor: Pallets.primary,
-                      onTap: () {
-                        pageController.nextPage(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.linearToEaseOut,
-                        );
-                      },
-                    ),
-                    30.verticalSpace,
-                  ],
-                ),
-              ),),
+                      35.verticalSpace,
+                      ButtonWidget(
+                        title: 'Create an Account',
+                        buttonColor: Pallets.white,
+                        textColor: Pallets.primary,
+                        onTap: () {
+                          context.pushNamed(PageUrl.signUp);
+                        },
+                      ),
+                      16.verticalSpace,
+                      InkWell(
+                        onTap: () {
+                          context.pushNamed(PageUrl.signIn);
+                        },
+                        child: RichText(text: TextSpan(style: GoogleFonts
+                            .plusJakartaSans(), children: const [
+                          TextSpan(text: "Already have account?",
+                              style: TextStyle(fontWeight: FontWeight.w400)),
+                          TextSpan(text: "Login",
+                              style: TextStyle(fontWeight: FontWeight.w700)),
+                        ])),
+                      )
+                    ],
+                  ),
+                )
+                    : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      35.verticalSpace,
+                      ButtonWidget(
+                        title: 'Next',
+                        buttonColor: Pallets.white,
+                        textColor: Pallets.primary,
+                        onTap: () {
+                          pageController.nextPage(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.linearToEaseOut,
+                          );
+                        },
+                      ),
+                      30.verticalSpace,
+                    ],
+                  ),
+                ),),
 
               45.verticalSpace,
             ],
@@ -201,7 +206,9 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                 context: context,
                 removeTop: true,
                 child: TextButton(
-                  style: TextButton.styleFrom(backgroundColor: Pallets.white,foregroundColor: Pallets.primary,shape: StadiumBorder()),
+                  style: TextButton.styleFrom(backgroundColor: Pallets.white,
+                      foregroundColor: Pallets.primary,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   onPressed: () {
                     pageController.animateToPage(2,
                         duration: const Duration(milliseconds: 400),
@@ -211,7 +218,6 @@ class _OnboardingPageState extends ConsumerState<OnBoardingPage> {
                     text: 'Skip',
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-
 
 
                   ),
