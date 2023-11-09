@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/profile/presentation/widgets/Interests_tab.dart';
 import 'package:triberly/app/profile/presentation/widgets/ethnicity_tab.dart';
 import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
+import 'package:triberly/app/profile/presentation/widgets/others_tab.dart';
 import 'package:triberly/app/profile/presentation/widgets/profile_tab.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
@@ -28,7 +29,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller = TabController(length: 3, vsync: this);
+    controller = TabController(length: 4, vsync: this);
     _getProfile();
   }
 
@@ -171,8 +172,11 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
             TabBar(
               indicatorSize: TabBarIndicatorSize.tab,
               isScrollable: true,
+// tabAlignment: TabAlignment.start,
               controller: controller,
+
               // indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
+
               labelPadding: const EdgeInsets.symmetric(horizontal: 10),
               padding: const EdgeInsets.symmetric(horizontal: 24),
               unselectedLabelStyle: ref
@@ -185,6 +189,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                   .titleMedium,
               labelColor: Pallets.white,
               unselectedLabelColor: Pallets.grey,
+
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(8), // Creates border
                 color: Pallets.primary,
@@ -214,18 +219,18 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                 ),
                 Tab(text: 'Ethnicity'),
                 Tab(text: 'Interests'),
-                // Tab(text: 'Others'),
+                Tab(text: 'Others'),
               ],
             ),
 
-             Expanded(
+            Expanded(
               child: TabBarView(
                 controller: controller,
                 children: const [
                   ProfileTab(),
                   EthnicityTab(),
                   InterestsTab(),
-                  // InterestsTab(),
+                  OthersTab(),
                 ],
               ),
             ),

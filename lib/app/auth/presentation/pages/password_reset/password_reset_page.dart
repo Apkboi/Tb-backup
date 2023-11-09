@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/forgot_password_req_dto.dart';
@@ -107,26 +106,26 @@ class _PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                   initialCountryCode: 'NG',
                 ),
               // 10.verticalSpace,
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     TextView(
-              //       text: isEmail
-              //           ? 'Use phone number instead'
-              //           : 'Use Email instead',
-              //       fontSize: 14,
-              //       color: Pallets.primaryDark,
-              //       fontWeight: FontWeight.w500,
-              //       onTap: () {
-              //         dataCtrl.clear();
-              //         dataEmailCtrl.clear();
-              //         setState(() {
-              //           isEmail = !isEmail;
-              //         });
-              //       },
-              //     ),
-              //   ],
-              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextView(
+                    text: isEmail
+                        ? 'Use phone number instead'
+                        : 'Use Email instead',
+                    fontSize: 14,
+                    color: Pallets.primaryDark,
+                    fontWeight: FontWeight.w500,
+                    onTap: () {
+                      dataCtrl.clear();
+                      dataEmailCtrl.clear();
+                      setState(() {
+                        isEmail = !isEmail;
+                      });
+                    },
+                  ),
+                ],
+              ),
               56.verticalSpace,
               ButtonWidget(
                 title: 'Reset',

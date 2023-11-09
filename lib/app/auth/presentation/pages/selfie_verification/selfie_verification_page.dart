@@ -185,9 +185,11 @@ class _SelfieVerificationPageState
     CustomDialogs.showLoading(context);
 
     try {
+
       detectedFaceData = await FacePlusService.detectFaces(
         photo.value!,
       );
+
     } catch (e, sta) {
       logger.e(sta);
     } finally {

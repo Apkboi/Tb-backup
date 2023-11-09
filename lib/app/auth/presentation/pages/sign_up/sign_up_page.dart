@@ -7,10 +7,7 @@ import 'package:triberly/app/auth/domain/models/dtos/sign_up_req_dto.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
-import 'package:triberly/core/services/_services.dart';
-import 'package:triberly/core/services/locale_service/local_notifier.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
-import 'package:triberly/core/utils/localization_extension.dart';
 import 'package:triberly/generated/assets.dart';
 import 'package:triberly/generated/l10n.dart';
 
@@ -135,6 +132,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             TextBoxField(
               label: 'Email Address',
               controller: email,
+              validator: FieldValidators.emailValidator,
             ),
             TextBoxField(
               label: 'Password',

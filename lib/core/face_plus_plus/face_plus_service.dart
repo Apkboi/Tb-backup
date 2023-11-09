@@ -1,7 +1,5 @@
-import 'dart:math';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/face_plus_plus/detect_face_data.dart';
