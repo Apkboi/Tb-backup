@@ -52,7 +52,7 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
     final userProfile =
         ref.watch(setupProfileProvider.notifier).userProfile.data;
     otherLanguages.text = userProfile?.otherLanguages ?? '';
-    // townshipCtrl.text = userProfile?. ?? '';
+    townshipCtrl.text = userProfile?.town ?? '';
     // motherTongue.text = userProfile?. ?? '';
 
     _tribeId = num.tryParse(userProfile?.tribes ?? "0");
@@ -160,6 +160,9 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
                     tribes: _tribeId.toString(),
                     originCountryId: _originalCountry,
                     residenceCountryId: _residenceCountryId,
+                    town: townshipCtrl.text
+
+
                   );
                   ref.read(setupProfileProvider.notifier).updateProfile(data);
                 },

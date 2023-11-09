@@ -4,7 +4,7 @@ class UserDto {
   dynamic middleName;
   dynamic lastName;
   dynamic email;
-  dynamic phoneNo;
+  String? phoneNo;
   dynamic gender;
   dynamic username;
   dynamic refCode;

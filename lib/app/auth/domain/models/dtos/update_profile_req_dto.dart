@@ -51,6 +51,11 @@ class UpdateProfileReqDto {
     this.linkedinLink,
     this.latitude,
     this.longitude,
+    this.haveKids,
+    this.relationShipStatus,
+    this.religion,
+    this.town
+
   });
 
   UpdateProfileReqDto.fromJson(dynamic json) {
@@ -82,6 +87,15 @@ class UpdateProfileReqDto {
     longitude = json['longitude'];
   }
   String? verificationImage;
+
+  // TODO: ADD THE FIELDS TO FROMJSON CONSTRUCTOR
+  String? haveKids;
+  String? religion;
+  String? otherLanguage;
+  String? relationShipStatus;
+  String? town;
+  //
+
   String? firstName;
   String? middleName;
   String? lastName;
@@ -108,6 +122,12 @@ class UpdateProfileReqDto {
   num? longitude;
   UpdateProfileReqDto copyWith({
     String? verificationImage,
+    String? haveKids,
+    String? religion,
+    String? otherLanguage,
+    String? relationShipStatus,
+    String? town,
+
     String? firstName,
     String? middleName,
     String? lastName,
@@ -166,7 +186,18 @@ class UpdateProfileReqDto {
     if (verificationImage != null) {
       map['verification_image'] = verificationImage;
     }
+
+
     if (firstName != null) map['first_name'] = firstName;
+
+    if (relationShipStatus != null) map['relationship_status'] = relationShipStatus;
+    if (haveKids != null) map['have_kids'] = haveKids;
+    if (religion != null) map['religion'] = religion;
+    if (otherLanguages != null) map['other_languages'] = otherLanguages;
+    if (town != null) map['town'] = town;
+
+
+
     if (middleName != null) map['middle_name'] = middleName;
     if (lastName != null) map['last_name'] = lastName;
     if (dob != null) map['dob'] = dob;

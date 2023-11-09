@@ -110,6 +110,26 @@ class CustomRoutes {
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const NotificationsPage(),
       ),
+      GoRoute(
+        path: '/setupProfileIntroPage',
+        name: PageUrl.setupProfileIntroPage,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => SetupProfileIntroPage(),
+        routes: [
+          GoRoute(
+            path: 'uploadPhotos',
+            name: PageUrl.uploadPhotos,
+            parentNavigatorKey: rootNavigatorKey,
+            builder: (context, state) => UploadPhotosPage(),
+          ),
+          GoRoute(
+            path: 'setupProfilePage',
+            name: PageUrl.setupProfilePage,
+            parentNavigatorKey: rootNavigatorKey,
+            builder: (context, state) => SetupProfilePage(),
+          ),
+        ],
+      ),
       StatefulShellRoute.indexedStack(
 
         builder: (context, state, navigationShell) {
@@ -226,26 +246,13 @@ class CustomRoutes {
                   ),
 
 
-                  GoRoute(
-                    path: 'setupProfileIntroPage',
-                    name: PageUrl.setupProfileIntroPage,
-                    parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => SetupProfileIntroPage(),
-                    routes: [
-                      GoRoute(
-                        path: 'uploadPhotos',
-                        name: PageUrl.uploadPhotos,
-                        parentNavigatorKey: rootNavigatorKey,
-                        builder: (context, state) => UploadPhotosPage(),
-                      ),
-                      GoRoute(
-                        path: 'setupProfilePage',
-                        name: PageUrl.setupProfilePage,
-                        parentNavigatorKey: rootNavigatorKey,
-                        builder: (context, state) => SetupProfilePage(),
-                      ),
-                    ],
-                  ),
+                  // GoRoute(
+                  //   path: 'setupProfilePage',
+                  //   name: PageUrl.setupProfilePage,
+                  //   parentNavigatorKey: rootNavigatorKey,
+                  //   builder: (context, state) => SetupProfilePage(),
+                  // ),
+
                 ],
               ),
             ],

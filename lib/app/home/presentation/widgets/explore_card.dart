@@ -27,6 +27,7 @@ class ExploreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        // context.goNamed(PageUrl.setupProfileIntroPage);
         context.pushNamed(
           PageUrl.profileDetails,
           queryParameters: {PathParam.userId: user.id.toString()},

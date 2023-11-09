@@ -1,15 +1,149 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
+import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
+import 'package:triberly/core/constants/pallets.dart';
+import 'package:triberly/core/navigation/route_url.dart';
+import 'package:triberly/core/shared/custom_drop_down.dart';
+import 'package:triberly/core/shared/custom_text_button.dart';
+import 'package:triberly/core/shared/text_view.dart';
 
-class OthersTab extends StatefulWidget {
+class OthersTab extends ConsumerStatefulWidget {
   const OthersTab({Key? key}) : super(key: key);
 
   @override
-  State<OthersTab> createState() => _OthersTabState();
+  ConsumerState<OthersTab> createState() => _OthersTabState();
 }
 
-class _OthersTabState extends State<OthersTab> {
+class _OthersTabState extends ConsumerState<OthersTab>
+    with AutomaticKeepAliveClientMixin {
+  TextEditingController education = TextEditingController();
+  TextEditingController faith = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  TextEditingController relationShip = TextEditingController();
+  TextEditingController otherLanguage = TextEditingController();
+  TextEditingController haveKids = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+    Future.delayed(Duration.zero, () {
+      _prefillTab();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    super.build(context);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          21.verticalSpace,
+          const TextView(
+            text:
+                'Add a bit more to enable us match with other Tribers with similar background.',
+            fontSize: 14,
+            color: Pallets.grey,
+          ),
+          24.verticalSpace,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FilterCustomDropDown(
+                hintText: "School or University (optional)",
+                selectedValue: education.text,
+                listItems: const ['University', 'College'],
+                onTap: (value) {
+                  education.text = value ?? '';
+                },
+                hasValidator: true,
+              ),
+              FilterCustomDropDown(
+                hintText: "Faith/Religion",
+                selectedValue: faith.text,
+                listItems: const ['Male', 'Female'],
+                onTap: (value) {
+                  faith.text = value ?? '';
+                },
+                hasValidator: true,
+              ),
+              FilterCustomDropDown(
+                hintText: "Relationship Status",
+                selectedValue: relationShip.text,
+                listItems: const ['Male', 'Female'],
+                onTap: (value) {
+                  relationShip.text = value ?? '';
+                },
+                hasValidator: true,
+              ),
+              FilterCustomDropDown(
+                label: null,
+                hintText: "Other languages spoken",
+                selectedValue: "English",
+                listItems: const ['English', 'French'],
+                onTap: (value) {
+                  otherLanguage.text = value ?? '';
+                },
+                hasValidator: true,
+              ),
+              FilterCustomDropDown(
+                hintText: "Do you have kids?",
+                selectedValue: haveKids.text,
+                listItems: const ['Male', 'Female'],
+                onTap: (value) {
+                  haveKids.text = value ?? '';
+                },
+                hasValidator: true,
+              ),
+              57.verticalSpace,
+              ButtonWidget(
+                title: 'Save',
+                onTap: () {
+                  final data = UpdateProfileReqDto(
+                    education: education.text,
+                    otherLanguages: otherLanguage.text,
+                    haveKids: haveKids.text,
+
+                  );
+                  ref
+                      .read(setupProfileProvider.notifier)
+                      .updateProfile(data)
+                      .then(
+                        (value) => context.goNamed(PageUrl.home),
+                      );
+                  // CustomDialogs.showFlushBar(
+                  //   context,
+                  //   'Profile updated successfully',
+                  // );
+                },
+              ),
+              45.verticalSpace,
+            ],
+          ),
+        ],
+      ),
+    );
   }
+
+  _prefillTab() {
+    final userProfile =
+        ref.watch(setupProfileProvider.notifier).userProfile.data;
+
+    haveKids.text = userProfile?.haveKids ?? '';
+    faith.text = userProfile?.religion ?? '';
+    // gender.text = userProfile?.religion ?? '';
+    otherLanguage.text = userProfile?.otherLanguages ?? '';
+    relationShip.text = userProfile?.relationshipStatus ?? '';
+    education.text = userProfile?.education ?? '';
+
+    setState(() {});
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

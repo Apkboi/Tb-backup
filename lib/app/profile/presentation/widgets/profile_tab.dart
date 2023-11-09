@@ -12,6 +12,7 @@ import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
 import 'package:triberly/core/shared/custom_type_drop_down_search.dart';
+import 'package:triberly/core/utils/string_extension.dart';
 
 
 class ProfileTab extends ConsumerStatefulWidget {
@@ -308,6 +309,8 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                           bio: bio.text,
                           dob: dob.text,
                           phone: phoneNumber.text,
+                          residenceCountryId: _residenceCountryId,
+
                         );
                         ref
                             .read(setupProfileProvider.notifier)

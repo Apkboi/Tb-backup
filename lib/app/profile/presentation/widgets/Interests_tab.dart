@@ -59,39 +59,48 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
-              18.verticalSpace,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ConnectTypeRadio(
-                    title: 'Men Only',
-                    value: connectType,
-                    onTap: () {
-                      connectType = 'Men Only';
-                      setState(() {});
-                    },
-                  ),
-                  ConnectTypeRadio(
-                    title: 'Women Only',
-                    value: connectType,
-                    onTap: () {
-                      connectType = 'Women Only';
-                      setState(() {});
-                    },
-                  ),
-                  ConnectTypeRadio(
-                    title: 'Anyone',
-                    value: connectType,
-                    onTap: () {
-                      connectType = 'Anyone';
-                      setState(() {});
-                    },
-                  ),
-                ],
+              16.verticalSpace,
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     ConnectTypeRadio(
+              //       title: 'Men Only',
+              //       value: connectType,
+              //       onTap: () {
+              //         connectType = 'Men Only';
+              //         setState(() {});
+              //       },
+              //     ),
+              //     ConnectTypeRadio(
+              //       title: 'Women Only',
+              //       value: connectType,
+              //       onTap: () {
+              //         connectType = 'Women Only';
+              //         setState(() {});
+              //       },
+              //     ),
+              //     ConnectTypeRadio(
+              //       title: 'Anyone',
+              //       value: connectType,
+              //       onTap: () {
+              //         connectType = 'Anyone';
+              //         setState(() {});
+              //       },
+              //     ),
+              //   ],
+              // ),
+              FilterCustomDropDown(
+                hintText: "Who are you looking to connect to ?",
+                selectedValue: connectType,
+                listItems: const ['Men Only', 'Women Only',"Anyone"],
+                onTap: (value) {
+                  connectType = value ?? '';
+                },
+                hasValidator: true,
               ),
             ],
           ),
-          32.verticalSpace,
+          16.verticalSpace,
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -140,10 +149,8 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                   );
                   await ref
                       .read(setupProfileProvider.notifier)
-                      .updateProfile(data)
-                      .then(
-                        (value) => context.goNamed(PageUrl.home),
-                      );
+                      .updateProfile(data);
+
                 },
               ),
               45.verticalSpace,
