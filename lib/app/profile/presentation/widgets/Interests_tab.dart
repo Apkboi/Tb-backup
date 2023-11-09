@@ -92,7 +92,7 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
               FilterCustomDropDown(
                 hintText: "Who are you looking to connect to ?",
                 selectedValue: connectType,
-                listItems: const ['Men Only', 'Women Only',"Anyone"],
+                listItems: const ['Men Only', 'Women Only', "Anyone"],
                 onTap: (value) {
                   connectType = value ?? '';
                 },
@@ -104,17 +104,27 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextBoxField(
-                label: 'Intent',
-                topLabel: true,
-                controller: intentCtrl,
+              FilterCustomDropDown(
+                hintText: "Intent",
+                selectedValue: intentCtrl.text,
+                listItems: const [
+                  'Love and Romance',
+                  'College',
+                  "Host friends",
+                  "Business partners",
+                  "Find new friends"
+                ],
+                onTap: (value) {
+                  intentCtrl.text = value ?? '';
+                },
+                hasValidator: true,
               ),
-              TextView(
+              const TextView(
                 text: 'The hashtag that fits my life (optional)',
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
-              TextView(
+              const TextView(
                 text: 'Select 3 or more',
                 fontSize: 12,
                 color: Pallets.grey,
@@ -123,19 +133,19 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
               24.verticalSpace,
               LifeChipsList(),
               32.verticalSpace,
-              TextView(
+              const TextView(
                 text: 'Interests',
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
-              TextView(
+              const TextView(
                 text: 'Select 3 or more',
                 fontSize: 12,
                 color: Pallets.grey,
                 fontWeight: FontWeight.w600,
               ),
               24.verticalSpace,
-              LifeChipsList(),
+              const LifeChipsList(),
               32.verticalSpace,
               ButtonWidget(
                 title: 'Save',
@@ -150,7 +160,6 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                   await ref
                       .read(setupProfileProvider.notifier)
                       .updateProfile(data);
-
                 },
               ),
               45.verticalSpace,
@@ -273,6 +282,7 @@ class CustomChip extends StatelessWidget {
   final String title;
 
   final bool selected;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

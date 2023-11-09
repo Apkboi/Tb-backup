@@ -21,6 +21,7 @@ class SignInPage extends ConsumerStatefulWidget {
   });
 
   final String? email;
+
   @override
   ConsumerState createState() => _SignInPageState();
 }
@@ -171,7 +172,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
               16.verticalSpace,
               Center(
                 child: RichText(
-
                   textAlign: TextAlign.center,
                   text: TextSpan(
                       text: "You don't have an account? ",

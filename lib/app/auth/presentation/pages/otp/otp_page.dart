@@ -202,6 +202,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
   }
 
   void _resendOtp() {
+
     final data = ResendOtpReqDto(
       email: widget.email,
       type: widget.otpType,

@@ -247,7 +247,10 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                                       ?.name)
                                   .toList()
                                   .join(", ")
-                              : userDetails.tribes,
+                              : ref
+                                  .watch(tribeByIdProvider(int.parse(
+                                      userDetails.tribes.toString())))!
+                                  .name!,
                     ),
                     Container(
                       width: 1,
@@ -268,7 +271,8 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     ),
                     UserUpDownWidget(
                       title: 'Age',
-                      value: '${Helpers.calculateAge(userDetails?.dob ?? '')??"N/A"}',
+                      value:
+                          '${Helpers.calculateAge(userDetails?.dob ?? '') ?? "N/A"}',
                     ),
                   ],
                 ),

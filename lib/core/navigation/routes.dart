@@ -31,8 +31,7 @@ import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/navigation/route_url.dart';
 
-final rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'rootNavigator');
+final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNavigator');
 final _shellNavigatorAKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
 final _shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'shellB');
 final _shellNavigatorCKey = GlobalKey<NavigatorState>(debugLabel: 'shellC');
@@ -131,7 +130,6 @@ class CustomRoutes {
         ],
       ),
       StatefulShellRoute.indexedStack(
-
         builder: (context, state, navigationShell) {
           return BasePage(navigationShell: navigationShell);
         },
@@ -150,7 +148,6 @@ class CustomRoutes {
           ),
           StatefulShellBranch(
             navigatorKey: _shellNavigatorBKey,
-
             routes: [
               GoRoute(
                 path: '/community',
@@ -178,7 +175,8 @@ class CustomRoutes {
                     builder: (context, state) => ChatDetailsPage(
                       chatId: state.uri.queryParameters[PathParam.chatId] ?? '',
                       // userId: state.uri.queryParameters[PathParam.userId] ?? '',
-                      userName: state.uri.queryParameters[PathParam.userName] ?? '',
+                      userName:
+                          state.uri.queryParameters[PathParam.userName] ?? '',
                     ),
                   ),
                 ],
@@ -192,7 +190,6 @@ class CustomRoutes {
                 path: '/profile',
                 name: PageUrl.profile,
                 pageBuilder: (context, state) => const NoTransitionPage(
-
                   child: ProfilePage(),
                 ),
                 routes: [
@@ -204,25 +201,23 @@ class CustomRoutes {
                     ),
                   ),
                   GoRoute(
-                    path: 'security',
-                    name: PageUrl.security,
-                    builder: (context, state) => const SecurityPage(),
-                    routes: [
-                      GoRoute(
-                        path: 'suspendAccountPage',
-                        name: PageUrl.suspendAccount,
-                        builder: (context, state) => const SuspendAccountPage(),
-
-                      ),
-                      GoRoute(
-                        path: 'changePassword',
-                        name: PageUrl.changePassword,
-                        builder: (context, state) => const ChangePasswordPage(),
-
-                      ),
-                    ]
-
-                  ),
+                      path: 'security',
+                      name: PageUrl.security,
+                      builder: (context, state) => const SecurityPage(),
+                      routes: [
+                        GoRoute(
+                          path: 'suspendAccountPage',
+                          name: PageUrl.suspendAccount,
+                          builder: (context, state) =>
+                              const SuspendAccountPage(),
+                        ),
+                        GoRoute(
+                          path: 'changePassword',
+                          name: PageUrl.changePassword,
+                          builder: (context, state) =>
+                              const ChangePasswordPage(),
+                        ),
+                      ]),
 
                   GoRoute(
                       path: 'helpCenter',
@@ -233,18 +228,13 @@ class CustomRoutes {
                           path: 'reportIssue',
                           name: PageUrl.reportIssue,
                           builder: (context, state) => const ReportIssuePage(),
-
                         ),
                         GoRoute(
                           path: 'faq',
                           name: PageUrl.faq,
                           builder: (context, state) => const FaqPage(),
-
                         ),
-                      ]
-
-                  ),
-
+                      ]),
 
                   // GoRoute(
                   //   path: 'setupProfilePage',
@@ -252,7 +242,6 @@ class CustomRoutes {
                   //   parentNavigatorKey: rootNavigatorKey,
                   //   builder: (context, state) => SetupProfilePage(),
                   // ),
-
                 ],
               ),
             ],

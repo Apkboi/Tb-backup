@@ -99,11 +99,20 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
           'Profile saved successfully',
         );
 
-        if (sliderValue.value == 2) {
+        if (sliderValue.value == 1) {
+
           _animateToTargetValue(5);
           controller.index = 1;
           return;
         }
+
+        if (sliderValue.value == 2) {
+
+          _animateToTargetValue(5);
+          controller.index = 1;
+          return;
+        }
+
 
         if (sliderValue.value == 5) {
           _animateToTargetValue(7);
@@ -112,7 +121,10 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
           return;
         }
 
-        if (sliderValue.value == 7) {}
+        if (sliderValue.value == 7) {
+          _animateToTargetValue(10);
+          controller.index = 3;
+        }
 
         return;
       }

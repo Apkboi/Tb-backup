@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
-
 class SetupProfileIntroPage extends ConsumerStatefulWidget {
   const SetupProfileIntroPage({super.key});
 
@@ -21,6 +20,8 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    // _showDialogIfNeeded();
 
     _controllerCenter =
         ConfettiController(duration: const Duration(seconds: 10));
@@ -103,7 +104,7 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
                         fontWeight: FontWeight.w700,
                       ),
                       16.verticalSpace,
-                      TextView(
+                      const TextView(
                         text:
                             "We're excited to welcome you to Triberly. You will need to complete your profile so you can be visible to others and start making connections.",
                         fontSize: 14,
@@ -139,4 +140,19 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
       ),
     );
   }
+
+  // void _showDialogIfNeeded() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return  Center(
+  //         child: Column(
+  //           children: [
+  //             ImageWidget(imageUrl: Assets.);
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

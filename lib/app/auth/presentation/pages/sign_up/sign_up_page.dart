@@ -24,6 +24,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
 
+  var signUpAs = "Individual";
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -125,6 +127,16 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               listItems: ['Male', 'Female'],
               onTap: (value) {
                 gender.text = value ?? 'N/A';
+              },
+              hasValidator: true,
+            ),
+            16.verticalSpace,
+            FilterCustomDropDown(
+              hintText: "Signup as",
+              selectedValue: signUpAs,
+              listItems: const ['Individual', 'Business', "Host"],
+              onTap: (value) {
+                signUpAs = value ?? '';
               },
               hasValidator: true,
             ),
