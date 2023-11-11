@@ -5,6 +5,7 @@ import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
+import 'package:triberly/core/shared/custom_mutiselect_dropdown.dart';
 
 List<Interests> selectedIntrestChips = [];
 List<String> selectedHastagChips = [];
@@ -98,21 +99,22 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                 },
                 hasValidator: true,
               ),
+              const CustomMultiSelectDropdown()
             ],
           ),
-          16.verticalSpace,
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FilterCustomDropDown(
-                hintText: "Intent",
+                hintText: "Searching for",
                 selectedValue: intentCtrl.text,
                 listItems: const [
                   'Love and Romance',
-                  'College',
-                  "Host friends",
+                  'Flat mates',
+                  "New friends",
                   "Business partners",
-                  "Find new friends"
+                  "Travel buddies"
                 ],
                 onTap: (value) {
                   intentCtrl.text = value ?? '';

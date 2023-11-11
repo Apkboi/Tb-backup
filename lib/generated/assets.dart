@@ -40,6 +40,8 @@ class Assets {
   static const String svgsHomeSelected = 'assets/images/svgs/home_selected.svg';
   static const String svgsLink = 'assets/images/svgs/link.svg';
   static const String svgsLinkSelected = 'assets/images/svgs/link_selected.svg';
+  static const String svgsLocation =
+      'assets/images/svgs/location.svg';
   static const String svgsLocationAccess =
       'assets/images/svgs/location_access.svg';
   static const String svgsLock =
@@ -79,4 +81,5 @@ class Assets {
   static const String svgsSplashLogo = 'assets/images/svgs/splash_logo.svg';
   static const String svgsTick = 'assets/images/svgs/tick.svg';
   static const String svgsTickCircle = 'assets/images/svgs/tick_circle.svg';
+  static const String svgsIntroIcon = 'assets/images/svgs/intro_icon.svg';
 }

@@ -8,6 +8,7 @@ import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_prof
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 
+import '../../../../auth/presentation/widgets/onboarding/intro_dialog.dart';
 import '../../widgets/_home_widgets.dart';
 import 'home_controller.dart';
 
@@ -32,10 +33,12 @@ class _HomePageState extends ConsumerState<HomePage>
   void initState() {
     super.initState();
     getConnections();
+
   }
 
   getConnections() {
     Future.delayed(Duration.zero, () {
+      _showIntroDialog();
       ref.read(homeProvider.notifier).caller(SearchConnectionsReqDto());
       ref.read(homeProvider.notifier).clearFilter();
       ref.read(setupProfileProvider.notifier).getDataConfigs();
@@ -79,9 +82,10 @@ class _HomePageState extends ConsumerState<HomePage>
     });
     ref.listen(homeProvider, (previous, next) {
       if (next is HomeSuccess) {
+
+
         randomUsers = ref.watch(homeProvider.notifier).randomUsers;
         latLngUsers = ref.watch(homeProvider.notifier).latLngUsers;
-
         if (randomUsers.isEmpty && latLngUsers.isEmpty) {
           CustomDialogs.error(
             'No users fit the current data, try adjusting the filter',
@@ -90,7 +94,11 @@ class _HomePageState extends ConsumerState<HomePage>
           //   scaffoldKey.currentState!.context,
           //   FilterWidget(),
           // );
+
         }
+
+
+
       }
     });
     return Scaffold(
@@ -123,7 +131,7 @@ class _HomePageState extends ConsumerState<HomePage>
                     CustomDialogs.getLoading(size: 50)
                   else
                     SizedBox(
-                      height: 1.sh-410,
+                      height: 1.sh - 410,
                       width: 1.sw,
                       child: InkWell(
                         onTap: () {
@@ -173,5 +181,12 @@ class _HomePageState extends ConsumerState<HomePage>
         ),
       ),
     );
+  }
+
+  void _showIntroDialog() {
+    if (ref.read(isFirsTImeProvider)) {
+      CustomDialogs.showOverlayDialog(context, child: const IntroDialog());
+      ref.read(isFirsTImeProvider.notifier).state = false;
+    }
   }
 }

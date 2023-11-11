@@ -1,16 +1,14 @@
 import 'dart:io';
 
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_other_photos_req_dto.dart';
-import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
+import 'package:triberly/app/auth/presentation/widgets/onboarding/intro_dialog.dart';
 import 'package:triberly/app/profile/presentation/widgets/gradient_slider.dart';
 import 'package:triberly/app/profile/presentation/widgets/upload_photo_widget.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
-import 'package:triberly/core/services/theme_service/app_theme.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
 import 'setup_profile_controller.dart';
@@ -73,6 +71,7 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
           context,
           'Photos uploaded successfully',
         );
+        ref.read(isFirsTImeProvider.notifier).state = true;
         context.pushNamed(PageUrl.setupProfilePage);
       }
     });

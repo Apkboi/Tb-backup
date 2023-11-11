@@ -8,6 +8,7 @@ import 'package:triberly/core/constants/pallets.dart';
 import 'package:triberly/core/navigation/route_url.dart';
 import 'package:triberly/core/shared/custom_drop_down.dart';
 import 'package:triberly/core/shared/custom_text_button.dart';
+import 'package:triberly/core/shared/text_box.dart';
 import 'package:triberly/core/shared/text_view.dart';
 
 class OthersTab extends ConsumerStatefulWidget {
@@ -54,15 +55,12 @@ class _OthersTabState extends ConsumerState<OthersTab>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FilterCustomDropDown(
-                hintText: "School or University (optional)",
-                selectedValue: education.text,
-                listItems: const ['University', 'College'],
-                onTap: (value) {
-                  education.text = value ?? '';
-                },
-                hasValidator: true,
+              TextBoxField(
+                label: 'School or University (optional)',
+                controller: education,
+                hasBottomPadding: false,
               ),
+              8.verticalSpace,
               FilterCustomDropDown(
                 hintText: "Faith/Religion",
                 selectedValue: faith.text,
@@ -84,7 +82,7 @@ class _OthersTabState extends ConsumerState<OthersTab>
               FilterCustomDropDown(
                 label: null,
                 hintText: "Other languages spoken",
-                selectedValue: "English",
+                selectedValue: otherLanguage.text,
                 listItems: const ['English', 'French'],
                 onTap: (value) {
                   otherLanguage.text = value ?? '';

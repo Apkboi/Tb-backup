@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/utils/color_utils.dart';
 
+import '../../../../auth/presentation/widgets/onboarding/intro_dialog.dart';
+
 class SetupProfileIntroPage extends ConsumerStatefulWidget {
   const SetupProfileIntroPage({super.key});
 
@@ -127,6 +129,7 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
                         align: TextAlign.center,
                         color: Pallets.grey,
                         onTap: () {
+                          ref.read(isFirsTImeProvider.notifier).state = true;
                           context.goNamed(PageUrl.home);
                         },
                       ),
