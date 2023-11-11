@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 
-class ExploreCard extends StatelessWidget {
+class ExploreCard extends ConsumerWidget {
   const ExploreCard({
     super.key,
     required this.name,
@@ -24,7 +25,7 @@ class ExploreCard extends StatelessWidget {
   final String? country;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,ref) {
     return InkWell(
       onTap: () {
         // context.goNamed(PageUrl.setupProfileIntroPage);
@@ -36,11 +37,11 @@ class ExploreCard extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            height: 470.h,
+            height: 1.sh,
           ),
           ImageWidget(
             imageUrl: image ?? '',
-            height: .6.sh,
+            height: 1.sh,
             width: 1.sw,
             fit: BoxFit.cover,
             borderRadius: BorderRadius.circular(15),
@@ -52,7 +53,7 @@ class ExploreCard extends StatelessWidget {
             child: Container(
               height: .5.sw,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(15),
                 ),
                 gradient: LinearGradient(
@@ -91,7 +92,7 @@ class ExploreCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         const ImageWidget(
-                          imageUrl: Assets.svgsHome,
+                          imageUrl: Assets.svgsLocationAccess,
                           size: 15,
                           color: Pallets.white,
                         ),
@@ -118,7 +119,7 @@ class ExploreCard extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: Pallets.white,
                     ),
-                    if(tribe!= null)
+                    if(tribe!= null||ref.watch(tribeByIdProvider(int.parse(tribe??"0")))?.name != null)
                     Row(
                       children: [
                         const ImageWidget(
@@ -128,7 +129,7 @@ class ExploreCard extends StatelessWidget {
                         ),
                         6.horizontalSpace,
                         TextView(
-                          text: tribe!,
+                          text: ref.watch(tribeByIdProvider(int.parse(tribe??"0")))?.name??"other" ,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Pallets.white,

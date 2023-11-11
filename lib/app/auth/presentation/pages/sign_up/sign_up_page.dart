@@ -24,7 +24,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
 
-  var signUpAs = "Individual";
+  var signUpAs = null ;
 
   @override
   void dispose() {
@@ -71,13 +71,14 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           queryParameters: {
             PathParam.otpType: OtpType.accountSetup.value,
             PathParam.phoneNumber: completeNumber,
+            // PathParam.email: userData?.email,
           },
         );
       }
     });
     return Scaffold(
       key: scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Create an account',
       ),
       body: SingleChildScrollView(

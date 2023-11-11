@@ -123,7 +123,7 @@ class _HomePageState extends ConsumerState<HomePage>
                     CustomDialogs.getLoading(size: 50)
                   else
                     SizedBox(
-                      height: .6.sh,
+                      height: 1.sh-410,
                       width: 1.sw,
                       child: InkWell(
                         onTap: () {
@@ -167,7 +167,7 @@ class _HomePageState extends ConsumerState<HomePage>
                         ),
                       ),
                     ),
-                  150.verticalSpace,
+                  // 150.verticalSpace,
                 ],
               )),
         ),

@@ -66,7 +66,7 @@ class _OthersTabState extends ConsumerState<OthersTab>
               FilterCustomDropDown(
                 hintText: "Faith/Religion",
                 selectedValue: faith.text,
-                listItems: const ['Male', 'Female'],
+                listItems: const ['Christianity', 'Islam',"Buddhism","Hinduism"],
                 onTap: (value) {
                   faith.text = value ?? '';
                 },
@@ -75,7 +75,7 @@ class _OthersTabState extends ConsumerState<OthersTab>
               FilterCustomDropDown(
                 hintText: "Relationship Status",
                 selectedValue: relationShip.text,
-                listItems: const ['Male', 'Female'],
+                listItems: const ['Single', 'In a Relationship',"Engaged","Married"],
                 onTap: (value) {
                   relationShip.text = value ?? '';
                 },
@@ -94,7 +94,7 @@ class _OthersTabState extends ConsumerState<OthersTab>
               FilterCustomDropDown(
                 hintText: "Do you have kids?",
                 selectedValue: haveKids.text,
-                listItems: const ['Male', 'Female'],
+                listItems: const ['Yes', 'No'],
                 onTap: (value) {
                   haveKids.text = value ?? '';
                 },

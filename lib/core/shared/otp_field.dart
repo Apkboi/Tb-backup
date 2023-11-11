@@ -73,6 +73,9 @@ class OtpField extends StatelessWidget {
 
       ///For autofill on otp received
       androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsUserConsentApi,
+     onChanged: (val){
+
+     },
 
       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
       validator: validator,
