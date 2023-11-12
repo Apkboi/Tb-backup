@@ -126,12 +126,17 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
               'Relationship Status',
               '${userDetails?.relationshipStatus ?? '-'}'
             ),
-            ('Looking for', '-'),
+            ('Looking for', userDetails?.intent??"-"),
             ('Origin Country', userCountry),
             ('Other Nationality', '-'),
             ('Mother Tongue', '${userDetails?.tribes ?? '-'}'),
             ('Bio', '${userDetails?.bio ?? '-'}'),
-            ('Interests', ['${userDetails?.interests ?? '-'}']),
+            ('Interests', userDetails?.interests!= null? (userDetails!.interests).toString().split(", ")
+                .map((e) => ref
+                .watch(interestByIdProvider(int.parse(e)))
+                ?.name)
+                .toList()
+                .join(", "):"-",),
             ('Faith', '-'),
             ('Education', '-'),
             ('Hashtags', '-'),
@@ -340,6 +345,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
       ),
     );
   }
+
 
   void _sendInitialMessage(num chatId) {
     if (_requestMessage != null) {

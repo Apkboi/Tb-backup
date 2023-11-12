@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/user_dto.dart';
 import 'package:triberly/core/_core.dart';
 
+import '../../../../core/navigation/path_params.dart';
+
 class ExploreCard extends ConsumerWidget {
   const ExploreCard({
     super.key,
@@ -27,12 +29,11 @@ class ExploreCard extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return InkWell(
       onTap: () {
-
         // context.goNamed(PageUrl.setupProfileIntroPage);
-        // context.pushNamed(
-        //   PageUrl.profileDetails,
-        //   queryParameters: {PathParam.userId: user.id.toString()},
-        // );
+        context.pushNamed(
+          PageUrl.profileDetails,
+          queryParameters: {PathParam.userId: user.id.toString()},
+        );
       },
       child: Stack(
         children: [

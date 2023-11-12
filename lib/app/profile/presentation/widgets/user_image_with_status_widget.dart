@@ -29,6 +29,7 @@ class UserImageWithStatusWidget extends StatelessWidget {
           width: 106.w,
           child:  CircularProgressIndicator(
             value: status!*0.01,
+            color: status == 100?Colors.green:null,
           ),
         ),
         Positioned(

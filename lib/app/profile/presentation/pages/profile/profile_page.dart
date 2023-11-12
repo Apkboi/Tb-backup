@@ -71,7 +71,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 Center(
                     child: UserImageWithStatusWidget(
                   imageUrl: user?.profileImage,
-                  status: user?.profilePercentage(),
+                  status: user?.profileCompletion ?? user?.profilePercentage(),
                 )),
                 40.verticalSpace,
                 Center(

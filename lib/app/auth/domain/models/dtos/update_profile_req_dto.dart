@@ -24,39 +24,37 @@
 /// longitude : 3.3792
 
 class UpdateProfileReqDto {
-  UpdateProfileReqDto({
-    this.verificationImage,
-    this.firstName,
-    this.middleName,
-    this.lastName,
-    this.phone,
-    this.profileImage,
-    this.originCityId,
-    this.originStateId,
-    this.originCountryId,
-    this.residenceCountryId,
-    this.tribes,
-    this.bio,
-    this.dob,
-    this.profession,
-    this.familyStatus,
-    this.intent,
-    this.interests,
-    // this.hashTags,
-    this.motherTongue,
-    this.otherLanguages,
-    this.education,
-    this.instagramLink,
-    this.tiktokLink,
-    this.linkedinLink,
-    this.latitude,
-    this.longitude,
-    this.haveKids,
-    this.relationShipStatus,
-    this.religion,
-    this.town
-
-  });
+  UpdateProfileReqDto(
+      {this.verificationImage,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.phone,
+      this.profileImage,
+      this.originCityId,
+      this.originStateId,
+      this.originCountryId,
+      this.residenceCountryId,
+      this.tribes,
+      this.bio,
+      this.dob,
+      this.profession,
+      this.familyStatus,
+      this.intent,
+      this.interests,
+      // this.hashTags,
+      this.motherTongue,
+      this.otherLanguages,
+      this.education,
+      this.instagramLink,
+      this.tiktokLink,
+      this.linkedinLink,
+      this.latitude,
+      this.longitude,
+      this.haveKids,
+      this.relationShipStatus,
+      this.religion,
+      this.town});
 
   UpdateProfileReqDto.fromJson(dynamic json) {
     verificationImage = json['verification_image'];
@@ -86,6 +84,7 @@ class UpdateProfileReqDto {
     latitude = json['latitude'];
     longitude = json['longitude'];
   }
+
   String? verificationImage;
 
   // TODO: ADD THE FIELDS TO FROMJSON CONSTRUCTOR
@@ -94,6 +93,7 @@ class UpdateProfileReqDto {
   String? otherLanguage;
   String? relationShipStatus;
   String? town;
+
   //
 
   String? firstName;
@@ -120,6 +120,7 @@ class UpdateProfileReqDto {
   String? linkedinLink;
   num? latitude;
   num? longitude;
+
   UpdateProfileReqDto copyWith({
     String? verificationImage,
     String? haveKids,
@@ -127,7 +128,6 @@ class UpdateProfileReqDto {
     String? otherLanguage,
     String? relationShipStatus,
     String? town,
-
     String? firstName,
     String? middleName,
     String? lastName,
@@ -180,6 +180,7 @@ class UpdateProfileReqDto {
         latitude: latitude ?? this.latitude,
         longitude: longitude ?? this.longitude,
       );
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
 
@@ -187,16 +188,14 @@ class UpdateProfileReqDto {
       map['verification_image'] = verificationImage;
     }
 
-
     if (firstName != null) map['first_name'] = firstName;
 
-    if (relationShipStatus != null) map['relationship_status'] = relationShipStatus;
+    if (relationShipStatus != null)
+      map['relationship_status'] = relationShipStatus;
     if (haveKids != null) map['have_kids'] = haveKids;
     if (religion != null) map['religion'] = religion;
     if (otherLanguages != null) map['other_languages'] = otherLanguages;
     if (town != null) map['town'] = town;
-
-
 
     if (middleName != null) map['middle_name'] = middleName;
     if (lastName != null) map['last_name'] = lastName;

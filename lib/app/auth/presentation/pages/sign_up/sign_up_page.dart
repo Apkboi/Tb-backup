@@ -24,7 +24,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
 
-  var signUpAs = null ;
+  var signUpAs = null;
 
   @override
   void dispose() {
@@ -71,7 +71,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           queryParameters: {
             PathParam.otpType: OtpType.accountSetup.value,
             PathParam.phoneNumber: completeNumber,
-            // PathParam.email: userData?.email,
+            PathParam.email: email.text
+
           },
         );
       }
@@ -107,9 +108,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               label: 'Surname',
               controller: lastName,
               hasBottomPadding: false,
+              onValueChnaged: _onTextChanged,
             ),
             10.verticalSpace,
-            TextView(
+            const TextView(
               text:
                   "Only first name will be displayed. Once this is set, you won't be able to change it",
               fontSize: 12,
@@ -117,7 +119,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             16.verticalSpace,
             CustomPhoneField(
               controller: phoneNumber,
-              initialCountryCode: 'NG',
+              initialCountryCode: 'GB',
+
               onChanged: (number) {
                 completeNumber = number.completeNumber;
                 // print(number.completeNumber);
@@ -145,6 +148,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             TextBoxField(
               label: 'Email Address',
               controller: email,
+              keyBoardType: TextInputType.emailAddress,
+
               validator: FieldValidators.emailValidator,
             ),
             TextBoxField(
@@ -255,5 +260,34 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void _onTextChanged(String newText) {
+    // Convert the text to title case
+    String titleCaseText = toTitleCase(newText);
+
+    // Set the title case text back to the TextField
+    lastName.value = lastName.value.copyWith(
+      text: titleCaseText,
+      selection: TextSelection.collapsed(offset: titleCaseText.length),
+    );
+  }
+
+  String toTitleCase(String text) {
+    if (text.isEmpty) {
+      return '';
+    }
+
+    List<String> words = text.split(' ');
+    List<String> titleCaseWords = [];
+
+    for (String word in words) {
+      if (word.isNotEmpty) {
+        titleCaseWords
+            .add('${word[0].toUpperCase()}${word.substring(1).toLowerCase()}');
+      }
+    }
+
+    return titleCaseWords.join(' ');
   }
 }

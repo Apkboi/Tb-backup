@@ -82,4 +82,5 @@ class Assets {
   static const String svgsTick = 'assets/images/svgs/tick.svg';
   static const String svgsTickCircle = 'assets/images/svgs/tick_circle.svg';
   static const String svgsIntroIcon = 'assets/images/svgs/intro_icon.svg';
+  static const String svgsUpload = 'assets/images/svgs/upload.svg';
 }

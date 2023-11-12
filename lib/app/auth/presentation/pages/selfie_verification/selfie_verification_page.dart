@@ -48,7 +48,7 @@ class _SelfieVerificationPageState
   Widget build(BuildContext context) {
     ref.listen(selfieVerificationProvider, (previous, next) {
       if (next is SelfieVerificationLoading) {
-        CustomDialogs.showLoading(context);
+        // CustomDialogs.showLoading(context);
       }
 
       if (next is SelfieVerificationError) {
@@ -60,6 +60,7 @@ class _SelfieVerificationPageState
       if (next is SelfieVerificationSuccess) {
         CustomDialogs.hideLoading(context);
         context.goNamed(PageUrl.setupProfileIntroPage);
+
       }
     });
     return Scaffold(
@@ -117,14 +118,12 @@ class _SelfieVerificationPageState
                 valueListenable: photo,
                 builder: (context, value, child) {
                   return ButtonWidget(
-                    title: 'Confirm',
+                    title: 'Submit selfie',
                     onTap: value == null
                         ? null
                         : () async {
                             if (detectedFaceData.facePassed) {
-                              await _uploadPhotosToCloud(context).then(
-                                (value) => _updateProfile(),
-                              );
+                              await matchFace(context);
                             } else {
                               CustomDialogs.error('Please add a valid photo');
                             }
@@ -133,7 +132,7 @@ class _SelfieVerificationPageState
                 }),
             16.verticalSpace,
             TextView(
-              text: 'Upload another photo',
+              text: 'Retake selfie',
               color: (photo.value == null)
                   ? Pallets.grey.withOpacity(0.2)
                   : Pallets.grey,
@@ -185,11 +184,9 @@ class _SelfieVerificationPageState
     CustomDialogs.showLoading(context);
 
     try {
-
       detectedFaceData = await FacePlusService.detectFaces(
         photo.value!,
       );
-
     } catch (e, sta) {
       logger.e(sta);
     } finally {
@@ -207,6 +204,30 @@ class _SelfieVerificationPageState
         await _detectFace(context);
       }
     });
+  }
+
+  matchFace(BuildContext context) async {
+    CustomDialogs.showLoading(context);
+    try {
+      var res = await FacePlusService.compareFaces(
+          widget.profilePhoto, photo.value?.path ?? "");
+
+      logger.e(res.confidence);
+
+      if (res.isSimilar) {
+        await _uploadPhotosToCloud(context).then(
+          (value) => _updateProfile(),
+        );
+      } else {
+        CustomDialogs.hideLoading(context);
+
+        CustomDialogs.error(
+            "User in the previous image does not match, kindly upload another");
+      }
+    } on Exception catch (e) {
+      CustomDialogs.hideLoading(context);
+      CustomDialogs.error(e.toString());
+    }
   }
 }
 
@@ -297,7 +318,7 @@ class _EmptyPhotoCardState extends State<EmptyPhotoCard> {
           width: 1.sw,
           margin: const EdgeInsets.symmetric(horizontal: 20.0),
           child: DashedRect(
-            color: Pallets.primary,
+            color: Pallets.primary.withOpacity(0.3),
             strokeWidth: 1.0,
             gap: 8.0,
           ),

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multi_dropdown/models/value_item.dart';
 import 'package:triberly/app/auth/domain/models/dtos/config_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/shared/custom_mutiselect_dropdown.dart';
-
-List<Interests> selectedIntrestChips = [];
-List<String> selectedHastagChips = [];
 
 class InterestsTab extends ConsumerStatefulWidget {
   const InterestsTab({super.key});
@@ -20,6 +18,15 @@ class InterestsTab extends ConsumerStatefulWidget {
 class _InterestsTabState extends ConsumerState<InterestsTab>
     with AutomaticKeepAliveClientMixin {
   TextEditingController intentCtrl = TextEditingController();
+  List<Interests> selectedIntrestChips = [];
+  List<String> selectedHastagChips = [];
+  final intents = const [
+    'Love and Romance',
+    'Flat mates',
+    "New friends",
+    "Business partners",
+    "Travel buddies"
+  ];
 
   @override
   void dispose() {
@@ -99,28 +106,42 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                 },
                 hasValidator: true,
               ),
-              const CustomMultiSelectDropdown()
+              16.verticalSpace,
+
+              CustomMultiSelectDropdown(
+                options: intents.map((e) => ValueItem(label: e)).toList(),
+                onOptionSelected: (List<ValueItem> options) {
+                  logger.e(options.length);
+                  if (options.isNotEmpty) {
+                    logger.e(options.first.label);
+                    intentCtrl.text = options.first.label;
+                    setState(() {});
+                  }
+                },
+                hint: 'Searching for',
+              )
             ],
           ),
 
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FilterCustomDropDown(
-                hintText: "Searching for",
-                selectedValue: intentCtrl.text,
-                listItems: const [
-                  'Love and Romance',
-                  'Flat mates',
-                  "New friends",
-                  "Business partners",
-                  "Travel buddies"
-                ],
-                onTap: (value) {
-                  intentCtrl.text = value ?? '';
-                },
-                hasValidator: true,
-              ),
+              // FilterCustomDropDown(
+              //   hintText: "Searching for",
+              //   selectedValue: intentCtrl.text,
+              //   listItems: const [
+              //     'Love and Romance',
+              //     'Flat mates',
+              //     "New friends",
+              //     "Business partners",
+              //     "Travel buddies"
+              //   ],
+              //   onTap: (value) {
+              //     intentCtrl.text = value ?? '';
+              //   },
+              //   hasValidator: true,
+              // ),
+              16.verticalSpace,
               const TextView(
                 text: 'The hashtag that fits my life (optional)',
                 fontSize: 16,
@@ -133,7 +154,15 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                 fontWeight: FontWeight.w600,
               ),
               24.verticalSpace,
-              LifeChipsList(),
+              LifeChipsList<Hashtags>(
+                items: ref.watch(setupProfileProvider.notifier).hashtags,
+                onItemSelected: (List<Hashtags> hashtags) {
+                  logger.e('message');
+                  ref.read(selectedHashTagProvider.notifier).state =
+                      hashtags as List<Hashtags>;
+                  setState(() {});
+                },
+              ),
               32.verticalSpace,
               const TextView(
                 text: 'Interests',
@@ -147,22 +176,33 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                 fontWeight: FontWeight.w600,
               ),
               24.verticalSpace,
-              const LifeChipsList(),
+              LifeChipsList<Interests>(
+                items: ref.watch(setupProfileProvider.notifier).interests,
+                onItemSelected: (List interests) {
+                  ref.read(selectedInterestsProvider.notifier).state =
+                      interests as List<Interests>;
+                  setState(() {});
+                },
+              ),
               32.verticalSpace,
               ButtonWidget(
                 title: 'Save',
-                onTap: () async {
-                  final data = UpdateProfileReqDto(
-                    interests: selectedIntrestChips
-                        .map((e) => e.id)
-                        .toList()
-                        .toString(),
-                    intent: intentCtrl.text,
-                  );
-                  await ref
-                      .read(setupProfileProvider.notifier)
-                      .updateProfile(data);
-                },
+                onTap: (ref.watch(selectedInterestsProvider).isNotEmpty &&
+                        ref.watch(selectedHashTagProvider).isNotEmpty)
+                    ? () async {
+                        final data = UpdateProfileReqDto(
+                          interests: ref
+                              .read(selectedInterestsProvider)
+                              .map((e) => e.id)
+                              .toList()
+                              .join(", "),
+                          intent: intentCtrl.text,
+                        );
+                        await ref
+                            .read(setupProfileProvider.notifier)
+                            .updateProfile(data);
+                      }
+                    : null,
               ),
               45.verticalSpace,
             ],
@@ -176,44 +216,53 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
   bool get wantKeepAlive => true;
 }
 
-class LifeChipsList extends StatefulWidget {
+class LifeChipsList<T> extends StatefulWidget {
   const LifeChipsList({
     super.key,
+    required this.items,
+    required this.onItemSelected,
   });
 
+  final List<T> items;
+  final Function(List<T>) onItemSelected;
+
   @override
-  State<LifeChipsList> createState() => _LifeChipsListState();
+  _LifeChipsListState<T> createState() => _LifeChipsListState<T>();
 }
 
-class _LifeChipsListState extends State<LifeChipsList> {
-  List<String> availableChips = [];
+class _LifeChipsListState<T> extends State<LifeChipsList<T>> {
+  List<T> selectedOptions = [];
 
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        availableChips = ref
-            .watch(setupProfileProvider.notifier)
-            .hashtags
-            .map((e) => e.name ?? '')
-            .toList();
+        // availableChips = ref
+        //     .watch(setupProfileProvider.notifier)
+        //     .hashtags
+        //     .map((e) => e.name ?? '')
+        //     .toList();
 
         return Wrap(
           children: List.generate(
-            availableChips.take(10).length,
+            widget.items.length,
             (index) => CustomChip(
-              title: availableChips[index],
-              selected: selectedHastagChips.contains(availableChips[index]),
+              title: widget.items[index].toString(),
+              selected: selectedOptions.contains(widget.items[index]),
               onTap: () {
-                if (selectedHastagChips.contains(availableChips[index])) {
+                if (selectedOptions.contains(widget.items[index])) {
                   setState(() {
-                    selectedHastagChips.remove(availableChips[index]);
+                    selectedOptions.remove(widget.items[index]);
                   });
+                  widget.onItemSelected(selectedOptions);
+
                   return;
                 }
                 setState(() {
-                  selectedHastagChips.add(availableChips[index]);
+                  selectedOptions.add(widget.items[index]);
                 });
+                logger.e(selectedOptions.runtimeType);
+                widget.onItemSelected(selectedOptions);
               },
             ),
           ),
@@ -223,54 +272,54 @@ class _LifeChipsListState extends State<LifeChipsList> {
   }
 }
 
-class InterestsChipsList extends StatefulWidget {
-  const InterestsChipsList({
-    super.key,
-  });
-
-  @override
-  State<InterestsChipsList> createState() => _InterestsChipsListState();
-}
-
-class _InterestsChipsListState extends State<InterestsChipsList> {
-  List<Interests> availableChips = [];
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        availableChips = ref.watch(setupProfileProvider.notifier).interests;
-
-        return Wrap(
-          children: List.generate(
-            availableChips.take(10).length,
-            (index) => CustomChip(
-              title: availableChips[index].name ?? '',
-              selected: selectedIntrestChips.contains(availableChips[index]),
-              onTap: () {
-                if (selectedIntrestChips.contains(availableChips[index])) {
-                  setState(() {
-                    selectedIntrestChips.remove(availableChips[index]);
-                  });
-                  return;
-                }
-                setState(() {
-                  selectedIntrestChips.add(availableChips[index]);
-                });
-
-                logger.e(selectedIntrestChips.map((e) => e.name));
-                // final data = UpdateProfileReqDto(
-                //   interests: selectedChips.map((e) => e.id).toString(),
-                // );
-                // ref.read(setupProfileProvider.notifier).updateProfile(data);
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
+// class InterestsChipsList extends StatefulWidget {
+//   const InterestsChipsList({
+//     super.key,
+//   });
+//
+//   @override
+//   State<InterestsChipsList> createState() => _InterestsChipsListState();
+// }
+//
+// class _InterestsChipsListState extends State<InterestsChipsList> {
+//   List<Interests> availableChips = [];
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer(
+//       builder: (context, ref, child) {
+//         availableChips = ref.watch(setupProfileProvider.notifier).interests;
+//
+//         return Wrap(
+//           children: List.generate(
+//             availableChips.take(10).length,
+//             (index) => CustomChip(
+//               title: availableChips[index].name ?? '',
+//               selected: selectedIntrestChips.contains(availableChips[index]),
+//               onTap: () {
+//                 if (selectedIntrestChips.contains(availableChips[index])) {
+//                   setState(() {
+//                     selectedIntrestChips.remove(availableChips[index]);
+//                   });
+//                   return;
+//                 }
+//                 setState(() {
+//                   selectedIntrestChips.add(availableChips[index]);
+//                 });
+//
+//                 logger.e(selectedIntrestChips.map((e) => e.name));
+//                 // final data = UpdateProfileReqDto(
+//                 //   interests: selectedChips.map((e) => e.id).toString(),
+//                 // );
+//                 // ref.read(setupProfileProvider.notifier).updateProfile(data);
+//               },
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
 class CustomChip extends StatelessWidget {
   const CustomChip({

@@ -58,15 +58,19 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
         ),
         child: Stack(
           children: [
-            Column(
-              children: [
-                ImageWidget(
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0, vertical: 50),
+                child: ImageWidget(
+                  fit: BoxFit.contain,
                   imageUrl:
-                      'https://firebasestorage.googleapis.com/v0/b/triberly-app.appspot.com/o/app_images%2Fprofile_welcome.png?alt=media&token=4618edb5-f444-45b3-b9f4-19096cd293d3&_gl=1*1pvi5q*_ga*MTcyOTUxNDYxLjE2OTA4NjU0MzM.*_ga_CW55HF8NVT*MTY5NjYyNjU0NC4yOC4xLjE2OTY2MjcwMzUuNDUuMC4w',
+                      "https://firebasestorage.googleapis.com/v0/b/triberly-app.appspot.com/o/app_images%2Fprofile_welcome.png?alt=media&token=1c747c1d-20db-4a3e-921b-a79b3a849924&_gl=1*9x01d3*_ga*OTc3MDA3MDg2LjE2OTkyNTg5MDE.*_ga_CW55HF8NVT*MTY5OTY5NTE4OC4xMS4xLjE2OTk2OTUzOTMuMzEuMC4w",
                   width: double.infinity,
                   height: 1.sh,
                 ),
-              ],
+              ),
             ),
             Positioned(
               bottom: -45,
@@ -121,18 +125,18 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
                           context.pushNamed(PageUrl.uploadPhotos);
                         },
                       ),
-                      16.verticalSpace,
-                      TextView(
-                        text: 'Skip and complete later',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        align: TextAlign.center,
-                        color: Pallets.grey,
-                        onTap: () {
-                          ref.read(isFirsTImeProvider.notifier).state = true;
-                          context.goNamed(PageUrl.home);
-                        },
-                      ),
+                      // 16.verticalSpace,
+                      // TextView(
+                      //   text: 'Skip and complete later',
+                      //   fontSize: 14,
+                      //   fontWeight: FontWeight.w500,
+                      //   align: TextAlign.center,
+                      //   color: Pallets.grey,
+                      //   onTap: () {
+                      //     ref.read(isFirsTImeProvider.notifier).state = true;
+                      //     context.goNamed(PageUrl.home);
+                      //   },
+                      // ),
                     ],
                   ),
                 ),
@@ -144,18 +148,18 @@ class _SetupProfileIntroState extends ConsumerState<SetupProfileIntroPage> {
     );
   }
 
-  // void _showDialogIfNeeded() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return  Center(
-  //         child: Column(
-  //           children: [
-  //             ImageWidget(imageUrl: Assets.);
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+// void _showDialogIfNeeded() {
+//   showDialog(
+//     context: context,
+//     builder: (context) {
+//       return  Center(
+//         child: Column(
+//           children: [
+//             ImageWidget(imageUrl: Assets.);
+//           ],
+//         ),
+//       );
+//     },
+//   );
+// }
 }

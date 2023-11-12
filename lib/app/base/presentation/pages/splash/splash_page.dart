@@ -6,6 +6,7 @@ import 'package:triberly/core/constants/package_exports.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/shared/text_view.dart';
 
+import '../../../../profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'splash_controller.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
@@ -38,14 +39,23 @@ class _SplashPageState extends ConsumerState<SplashPage>
       ),
     );
 
+    Future.delayed(Duration.zero, () {
+
+      ref.read(setupProfileProvider.notifier).getDataConfigs();
+      // ref.read(locationProvider.notifier).caller();
+    });
+
     animationCtrl?.forward();
     animation?.addListener(() async {
       if (animation?.isCompleted ?? false) {
-        if (SessionManager.instance.doesUserDataExists()) {
+
+        if (SessionManager.instance.isLoggedIn) {
+          // TODO: GET USER PROFILE AND VERIFY
           context.goNamed(PageUrl.home);
         } else {
           context.pushReplacementNamed(PageUrl.onBoardingPage);
         }
+
       }
     });
   }

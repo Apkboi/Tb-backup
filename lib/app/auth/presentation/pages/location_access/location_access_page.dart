@@ -50,7 +50,7 @@ class _LocationAccessPageState extends ConsumerState<LocationAccessPage> {
                 8.verticalSpace,
                 TextView(
                   text:
-                      'Your location helps us to connect you with other tribers close to you and other services',
+                      'Your location helps us to connect you with other trybers close to you and other services',
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -60,7 +60,7 @@ class _LocationAccessPageState extends ConsumerState<LocationAccessPage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 55.0),
               child: ButtonWidget(
-                title: 'Enable location access',
+                title: 'Frant location access',
                 onTap: () async {
                   final userEmail =
                       ref.read(signupProvider.notifier).getUserData.$1;

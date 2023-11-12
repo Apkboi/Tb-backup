@@ -65,3 +65,19 @@ final tribeByIdProvider = Provider.family<Tribes?, num?>((ref, name) {
     (country) => country.id == name,
   );
 });
+
+final interestByIdProvider = Provider.family<Interests?, num?>((ref, name) {
+  final interests = ref.read(setupProfileProvider.notifier).interests;
+
+  return interests.firstWhereOrNull(
+    (interest) => interest.id == name,
+  );
+});
+
+final hashTagByIdProvider = Provider.family<Hashtags?, num?>((ref, name) {
+  final hashtags = ref.read(setupProfileProvider.notifier).hashtags;
+
+  return hashtags.firstWhereOrNull(
+        (hashtag) => hashtag.id == name,
+  );
+});

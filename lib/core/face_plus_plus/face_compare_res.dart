@@ -40,6 +40,9 @@ FaceCompareRes copyWith({  num? timeUsed,
     return map;
   }
 
+
+  bool get isSimilar => confidence! >=(thresholds?.e5??101) ;
+
 }
 
 /// 1e-3 : 65.3

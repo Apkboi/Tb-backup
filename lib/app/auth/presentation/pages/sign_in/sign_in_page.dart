@@ -9,9 +9,11 @@ import 'package:triberly/app/auth/domain/models/dtos/sign_in_req_dto.dart';
 import 'package:triberly/app/auth/presentation/pages/otp/otp_controller.dart';
 import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
+import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/services/theme_service/app_theme.dart';
 
 import '../../../../../core/_core.dart';
+import '../../../../profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'sign_in_controller.dart';
 
 class SignInPage extends ConsumerStatefulWidget {
@@ -80,42 +82,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       if (next is SignInSuccess) {
         CustomDialogs.hideLoading(context);
 
-        final userData = ref.watch(signInProvider.notifier).userData;
 
-        if (userData?.emailVerification == false) {
-          ref.read(otpProvider.notifier).resendOtp(
-                ResendOtpReqDto(
-                  email: userData?.email,
-                  type: OtpType.accountSetup.value,
-                ),
-              );
+        _userSignedIn(context);
 
-          context.pushNamed(
-            PageUrl.otpPage,
-            queryParameters: {
-              PathParam.otpType: OtpType.accountSetup.value,
-              PathParam.phoneNumber: userData?.phoneNo,
-              PathParam.email: userData?.email,
-            },
-          );
-          return;
-        }
 
-        if (userData?.profileImage == null) {
-          context.pushNamed(PageUrl.uploadProfilePhoto);
-          return;
-        }
-        if (userData?.otherImages == null ||
-            (userData?.otherImages?.length == 0)) {
-          context.pushNamed(PageUrl.uploadPhotos);
-          return;
-        }
-        if (userData?.dob == null) {
-          context.pushNamed(PageUrl.setupProfilePage);
-          return;
-        }
-
-        context.goNamed(PageUrl.home);
       }
     });
     return Scaffold(
@@ -250,5 +220,55 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     if (dialogKey.currentState!.validate()) {
       ref.read(signInProvider.notifier).signIn(data);
     }
+  }
+
+  void _userSignedIn(BuildContext context) {
+    // Retreive app configs
+    ref.read(setupProfileProvider.notifier).getDataConfigs();
+    // ref.read(locationProvider.notifier).caller();
+
+    // Get user data
+    final userData = ref.watch(signInProvider.notifier).userData;
+
+    // Confirm email verification
+    if (userData?.emailVerification == false) {
+      ref.read(otpProvider.notifier).resendOtp(
+        ResendOtpReqDto(
+          email: userData?.email,
+          type: OtpType.accountSetup.value,
+        ),
+      );
+
+      context.pushNamed(
+        PageUrl.otpPage,
+        queryParameters: {
+          PathParam.otpType: OtpType.accountSetup.value,
+          PathParam.phoneNumber: userData?.phoneNo,
+          PathParam.email: userData?.email,
+        },
+      );
+      return;
+    }
+
+    // Confirm profile photoupload
+    if (userData?.profileImage == null) {
+      context.pushNamed(PageUrl.uploadProfilePhoto);
+      return;
+    }
+    // Confirm other images upload
+    if (userData?.otherImages == null ||
+        (userData?.otherImages?.length == 0)) {
+      context.pushNamed(PageUrl.uploadPhotos);
+      return;
+    }
+
+    // Confirm profile completeness before proceeding
+    if (userData?.dob == null) {
+      context.pushNamed(PageUrl.setupProfilePage);
+      return;
+    }
+
+    context.goNamed(PageUrl.home);
+    SessionManager.instance.isLoggedIn = true;
   }
 }

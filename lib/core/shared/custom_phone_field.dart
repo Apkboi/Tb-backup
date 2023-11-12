@@ -56,8 +56,9 @@ class _CustomPhoneFieldState extends State<CustomPhoneField> {
           enabled: widget.enabled,
           controller: widget.controller,
           validator: widget.validator,
+
           pickerDialogStyle: PickerDialogStyle(padding: EdgeInsets.zero),
-          keyboardType: const TextInputType.numberWithOptions(signed: true),
+          keyboardType: TextInputType.phone,
           dropdownIcon: const Icon(
             Icons.keyboard_arrow_down,
             size: 7,

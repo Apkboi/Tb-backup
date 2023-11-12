@@ -204,7 +204,7 @@ class _TextBoxFieldState extends State<TextBoxField> {
                             ? CupertinoIcons.eye_slash
                             : Icons.remove_red_eye_outlined,
                         size: 24.0,
-                        color: Pallets.primary,
+                        color: Pallets.grey,
                       ),
                     )
                   : widget.suffixIcon,

@@ -200,7 +200,11 @@ Interests copyWith({  num? id,
     map['name'] = name;
     return map;
   }
+  @override
+  String toString() {
 
+    return name??"";
+  }
 }
 
 /// id : 1
@@ -227,6 +231,12 @@ Hashtags copyWith({  num? id,
     map['id'] = id;
     map['name'] = name;
     return map;
+  }
+
+  @override
+  String toString() {
+
+    return name??"";
   }
 
 }

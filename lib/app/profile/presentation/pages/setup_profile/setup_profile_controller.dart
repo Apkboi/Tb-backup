@@ -25,7 +25,9 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
   Future<void> uploadOtherPhotos(UpdateOtherPhotosReqDto data) async {
     try {
       state = UploadOtherPhotosLoading();
-      await _accountImpService.updateOtherPhotos(data);
+      var res = await _accountImpService.updateOtherPhotos(data);
+      // Retrieve and save user information locally
+      await getProfile();
 
       state = UploadOtherPhotosSuccess();
     } catch (e) {
@@ -53,6 +55,8 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
     try {
       state = SetupProfileLoading();
       userProfile = await _accountImpService.getProfile();
+      sl<UserImpDao>().storeUser(userProfile.data);
+      sl<UserImpDao>().getUser();
 
       state = SetupProfileSuccess();
     } catch (e) {
@@ -133,3 +137,8 @@ class GetConfigsError extends SetupProfileState {
 
   GetConfigsError(this.message);
 }
+
+final selectedHashTagProvider =
+    StateProvider.autoDispose<List<Hashtags>>((ref) => []);
+final selectedInterestsProvider =
+    StateProvider.autoDispose<List<Interests>>((ref) => []);

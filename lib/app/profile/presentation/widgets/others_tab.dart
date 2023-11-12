@@ -106,6 +106,7 @@ class _OthersTabState extends ConsumerState<OthersTab>
                     education: education.text,
                     otherLanguages: otherLanguage.text,
                     haveKids: haveKids.text,
+                    relationShipStatus: relationShip.text
 
                   );
                   ref

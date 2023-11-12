@@ -52,6 +52,7 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
   ]);
 
   double sliderValue = 1;
+
   @override
   Widget build(BuildContext context) {
     ref.listen(setupProfileProvider, (previous, next) {
@@ -71,7 +72,11 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
           context,
           'Photos uploaded successfully',
         );
+
+
+        // Update Login Preferences and proceed
         ref.read(isFirsTImeProvider.notifier).state = true;
+        // SessionManager.instance.isLoggedIn = true;
         context.pushNamed(PageUrl.setupProfilePage);
       }
     });
@@ -116,7 +121,7 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
                   8.verticalSpace,
                   const TextView(
                     text:
-                        'Add some more really cool photos of you living your best life, so others get a vibe of the amazing you.',
+                    'Add some more really cool photos of you living your best life, so others get a vibe of the amazing you.',
                     fontSize: 14,
                     color: Pallets.grey,
                   ),
@@ -167,42 +172,45 @@ class _UploadPhotosPageState extends ConsumerState<UploadPhotosPage> {
                         onTap: (imagesList.contains(null))
                             ? null
                             : () async {
-                                ///UPload Photos
-                                ///
+                          ///UPload Photos
+                          ///
 
-                                CustomDialogs.showLoading(context);
+                          CustomDialogs.showLoading(context);
 
-                                try {
-                                  await Future.wait(
-                                    List.generate(
-                                      imagesList.length,
-                                      (index) => CloudinaryManager.uploadFile(
-                                        filePath: imagesList[index]!,
-                                        file: File(
-                                          imagesList[index]!,
-                                        ),
+                          try {
+                            await Future.wait(
+                              List.generate(
+                                imagesList.length,
+                                    (index) =>
+                                    CloudinaryManager.uploadFile(
+                                      filePath: imagesList[index]!,
+                                      file: File(
+                                        imagesList[index]!,
                                       ),
                                     ),
-                                  ).then(
-                                    (value) {
-                                      CustomDialogs.hideLoading(context);
+                              ),
+                            ).then(
+                                  (value) {
+                                CustomDialogs.hideLoading(context);
 
-                                      ref
-                                          .read(setupProfileProvider.notifier)
-                                          .uploadOtherPhotos(
-                                            UpdateOtherPhotosReqDto(
-                                              images: value,
-                                            ),
-                                          );
-                                    },
-                                  );
-                                } catch (e) {
-                                  CustomDialogs.hideLoading(context);
-
-                                  CustomDialogs.error(e.toString());
-                                  logger.e('message');
-                                }
+                                ref
+                                    .read(setupProfileProvider.notifier)
+                                    .uploadOtherPhotos(
+                                  UpdateOtherPhotosReqDto(
+                                    images: value,
+                                  ),
+                                );
                               },
+                            );
+                          } catch (e) {
+                            CustomDialogs.hideLoading(context);
+
+                            CustomDialogs.error(e.toString());
+                            logger.e('message');
+                          }
+
+
+                        },
                       ),
                     ],
                   ),

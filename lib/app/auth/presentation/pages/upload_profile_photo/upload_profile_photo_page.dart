@@ -153,7 +153,7 @@ class _EmptyPhotoCardState extends State<EmptyPhotoCard> {
           width: 1.sw,
           margin: const EdgeInsets.symmetric(horizontal: 20.0),
           child: DashedRect(
-            color: Pallets.primary,
+            color: Pallets.primary.withOpacity(0.3),
             strokeWidth: 1.0,
             gap: 8.0,
           ),
@@ -162,7 +162,7 @@ class _EmptyPhotoCardState extends State<EmptyPhotoCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const ImageWidget(imageUrl: Assets.svgsExport),
+              const ImageWidget(imageUrl: Assets.svgsUpload),
               8.verticalSpace,
               const TextView(
                 text: 'Upload profile picture',
@@ -173,7 +173,7 @@ class _EmptyPhotoCardState extends State<EmptyPhotoCard> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                 child: TextView(
-                  text: 'Supported format: .jpeg, png ,jpg less than 5MB',
+                  text: 'Supported format: jpeg, png ,jpg less than 5MB',
                   color: Pallets.grey,
                   fontSize: 14,
                   align: TextAlign.center,

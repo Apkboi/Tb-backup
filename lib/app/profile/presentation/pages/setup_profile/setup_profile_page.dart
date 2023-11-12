@@ -99,32 +99,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
           'Profile saved successfully',
         );
 
-        if (sliderValue.value == 1) {
-
-          _animateToTargetValue(5);
-          controller.index = 1;
-          return;
-        }
-
-        if (sliderValue.value == 2) {
-
-          _animateToTargetValue(5);
-          controller.index = 1;
-          return;
-        }
-
-
-        if (sliderValue.value == 5) {
-          _animateToTargetValue(7);
-          controller.index = 2;
-
-          return;
-        }
-
-        if (sliderValue.value == 7) {
-          _animateToTargetValue(10);
-          controller.index = 3;
-        }
+        _navigateToNextForm();
 
         return;
       }
@@ -141,6 +116,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
               child: ValueListenableBuilder(
                   valueListenable: sliderValue,
                   builder: (context, sliderValue, child) {
+                    _profileIsCompleteEnough();
                     return TextView(
                       text: sliderValue == 7 ? 'Done' : 'Skip',
                       color: Pallets.maybeBlack,
@@ -208,22 +184,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
               ),
 
               onTap: (currentIndex) {
-                if (currentIndex == 0) {
-                  _animateToTargetValue(2.toDouble());
-
-                  return;
-                }
-                if (currentIndex == 1) {
-                  _animateToTargetValue(5);
-                  return;
-                }
-                if (currentIndex == 2) {
-                  _animateToTargetValue(7);
-                  return;
-                }
-
-                _animateToTargetValue(10);
-                return;
+                _handleTabNavigation(currentIndex);
               },
               tabs: const [
                 Tab(
@@ -238,6 +199,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
             Expanded(
               child: TabBarView(
                 controller: controller,
+                physics: const NeverScrollableScrollPhysics(),
                 children: const [
                   ProfileTab(),
                   EthnicityTab(),
@@ -253,5 +215,66 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
         ),
       ),
     );
+  }
+
+  void _navigateToNextForm() {
+    if (sliderValue.value == 1) {
+      _animateToTargetValue(5);
+      controller.index = 1;
+      return;
+    }
+    if (sliderValue.value == 2) {
+      _animateToTargetValue(5);
+      controller.index = 1;
+      return;
+    }
+    if (sliderValue.value == 5) {
+      _animateToTargetValue(7);
+      controller.index = 2;
+
+      return;
+    }
+    if (sliderValue.value == 7) {
+      _animateToTargetValue(10);
+      controller.index = 3;
+    }
+  }
+
+  void _handleTabNavigation(int currentIndex) {
+    if (currentIndex == 0) {
+      _animateToTargetValue(2.toDouble());
+
+      return;
+    }
+    if (currentIndex == 1) {
+      _animateToTargetValue(5);
+      return;
+    }
+    if (currentIndex == 2) {
+      _animateToTargetValue(7);
+
+      return;
+    }
+
+    if (ref.watch(selectedInterestsProvider).isNotEmpty &&
+        ref.watch(selectedHashTagProvider).isNotEmpty) {
+      _animateToTargetValue(10);
+    } else {
+      _animateToTargetValue(7);
+      controller.index = 2;
+      CustomDialogs.showToast(
+          'Select atleast one Interest and Hashtag to continue');
+    }
+    // _animateToTargetValue(10);
+    return;
+  }
+
+  bool _profileIsCompleteEnough() {
+    final userProfile =
+        ref.watch(setupProfileProvider.notifier).userProfile.data;
+
+    return userProfile?.tribes != null &&
+        userProfile?.originCountryId != null &&
+        userProfile?.residenceCountryId != null && userProfile?.interests!= null;
   }
 }
