@@ -7,7 +7,8 @@ class CustomMultiSelectDropdown extends StatelessWidget {
       {Key? key,
       required this.options,
       required this.onOptionSelected,
-      this.controller, required this.hint})
+      this.controller,
+      required this.hint})
       : super(key: key);
   final List<ValueItem> options;
   final Function(List<ValueItem>) onOptionSelected;
@@ -25,6 +26,7 @@ class CustomMultiSelectDropdown extends StatelessWidget {
       },
       options: options,
       hint: hint,
+
       hintColor: Pallets.grey,
       // maxItems: 2,
       // disabledOptions: const [ValueItem(label: 'Option 1', value: '1')],
@@ -36,10 +38,10 @@ class CustomMultiSelectDropdown extends StatelessWidget {
       borderColor: Pallets.grey,
       suffixIcon: const Icon(
         Icons.keyboard_arrow_down_outlined,
-
         size: 30,
       ),
       borderWidth: 0.5,
+
       focusedBorderColor: Pallets.grey,
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       // color: hasValue ? Pallets.primary : Pallets.borderGrey),

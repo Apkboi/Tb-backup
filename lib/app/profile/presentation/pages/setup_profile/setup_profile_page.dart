@@ -24,12 +24,16 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
 
   late TabController controller;
+  int tabIndex = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     controller = TabController(length: 4, vsync: this);
+    controller.addListener(() {
+      _handleTabNavigation(tabIndex);
+    });
     _getProfile();
   }
 
@@ -167,6 +171,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
               labelPadding: const EdgeInsets.symmetric(horizontal: 10),
               padding: const EdgeInsets.symmetric(horizontal: 24),
+
               unselectedLabelStyle: ref
                   .read(themeProvider.notifier)
                   .selectedTextTheme
@@ -184,8 +189,12 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
               ),
 
               onTap: (currentIndex) {
-                _handleTabNavigation(currentIndex);
+                validateFields(currentIndex);
+                logger.e("CURRENT INDEX:$currentIndex");
+                logger.e("CONTROLLER INDEX:${controller.index}");
+                // _handleTabNavigation(currentIndex);
               },
+
               tabs: const [
                 Tab(
                   text: 'Personal bio',
@@ -200,11 +209,11 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
               child: TabBarView(
                 controller: controller,
                 physics: const NeverScrollableScrollPhysics(),
-                children: const [
-                  ProfileTab(),
-                  EthnicityTab(),
-                  InterestsTab(),
-                  OthersTab(),
+                children: [
+                  ProfileTab(controller),
+                  EthnicityTab(controller),
+                  InterestsTab(controller),
+                  OthersTab(controller),
                 ],
               ),
             ),
@@ -246,25 +255,31 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
       return;
     }
+
     if (currentIndex == 1) {
-      _animateToTargetValue(5);
+      _animateToTargetValue(5.toDouble());
+
       return;
     }
     if (currentIndex == 2) {
       _animateToTargetValue(7);
-
       return;
     }
+    // if (currentIndex == 3) {
+    //   _animateToTargetValue(7);
+    //
+    //   return;
+    // }
 
-    if (ref.watch(selectedInterestsProvider).isNotEmpty &&
-        ref.watch(selectedHashTagProvider).isNotEmpty) {
-      _animateToTargetValue(10);
-    } else {
-      _animateToTargetValue(7);
-      controller.index = 2;
-      CustomDialogs.showToast(
-          'Select atleast one Interest and Hashtag to continue');
-    }
+    // if (ref.watch(selectedInterestsProvider).isNotEmpty &&
+    //     ref.watch(selectedHashTagProvider).isNotEmpty) {
+    //   _animateToTargetValue(10);
+    // } else {
+    //   _animateToTargetValue(7);
+    //   controller.index = 2;
+    //   CustomDialogs.showToast(
+    //       'Select atleast one Interest and Hashtag to continue');
+    // }
     // _animateToTargetValue(10);
     return;
   }
@@ -275,6 +290,35 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
     return userProfile?.tribes != null &&
         userProfile?.originCountryId != null &&
-        userProfile?.residenceCountryId != null && userProfile?.interests!= null;
+        userProfile?.residenceCountryId != null &&
+        userProfile?.interests != null;
+  }
+
+  void validateFields(int index, {bool? skip = false}) {
+    switch (controller.index) {
+      case 0:
+        controller.index = 0;
+        // ref.read(setupProfileProvider.notifier)
+        //     .validateProfileForm(ProfileForm.bio);
+        break;
+      case 1:
+        ref
+            .read(setupProfileProvider.notifier)
+            .validateProfileForm(ProfileForm.bio);
+        break;
+
+      case 2:
+        ref
+            .read(setupProfileProvider.notifier)
+            .validateProfileForm(ProfileForm.ethnicity);
+        break;
+
+      case 3:
+        ref
+            .read(setupProfileProvider.notifier)
+            .validateProfileForm(ProfileForm.interest);
+        break;
+    }
+    tabIndex = controller.index;
   }
 }

@@ -15,7 +15,9 @@ import 'package:triberly/core/shared/custom_type_drop_down_search.dart';
 import 'package:triberly/core/utils/string_extension.dart';
 
 class ProfileTab extends ConsumerStatefulWidget {
-  const ProfileTab({super.key});
+  const ProfileTab(this.controller, {super.key});
+
+  final TabController controller;
 
   @override
   ConsumerState createState() => _ProfileTabState();
@@ -69,11 +71,14 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   }
 
   _prefillTab() {
-    final userProfile = ref.watch(setupProfileProvider.notifier).userProfile.data;
+    final userProfile =
+        ref.watch(setupProfileProvider.notifier).userProfile.data;
     firstName.text = userProfile?.firstName ?? '';
     lastName.text = userProfile?.lastName ?? '';
     email.text = userProfile?.email ?? '';
-    dob.text =userProfile?.dob!=null? TimeUtil.formatDateDDMMYYY(userProfile?.dob ?? ''):'';
+    dob.text = userProfile?.dob != null
+        ? TimeUtil.formatDateDDMMYYY(userProfile?.dob ?? '')
+        : '';
     occupation.text = userProfile?.profession ?? '';
     bio.text = userProfile?.bio ?? '';
     gender.text = userProfile?.gender ?? '';
@@ -106,6 +111,8 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    _listenToProfileStates();
 
     //
     return SingleChildScrollView(
@@ -301,8 +308,9 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                   onTap: (otherImages.contains(null))
                       ? null
                       : () {
+                          _updateProfile(context);
 
-                    _updateProfile(context);
+                          // widget.controller.index = 2;
 
                           // CustomDialogs.showFlushBar(
                           //   context,
@@ -348,28 +356,61 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   }
 
   void _updateProfile(BuildContext context) {
-
-    if(_formKey.currentState?.validate()??false){
-      if(dob.text.isNotEmpty && dob.text != "N/A" ){
-        final data = UpdateProfileReqDto(
-          firstName: firstName.text,
-          lastName: lastName.text,
-          profession: occupation.text,
-          bio: bio.text,
-          dob: dob.text,
-          phone: phoneNumber.text,
-          residenceCountryId: _residenceCountryId,
-        );
-        ref.read(setupProfileProvider.notifier)
-            .updateProfile(data);
-      }else{
-        CustomDialogs.error('Enter your date of birth.');
-      }
-
-    }
-
-
+    validateAndExecute(() {
+      final data = UpdateProfileReqDto(
+        firstName: firstName.text,
+        lastName: lastName.text,
+        profession: occupation.text,
+        bio: bio.text,
+        dob: dob.text,
+        phone: phoneNumber.text,
+        residenceCountryId: _residenceCountryId,
+      );
+      ref.read(setupProfileProvider.notifier).updateProfile(data);
+    });
   }
 
+  bool get formValidated => (_formKey.currentState?.validate() ?? false);
 
+  void validateAndExecute(VoidCallback action,
+      {VoidCallback? validationFailed}) {
+    if (formValidated) {
+      if (dob.text.isNotEmpty && dob.text != "N/A") {
+        action();
+      } else {
+        CustomDialogs.error('Enter your date of birth.');
+        if (validationFailed != null) {
+          validationFailed();
+        }
+      }
+    } else {
+      if (validationFailed != null) {
+        validationFailed();
+      }
+    }
+  }
+
+  void _listenToProfileStates() {
+    ref.listen(setupProfileProvider, (previous, next) {
+      if (next is PersonalBioValidation) {
+        validateAndExecute(() {
+
+
+          //  Check if fields have been updated
+          var user = ref.read(setupProfileProvider.notifier).userProfile.data;
+
+          if (user?.profession != null &&
+              user?.bio != null &&
+              user?.residenceCountryId != null) {
+            widget.controller.index = 1;
+          }else{
+            CustomDialogs.error('Please save your personal bio and continue.');
+          }
+        }, validationFailed: () {
+          widget.controller.index = 0;
+        });
+        setState(() {});
+      }
+    });
+  }
 }

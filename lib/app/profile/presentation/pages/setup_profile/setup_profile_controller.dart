@@ -8,6 +8,8 @@ import 'package:triberly/app/auth/domain/services/account_imp_service.dart';
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/core/services/di/di.dart';
 
+enum ProfileForm { bio, ethnicity, interest, others }
+
 class SetupProfileController extends StateNotifier<SetupProfileState> {
   SetupProfileController(this.ref, this._accountImpService)
       : super(SetupProfileInitial());
@@ -97,6 +99,26 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
       state = GetConfigsError(e.toString());
     }
   }
+
+  void validateProfileForm(ProfileForm form) {
+    switch (form) {
+      case ProfileForm.bio:
+        state = PersonalBioValidation();
+        break;
+
+      case ProfileForm.ethnicity:
+        state = EthnicityValidation();
+        break;
+
+      case ProfileForm.interest:
+        state = InterestValidation();
+        break;
+
+      case ProfileForm.others:
+        state = OthersValidation();
+        break;
+    }
+  }
 }
 
 final setupProfileProvider =
@@ -137,6 +159,16 @@ class GetConfigsError extends SetupProfileState {
 
   GetConfigsError(this.message);
 }
+
+// Validation States
+
+class PersonalBioValidation extends SetupProfileState {}
+
+class EthnicityValidation extends SetupProfileState {}
+
+class InterestValidation extends SetupProfileState {}
+
+class OthersValidation extends SetupProfileState {}
 
 final selectedHashTagProvider =
     StateProvider.autoDispose<List<Hashtags>>((ref) => []);

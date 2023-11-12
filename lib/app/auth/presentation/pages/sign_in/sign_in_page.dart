@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:triberly/app/auth/domain/models/dtos/resend_otp_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/sign_in_req_dto.dart';
 import 'package:triberly/app/auth/presentation/pages/otp/otp_controller.dart';
+import 'package:triberly/app/auth/presentation/widgets/onboarding/intro_dialog.dart';
 import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/services/_services.dart';
@@ -82,10 +83,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       if (next is SignInSuccess) {
         CustomDialogs.hideLoading(context);
 
-
         _userSignedIn(context);
-
-
       }
     });
     return Scaffold(
@@ -233,11 +231,11 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     // Confirm email verification
     if (userData?.emailVerification == false) {
       ref.read(otpProvider.notifier).resendOtp(
-        ResendOtpReqDto(
-          email: userData?.email,
-          type: OtpType.accountSetup.value,
-        ),
-      );
+            ResendOtpReqDto(
+              email: userData?.email,
+              type: OtpType.accountSetup.value,
+            ),
+          );
 
       context.pushNamed(
         PageUrl.otpPage,
@@ -256,14 +254,18 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       return;
     }
     // Confirm other images upload
-    if (userData?.otherImages == null ||
-        (userData?.otherImages?.length == 0)) {
+    if (userData?.otherImages == null || (userData?.otherImages?.length == 0)) {
       context.pushNamed(PageUrl.uploadPhotos);
       return;
     }
 
     // Confirm profile completeness before proceeding
-    if (userData?.dob == null) {
+    if (userData?.dob == null ||
+        userData?.tribes == null ||
+        userData?.originCountryId == null ||
+        userData?.interests == null ||
+        userData?.bio == null) {
+      ref.read(isFirsTImeProvider.notifier).state = true;
       context.pushNamed(PageUrl.setupProfilePage);
       return;
     }
