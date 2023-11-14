@@ -48,10 +48,17 @@ class UrlConfig {
   static const String searchConnections = '/general/connections/search';
   static const String saveConnection = '/general/connections/save';
   static const String getConnections = '/general/connections';
+  static const String addFavorite = '/user/add/favourite';
+  static const String addBookmark = '/user/add/bookmark';
+  static const String removeFavorite = '/user/remove/favourite';
+  static const String removeBookmark = '/user/remove/bookmark';
+  static const String checkBookmark = '/user/check/bookmark';
+  static const String checkFavorite = '/user/check/favourite';
 
   ///ACCOUNT
   static const String updateProfile = '/general/account/update';
   static const String updateOtherPhotos = 'general/account/upload-images';
+  static const String deleteAccount = 'general/account/deactivate';
 
   ///Chat
   static const String getChats = '/chats/list';

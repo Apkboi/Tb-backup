@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -141,12 +142,11 @@ class ImageManager {
     );
   }
 
-
   Future<File?> showDocumentSourceDialog(BuildContext context,
       {bool? shouldCompress, bool? shouldCrop}) {
     return showModalBottomSheet<File?>(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
       builder: (BuildContext context) {
         return Padding(
@@ -154,7 +154,7 @@ class ImageManager {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              TextView(
+              const TextView(
                 text: 'Upload Image',
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -189,5 +189,30 @@ class ImageManager {
         );
       },
     );
+  }
+
+  Future<List<String>> fetchFiles(
+      {bool allowMultiple = false,
+      String? title,
+      FileType fileType = FileType.any,
+      List<String>? allowedExtensions}) async {
+    try {
+      FilePicker filePicker = FilePicker.platform;
+      FilePickerResult? result = await filePicker.pickFiles(
+        type: fileType,
+        allowCompression: true,
+        dialogTitle: title ?? 'SELECT FILE',
+        withData: true,
+        allowMultiple: allowMultiple,
+        allowedExtensions: allowedExtensions,
+      );
+      if (result != null) {
+        return result.files.map((file) => file.path!).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
   }
 }

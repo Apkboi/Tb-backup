@@ -98,12 +98,14 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
       }
 
       if (next is SetupProfileSuccess) {
-        CustomDialogs.hideLoading(context);
-        CustomDialogs.success(
-          'Profile saved successfully',
-        );
-
-        _navigateToNextForm();
+        try {
+          CustomDialogs.hideLoading(context);
+          CustomDialogs.success(
+            'Profile saved successfully',
+          );
+        } finally {
+          _navigateToNextForm();
+        }
 
         return;
       }
@@ -122,7 +124,7 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                   builder: (context, sliderValue, child) {
                     _profileIsCompleteEnough();
                     return TextView(
-                      text: sliderValue == 7 ? 'Done' : 'Skip',
+                      text: sliderValue == 10 ? 'Done' : '',
                       color: Pallets.maybeBlack,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -161,48 +163,60 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
                 }),
 
             24.verticalSpace,
-            TabBar(
-              indicatorSize: TabBarIndicatorSize.tab,
-              isScrollable: true,
+            SizedBox(
+              height: 30,
+              child: TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,
+
+                isScrollable: true,
 // tabAlignment: TabAlignment.start,
-              controller: controller,
+              indicatorPadding: EdgeInsets.zero,
+                controller: controller,
+                tabAlignment: TabAlignment.center,
 
-              // indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
+                indicatorColor: Pallets.primary,
 
-              labelPadding: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+                // indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
 
-              unselectedLabelStyle: ref
-                  .read(themeProvider.notifier)
-                  .selectedTextTheme
-                  .titleMedium,
-              labelStyle: ref
-                  .read(themeProvider.notifier)
-                  .selectedTextTheme
-                  .titleMedium,
-              labelColor: Pallets.white,
-              unselectedLabelColor: Pallets.grey,
+                labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
 
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(8), // Creates border
-                color: Pallets.primary,
+                unselectedLabelStyle: ref
+                    .read(themeProvider.notifier)
+                    .selectedTextTheme
+                    .titleMedium,
+
+                labelStyle: ref
+                    .read(themeProvider.notifier)
+                    .selectedTextTheme
+                    .titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                labelColor: Pallets.black,
+                unselectedLabelColor: Pallets.grey,
+
+                // indicator: BoxDecoration(
+                //   borderRadius: BorderRadius.circular(8), // Creates border
+                //   color: Pallets.primary,
+                // ),
+
+                onTap: (currentIndex) {
+                  logger.e("CONTROLLER INDEX:${controller.index}");
+
+                  validateFields(controller.previousIndex, currentIndex);
+                  logger.e("CURRENT INDEX:$currentIndex");
+                  // _handleTabNavigation(currentIndex);
+                },
+
+                tabs: const [
+                  Tab(
+                    height: 20,
+
+                    text: 'Personal bio',
+                  ),
+                  Tab(text: 'Ethnicity'),
+                  Tab(text: 'Interests'),
+                  Tab(text: 'Others'),
+                ],
               ),
-
-              onTap: (currentIndex) {
-                validateFields(currentIndex);
-                logger.e("CURRENT INDEX:$currentIndex");
-                logger.e("CONTROLLER INDEX:${controller.index}");
-                // _handleTabNavigation(currentIndex);
-              },
-
-              tabs: const [
-                Tab(
-                  text: 'Personal bio',
-                ),
-                Tab(text: 'Ethnicity'),
-                Tab(text: 'Interests'),
-                Tab(text: 'Others'),
-              ],
             ),
 
             Expanded(
@@ -243,44 +257,25 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
 
       return;
     }
-    if (sliderValue.value == 7) {
-      _animateToTargetValue(10);
-      controller.index = 3;
-    }
+    _animateToTargetValue(10);
+    controller.index = 3;
+    return;
   }
 
   void _handleTabNavigation(int currentIndex) {
     if (currentIndex == 0) {
       _animateToTargetValue(2.toDouble());
-
       return;
     }
-
     if (currentIndex == 1) {
       _animateToTargetValue(5.toDouble());
-
       return;
     }
     if (currentIndex == 2) {
       _animateToTargetValue(7);
       return;
     }
-    // if (currentIndex == 3) {
-    //   _animateToTargetValue(7);
-    //
-    //   return;
-    // }
-
-    // if (ref.watch(selectedInterestsProvider).isNotEmpty &&
-    //     ref.watch(selectedHashTagProvider).isNotEmpty) {
-    //   _animateToTargetValue(10);
-    // } else {
-    //   _animateToTargetValue(7);
-    //   controller.index = 2;
-    //   CustomDialogs.showToast(
-    //       'Select atleast one Interest and Hashtag to continue');
-    // }
-    // _animateToTargetValue(10);
+    _animateToTargetValue(10);
     return;
   }
 
@@ -294,29 +289,28 @@ class _SetupProfilePageState extends ConsumerState<SetupProfilePage>
         userProfile?.interests != null;
   }
 
-  void validateFields(int index, {bool? skip = false}) {
-    switch (controller.index) {
+  void validateFields(int index, int nextIndex, {bool? skip = false}) {
+    switch (index) {
       case 0:
-        controller.index = 0;
-        // ref.read(setupProfileProvider.notifier)
-        //     .validateProfileForm(ProfileForm.bio);
+        ref
+            .read(setupProfileProvider.notifier)
+            .validateProfileForm(ProfileForm.bio, nextIndex);
         break;
       case 1:
         ref
             .read(setupProfileProvider.notifier)
-            .validateProfileForm(ProfileForm.bio);
+            .validateProfileForm(ProfileForm.ethnicity, nextIndex);
         break;
 
       case 2:
         ref
             .read(setupProfileProvider.notifier)
-            .validateProfileForm(ProfileForm.ethnicity);
+            .validateProfileForm(ProfileForm.interest, nextIndex);
         break;
-
       case 3:
         ref
             .read(setupProfileProvider.notifier)
-            .validateProfileForm(ProfileForm.interest);
+            .validateProfileForm(ProfileForm.others, nextIndex);
         break;
     }
     tabIndex = controller.index;

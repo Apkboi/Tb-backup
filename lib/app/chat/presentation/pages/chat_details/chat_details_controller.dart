@@ -8,7 +8,6 @@ import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
 import 'package:triberly/core/shared/custom_dialogs.dart';
 
-
 class ChatDetailsController extends StateNotifier<ChatDetailsState> {
   ChatDetailsController(this.ref) : super(ChatDetailsInitial());
 
@@ -28,12 +27,13 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
     }
 
     // Initialize the first date as the date of the first message
-    DateTime? currentDate = DateTime.parse(messagesList[0].date ?? DateTime.now().toString());
+    DateTime? currentDate =
+        DateTime.parse(messagesList[0].date ?? DateTime.now().toString());
 
     for (int i = 0; i < messagesList.length; i++) {
-
       final message = messagesList[i];
-      final messageDate = DateTime.parse(message.date ?? DateTime.now().toString());
+      final messageDate =
+          DateTime.parse(message.date ?? DateTime.now().toString());
 
       // Check if the current message's date is different from the previous one
       if (!DateUtils.isSameDay(currentDate, messageDate)) {
@@ -102,7 +102,6 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
         messagesList = datavalue2;
 
         state = ChatDetailsSuccess();
-
       }).onError((handleError) {
         state = ChatDetailsError(handleError.toString());
       });
@@ -112,28 +111,44 @@ class ChatDetailsController extends StateNotifier<ChatDetailsState> {
   }
 
   Future<void> sendChatMessage(
-      MessageModel data, String chatId, List<String> files) async {
+    MessageModel data,
+    String chatId,
+  ) async {
     if (data.message == '') {
       CustomDialogs.showToast('Add a text');
       return;
     }
 
-    if (files.isNotEmpty) {
-      var url = await Future.wait(files.map((e) => CloudinaryManager.uploadFile(
-        filePath: e,
-        file: File(e),
-      )));
+    addChat(data.copyWith(isLoading: true));
 
-      data = data.copyWith(message: url.first);
+    if (data.files != null && data.files!.isNotEmpty) {
+      var url =
+          await Future.wait(data.files!.map((e) => CloudinaryManager.uploadFile(
+                filePath: e,
+                file: File(e),
+              )));
+
+      data = data.copyWith(files: url);
     }
 
-    dbRef.child("chat_messages").child(chatId).push().set(data.toMap()).then(
+    dbRef
+        .child("chat_messages")
+        .child(chatId)
+        .push()
+        .set(data.copyWith().toMap())
+        .then(
           (value) {},
-    );
+        );
+  }
+
+  void addChat(
+    MessageModel data,
+  ) {
+    messagesList.add(data.copyWith(isLoading: true));
+
+    state = ChatDetailsSuccess();
   }
 }
-
-
 
 final chatDetailsProvider =
     StateNotifierProvider<ChatDetailsController, ChatDetailsState>((ref) {

@@ -107,6 +107,22 @@ class AccountImpService implements AccountService {
     }
   }
 
+  Future<dynamic?> deleteAccount(String reason) async {
+    try {
+      final response = await _networkService(
+        UrlConfig.deleteAccount,
+        RequestMethod.post,
+        data: {
+          "reason": reason,
+        },
+      );
+
+      return UpdateOtherPhotosResDto.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   @override
   Future<GetProfile> getProfile() async {
     try {

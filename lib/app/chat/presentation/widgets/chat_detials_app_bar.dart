@@ -46,50 +46,49 @@ class ChatDetailsAppbar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           children: [
-            PopupMenuButton<int>(
-              child: ImageWidget(
-                imageUrl: Assets.svgsCall,
-                size: 24,
-              ),
-              itemBuilder: (context) => [
-                // popupmenu item 1
-                PopupMenuItem(
-                  value: 1,
-                  child: Row(
-                    children: [
-                      Icon(Icons.call),
-                      8.horizontalSpace,
-                      TextView(
-                        text: 'Voice Call',
-                      )
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 1,
-                  child: Row(
-                    children: [
-                      Icon(Icons.camera_alt),
-                      8.horizontalSpace,
-                      TextView(
-                        text: 'Video Call',
-                      )
-                    ],
-                  ),
-                ),
-              ],
-              offset: Offset(0, 30),
-              // color: Colors.grey,
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4.0),
-                ),
-              ),
-            ),
+            // PopupMenuButton<int>(
+            //   child: ImageWidget(
+            //     imageUrl: Assets.svgsCall,
+            //     size: 24,
+            //   ),
+            //   itemBuilder: (context) => [
+            //     // popupmenu item 1
+            //     PopupMenuItem(
+            //       value: 1,
+            //       child: Row(
+            //         children: [
+            //           Icon(Icons.call),
+            //           8.horizontalSpace,
+            //           TextView(
+            //             text: 'Voice Call',
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //     PopupMenuItem(
+            //       value: 1,
+            //       child: Row(
+            //         children: [
+            //           Icon(Icons.camera_alt),
+            //           8.horizontalSpace,
+            //           TextView(
+            //             text: 'Video Call',
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            //   offset: Offset(0, 30),
+            //   // color: Colors.grey,
+            //   elevation: 5,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.all(
+            //       Radius.circular(4.0),
+            //     ),
+            //   ),
+            // ),
             10.horizontalSpace,
             PopupMenuButton<int>(
-              child: ImageWidget(imageUrl: Assets.svgsMore),
               itemBuilder: (context) => [
                 // popupmenu item 1
                 PopupMenuItem(
@@ -132,11 +131,12 @@ class ChatDetailsAppbar extends StatelessWidget implements PreferredSizeWidget {
               offset: Offset(0, 30),
               // color: Colors.grey,
               elevation: 5,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(4.0),
                 ),
               ),
+              child: const ImageWidget(imageUrl: Assets.svgsMore),
             ),
           ],
         ),

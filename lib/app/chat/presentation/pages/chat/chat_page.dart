@@ -99,32 +99,43 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   onRefresh: () async {
                     await getOngoingChats();
                   },
-                  child: ListView.separated(
-                    itemCount: chatsList.length,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 150.h),
-                    itemBuilder: (context, index) {
-                      final singleItem = chatsList[index];
-                      return ChatTile(
-                        chatData: singleItem,
-                        userDto: singleItem.participants?.firstOrNull?.user,
-                        onTap: () {
-                          context.pushNamed(
-                            PageUrl.chatDetails,
-                            queryParameters: {
-                              PathParam.chatId: "${singleItem.id}",
-                              PathParam.userName:
-                                  "${singleItem.participants?.firstOrNull?.user?.lastName} ${singleItem.participants?.firstOrNull?.user?.firstName}",
-                            },
-                          );
-                        },
-                      );
-                    },
-                    separatorBuilder: (context, index) => const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: CustomDivider(),
-                    ),
-                  ),
+                  child: chatsList.isNotEmpty
+                      ? ListView.separated(
+                          itemCount: chatsList.length,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 150.h),
+                          itemBuilder: (context, index) {
+                            final singleItem = chatsList[index];
+                            return ChatTile(
+                              chatData: singleItem,
+                              userDto:
+                                  singleItem.participants?.firstOrNull?.user,
+                              onTap: () {
+                                context.pushNamed(
+                                  PageUrl.chatDetails,
+                                  queryParameters: {
+                                    PathParam.chatId: "${singleItem.id}",
+                                    PathParam.userName:
+                                        "${singleItem.participants?.firstOrNull?.user?.lastName} ${singleItem.participants?.firstOrNull?.user?.firstName}",
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          separatorBuilder: (context, index) => const Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: CustomDivider(),
+                          ),
+                        )
+                      : ListView(
+                          children: const [
+                            EmptyState(
+                                imageUrl: '',
+                                title: "No messages here.",
+                                subtitle:
+                                    "Messages will appear here once you have any conversation."),
+                          ],
+                        ),
                 ),
               ),
             ],
@@ -168,10 +179,26 @@ class ChatTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ImageWidget(
-            imageUrl: userDto?.profileImage ?? '',
-            size: 61,
-            borderRadius: BorderRadius.circular(12),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              ImageWidget(
+                imageUrl: userDto?.profileImage ?? '',
+                size: 50,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              const Positioned(
+                  bottom: -2,
+                  right: -2,
+                  child: CircleAvatar(
+                    radius: 8,
+                    backgroundColor: Pallets.white,
+                    child: CircleAvatar(
+                      radius: 6,
+                      backgroundColor: Pallets.primary,
+                    ),
+                  ))
+            ],
           ),
           12.horizontalSpace,
           Expanded(
@@ -195,11 +222,11 @@ class ChatTile extends StatelessWidget {
                             ),
                           ),
                           12.horizontalSpace,
-                          const Icon(
-                            Icons.circle,
-                            color: Pallets.primary,
-                            size: 10,
-                          )
+                          // const Icon(
+                          //   Icons.circle,
+                          //   color: Pallets.primary,
+                          //   size: 10,
+                          // )
                         ],
                       ),
                     ),

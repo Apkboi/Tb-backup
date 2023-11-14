@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/models/value_item.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:triberly/app/auth/domain/models/dtos/config_res_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/update_profile_req_dto.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/_services.dart';
 import 'package:triberly/core/shared/custom_mutiselect_dropdown.dart';
+import 'package:triberly/core/utils/interest_image_mapper.dart';
 
 class InterestsTab extends ConsumerStatefulWidget {
   const InterestsTab(this.controller, {super.key});
@@ -31,6 +33,8 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
   ];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  var intentsController = MultiSelectController();
+
   @override
   void dispose() {
     intentCtrl.dispose();
@@ -38,12 +42,29 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      prefillFields();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    Future.delayed(Duration.zero, () {
+      prefillFields();
+    });
+  }
+
   String connectType = '';
 
   @override
   Widget build(BuildContext context) {
-    prefillFields();
     super.build(context);
+    _listenToProfileStates();
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Form(
@@ -74,35 +95,6 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                   fontWeight: FontWeight.w600,
                 ),
                 16.verticalSpace,
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     ConnectTypeRadio(
-                //       title: 'Men Only',
-                //       value: connectType,
-                //       onTap: () {
-                //         connectType = 'Men Only';
-                //         setState(() {});
-                //       },
-                //     ),
-                //     ConnectTypeRadio(
-                //       title: 'Women Only',
-                //       value: connectType,
-                //       onTap: () {
-                //         connectType = 'Women Only';
-                //         setState(() {});
-                //       },
-                //     ),
-                //     ConnectTypeRadio(
-                //       title: 'Anyone',
-                //       value: connectType,
-                //       onTap: () {
-                //         connectType = 'Anyone';
-                //         setState(() {});
-                //       },
-                //     ),
-                //   ],
-                // ),
                 FilterCustomDropDown(
                   hintText: "Who are you looking to connect to ?",
                   selectedValue: connectType,
@@ -110,10 +102,9 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                   onTap: (value) {
                     connectType = value ?? '';
                   },
-                  hasValidator: true,
+                  hasValidator: false,
                 ),
                 16.verticalSpace,
-
                 CustomMultiSelectDropdown(
                   options: intents.map((e) => ValueItem(label: e)).toList(),
                   onOptionSelected: (List<ValueItem> options) {
@@ -124,6 +115,7 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                       setState(() {});
                     }
                   },
+                  controller: intentsController,
                   hint: 'Searching for',
                 )
               ],
@@ -163,14 +155,10 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                 LifeChipsList<Hashtags>(
                   items: ref.watch(setupProfileProvider.notifier).hashtags,
                   onItemSelected: (List<Hashtags> hashtags) {
-                    logger.e('message');
-
                     selectedHastagChips = hashtags;
-                    ref.read(selectedHashTagProvider.notifier).state =
-                        hashtags as List<Hashtags>;
                     setState(() {});
                   },
-                  initialItems: selectedHastagChips,
+                  initialItems: selectedHastagChips, hasImage: false,
                 ),
                 32.verticalSpace,
                 const TextView(
@@ -190,29 +178,31 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
                   initialItems: selectedInterestChips,
                   onItemSelected: (List<Interests> interests) {
                     selectedInterestChips = interests;
-                    ref.read(selectedInterestsProvider.notifier).state =
-                        interests;
-
                     setState(() {});
-                  },
+                  }, hasImage: true,
                 ),
                 32.verticalSpace,
                 ButtonWidget(
                   title: 'Save',
-                  onTap: (ref.watch(selectedInterestsProvider).isNotEmpty &&
-                          ref.watch(selectedHashTagProvider).isNotEmpty)
+                  onTap: (selectedInterestChips.isNotEmpty)
                       ? () async {
-                          final data = UpdateProfileReqDto(
-                            interests: ref
-                                .read(selectedInterestsProvider)
-                                .map((e) => e.id)
-                                .toList()
-                                .join(", "),
-                            intent: intentCtrl.text,
+                          validateAndExecute(
+                            () async {
+                              final data = UpdateProfileReqDto(
+                                interests: selectedInterestChips
+                                    .map((e) => e.id)
+                                    .toList()
+                                    .join(", "),
+                                intent: intentCtrl.text,
+                              );
+                              await ref
+                                  .read(setupProfileProvider.notifier)
+                                  .updateProfile(data);
+                            },
+                            validationFailed: () {
+                              widget.controller.index = 2;
+                            },
                           );
-                          await ref
-                              .read(setupProfileProvider.notifier)
-                              .updateProfile(data);
                         }
                       : null,
                 ),
@@ -231,43 +221,40 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
   bool get formValidated => (_formKey.currentState?.validate() ?? false);
 
   void validateAndExecute(VoidCallback action,
-      {VoidCallback? validationFailed}) {
+      {required VoidCallback validationFailed}) {
     if (formValidated) {
-      action();
       if (intentCtrl.text.isNotEmpty) {
-        action();
-      } else {
-        CustomDialogs.error('Select what you are searching for.');
-        if (validationFailed != null) {
+        if (selectedInterestChips.isEmpty) {
+          CustomDialogs.error('Select your interests.');
           validationFailed();
+        } else {
+          action();
         }
+      } else {
+        validationFailed();
+        CustomDialogs.error('Select what you are searching for.');
       }
     } else {
-      if (validationFailed != null) {
-        validationFailed();
-      }
+      validationFailed();
     }
   }
 
   void _listenToProfileStates() {
     ref.listen(setupProfileProvider, (previous, next) {
-      if (next is EthnicityValidation) {
+      if (next is InterestValidation) {
         validateAndExecute(() {
           //  Check if fields have been updated
           var user = ref.read(setupProfileProvider.notifier).userProfile.data;
 
-          if (user?.tribes != null &&
-              user?.otherLanguages != null &&
-              user?.originCountryId != null) {
-            widget.controller.index = 2;
+          if (user?.intent != null && user?.interests != null) {
+            widget.controller.index = next.nextIndex;
           } else {
-            widget.controller.index = 1;
-
+            widget.controller.index = 2;
             CustomDialogs.error(
-                'Please save your ethnicity information and continue.');
+                'Please save your interests information and continue.');
           }
         }, validationFailed: () {
-          widget.controller.index = 1;
+          widget.controller.index = 2;
         });
         setState(() {});
       }
@@ -277,7 +264,6 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
   void prefillFields() {
     final userProfile =
         ref.watch(setupProfileProvider.notifier).userProfile.data;
-
     selectedInterestChips = userProfile?.interests != null
         ? (userProfile!.interests)
             .toString()
@@ -285,63 +271,62 @@ class _InterestsTabState extends ConsumerState<InterestsTab>
             .map((e) => ref.watch(interestByIdProvider(int.parse(e)))!)
             .toList()
         : [];
+
+    // interest as List<Interests>;
+    logger.e("USERS INTERESTS${selectedInterestChips.length}");
+    if (userProfile?.intent != null) {
+      intentsController
+          .setSelectedOptions([ValueItem(label: userProfile?.intent)]);
+    }
+    setState(() {});
   }
 }
 
-class LifeChipsList<T> extends StatefulWidget {
+class LifeChipsList<T> extends StatelessWidget {
   const LifeChipsList({
-    super.key,
+    Key? key,
     required this.items,
     required this.onItemSelected,
     required this.initialItems,
+    required this.hasImage,
   });
 
   final List<T> items;
   final Function(List<T>) onItemSelected;
   final List<T> initialItems;
-
-  @override
-  _LifeChipsListState<T> createState() => _LifeChipsListState<T>();
-}
-
-class _LifeChipsListState<T> extends State<LifeChipsList<T>> {
-  List<T> selectedOptions = [];
+ final bool hasImage;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        // availableChips = ref
-        //     .watch(setupProfileProvider.notifier)
-        //     .hashtags
-        //     .map((e) => e.name ?? '')
-        //     .toList();
+    return Wrap(
+      children: List.generate(
+        items.length,
+        (index) => CustomChip(
+          hasImage: hasImage,
+          title: items[index].toString(),
+          selected: initialItems
+              .map((e) => e.toString())
+              .contains(items[index].toString()),
+          onTap: () {
+            logger
+                .e("SELECTED CONTAINS: ${initialItems.contains(items[index])}");
+            logger.e("SELECTED OPTIONS${initialItems.length}");
 
-        return Wrap(
-          children: List.generate(
-            widget.items.length,
-            (index) => CustomChip(
-              title: widget.items[index].toString(),
-              selected: widget.initialItems.contains(widget.items[index]),
-              onTap: () {
-                if (selectedOptions.contains(widget.items[index])) {
-                  setState(() {
-                    selectedOptions.remove(widget.items[index]);
-                  });
-                  widget.onItemSelected(selectedOptions);
-
-                  return;
-                }
-                setState(() {
-                  selectedOptions.add(widget.items[index]);});
-                logger.e(selectedOptions.runtimeType);
-                widget.onItemSelected(selectedOptions);
-
-                },
-            ),
-          ),
-        );
-      },
+            if (initialItems
+                .map((e) => e.toString())
+                .contains(items[index].toString())) {
+              initialItems.removeWhere(
+                  (element) => element.toString() == items[index].toString());
+              onItemSelected(initialItems);
+              return;
+            } else {
+              initialItems.add(items[index]);
+              logger.e(initialItems.runtimeType);
+              onItemSelected(initialItems);
+            }
+          },
+        ),
+      ),
     );
   }
 }
@@ -401,10 +386,12 @@ class CustomChip extends StatelessWidget {
     this.onTap,
     required this.title,
     this.selected = false,
+    this.hasImage = false,
   });
 
   final VoidCallback? onTap;
   final String title;
+  final bool? hasImage;
 
   final bool selected;
 
@@ -420,9 +407,24 @@ class CustomChip extends StatelessWidget {
           border: Border.all(width: 1, color: Pallets.primary),
           color: selected ? Pallets.primary : Pallets.white,
         ),
-        child: TextView(
-          text: "#$title",
-          color: selected ? Pallets.white : Pallets.black,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            if (hasImage!)
+              ImageWidget(
+                imageUrl: InterestsHelper.getInterestAssetByName(title),
+                size: 15,
+                imageType: ImageWidgetType.asset,
+                color: selected ? Pallets.white : Pallets.primary,
+              ),
+            5.horizontalSpace,
+
+            TextView(
+              text: hasImage!?title:"#$title",
+              color: selected ? Pallets.white : Pallets.black,
+            ),
+          ],
         ),
       ),
     );

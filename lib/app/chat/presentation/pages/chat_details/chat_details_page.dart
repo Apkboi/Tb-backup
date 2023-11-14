@@ -2,20 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 import 'package:triberly/app/chat/presentation/widgets/base_message_widget.dart';
-
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/image_manipulation/cloudinary_manager.dart';
-
 import '../../widgets/_chat_widgets.dart';
 import 'chat_details_controller.dart';
 import 'dart:io';
-
 import 'package:audio_waveforms/audio_waveforms.dart';
-
 
 const String testSenderid = 'asdadsa-1233-sdas332-2sasd';
 const String anotherSenderid = 'another-1233-sender-1234';
@@ -60,6 +55,8 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
   bool isRecordingCompleted = false;
   bool isLoading = true;
   late Directory appDirectory;
+
+  List<String> _uploadedFiles = [];
 
   @override
   void initState() {
@@ -132,6 +129,15 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
                     .read(chatDetailsProvider.notifier)
                     .addDateSeparators(messagesList);
 
+                if (messagesList.isEmpty) {
+                  return const Expanded(
+                      child: Center(
+                          child: EmptyState(
+                              imageUrl: '',
+                              title: "No messages yet",
+                              subtitle: "You messages will appear here")));
+                }
+
                 return Expanded(
                   child: ListView.builder(
                     reverse: true,
@@ -144,7 +150,7 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
                       MessageModel singleItem = normalList[index];
 
-                     return BaseMessageWidget(index, singleItem: singleItem);
+                      return BaseMessageWidget(index, singleItem: singleItem, chatId: widget.chatId,);
                     },
                   ),
                 );
@@ -159,8 +165,8 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
               messageCtrl: messageCtrl,
               isRecording: value,
               audioCtrl: recorderController,
-              onSend:
-                  (messageCtrl.text.isEmpty) ? _startOrStopRecording : onSend,
+              onSend: (messageCtrl.text.isEmpty) ? _startOrStopRecording : onSend,
+              chatId: widget.chatId,
             );
           },
         ),
@@ -179,32 +185,30 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
           isRecordingCompleted = true;
           logger.wtf(path);
 
-          final url = await CloudinaryManager.uploadFile(
-            filePath: path,
-            file: File(path),
-          );
-
-          logger.i(url);
           final data = MessageModel(
-            message: url,
+            message: null,
             type: 'audio',
+            files: [path],
             senderId: userDto?.id.toString(),
             isMe: true,
+            isLocal: false,
             repliedMessage:
                 ref.read(chatDetailsProvider.notifier).replyingMessage,
             date: DateTime.now().toString(),
             timestamp: ServerValue.timestamp,
           );
 
-          dbRef
-              .child("chat_messages")
-              .child(widget.chatId)
-              .push()
-              .set(data.toMap())
-              .then(
-                (value) {},
-              );
+          // dbRef.child("chat_messages")
+          //     .child(widget.chatId)
+          //     .push()
+          //     .set(data.toMap())
+          //     .then(
+          //       (value) {},);
           debugPrint("Recorded file size: ${File(path).lengthSync()}");
+
+
+          ref.read(chatDetailsProvider.notifier).addChat(data);
+
         }
       } else {
         await recorderController.record(path: path);
@@ -222,16 +226,18 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
 
   onSend() {
     final data = MessageModel(
-      message: messageCtrl.text,
-      senderId: userDto?.id.toString(),
-      isMe: true,
-      repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
-      date: DateTime.now().toString(),
-      timestamp: ServerValue.timestamp,
-    );
+        message: messageCtrl.text,
+        senderId: userDto?.id.toString(),
+        isMe: true,
+        isLocal: false,
+        repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
+        date: DateTime.now().toString(),
+        timestamp: ServerValue.timestamp,
+        files: _uploadedFiles);
 
     if (data.message == '') {
       CustomDialogs.showToast('Add a text');
+
       return;
     }
 
@@ -243,7 +249,10 @@ class _ChatDetailsPageState extends ConsumerState<ChatDetailsPage> {
     //     .then(
     //       (value) {},
     //     );
-    ref.read(chatDetailsProvider.notifier).sendChatMessage(data, widget.chatId, []);
+    ref.read(chatDetailsProvider.notifier).sendChatMessage(
+          data,
+          widget.chatId,
+        );
 
     ///Clear textfield
     messageCtrl.clear();

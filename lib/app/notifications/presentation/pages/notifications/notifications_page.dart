@@ -43,16 +43,25 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
               ),
             ),
             32.verticalSpace,
-            Expanded(
-              child: ListView.separated(
-                itemCount: 15,
-                padding: const EdgeInsets.only(bottom: 45),
-                itemBuilder: (context, index) {
-                  return const NotificationTile();
-                },
-                separatorBuilder: (context, index) {
-                  return const CustomDivider();
-                },
+            // Expanded(
+            //   child: ListView.separated(
+            //     itemCount: 15,
+            //     padding: const EdgeInsets.only(bottom: 45),
+            //     itemBuilder: (context, index) {
+            //       return const NotificationTile();
+            //     },
+            //     separatorBuilder: (context, index) {
+            //       return const CustomDivider();
+            //     },
+            //   ),
+            // ),
+            const Expanded(
+              child: Center(
+                child: EmptyState(
+                  imageUrl: '',
+                  title: "No notifications here",
+                  subtitle: "Notifications will appear here if any.",
+                ),
               ),
             ),
           ],

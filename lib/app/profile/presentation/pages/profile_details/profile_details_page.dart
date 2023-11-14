@@ -8,6 +8,8 @@ import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 import 'package:triberly/app/chat/presentation/pages/chat/chat_controller.dart';
 import 'package:triberly/app/community/presentation/widgets/connection_request_dialog.dart';
 import 'package:triberly/app/profile/presentation/pages/setup_profile/setup_profile_controller.dart';
+import 'package:triberly/app/profile/presentation/widgets/bookmark_button.dart';
+import 'package:triberly/app/profile/presentation/widgets/favorite_button.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/shared/left_right_widget.dart';
 
@@ -84,6 +86,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
       }
 
       if (next is InitialiseChatSuccess) {
+        ref.read(chatProvider.notifier).getChats();
         context.pop();
 
         final userDetails =
@@ -116,7 +119,15 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                   .read(setupProfileProvider.notifier)
                   .countries
                   .firstWhereOrNull((element) =>
-                      element.id == userDetails?.residenceCountryId) ??
+                      element.id == userDetails?.residenceCountryId?.id)
+                  ?.name ??
+              'N/A';
+          final originCountry = ref
+                  .read(setupProfileProvider.notifier)
+                  .countries
+                  .firstWhereOrNull(
+                      (element) => element.id == userDetails?.originCountryId)
+                  ?.name ??
               'N/A';
 
           records = [
@@ -126,23 +137,29 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
               'Relationship Status',
               '${userDetails?.relationshipStatus ?? '-'}'
             ),
-            ('Looking for', userDetails?.intent??"-"),
-            ('Origin Country', userCountry),
-            ('Other Nationality', '-'),
-            ('Mother Tongue', '${userDetails?.tribes ?? '-'}'),
+            ('Looking for', userDetails?.intent ?? "-"),
+            ('Origin Country', originCountry),
+            ('Other Nationality', userCountry),
+            ('Mother Tongue', '${userDetails?.town ?? '-'}'),
             ('Bio', '${userDetails?.bio ?? '-'}'),
-            ('Interests', userDetails?.interests!= null? (userDetails!.interests).toString().split(", ")
-                .map((e) => ref
-                .watch(interestByIdProvider(int.parse(e)))
-                ?.name)
-                .toList()
-                .join(", "):"-",),
+            (
+              'Interests',
+              userDetails?.interests != null
+                  ? (userDetails!.interests)
+                      .toString()
+                      .split(", ")
+                      .map((e) =>
+                          ref.watch(interestByIdProvider(int.parse(e)))?.name)
+                      .toList()
+                      .join(", ")
+                  : "-",
+            ),
             ('Faith', '-'),
             ('Education', '-'),
             ('Hashtags', '-'),
           ];
 
-          logger.log(Logger.level, 'TRIBE ${userDetails?.tribes ?? 'N/A'}');
+          // logger.log(Logger.level, 'TRIBE ${userDetails?.tribes ?? 'N/A'}');
 
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -168,7 +185,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                       onTap: () {
                         context.pop();
                       },
-                      child: ImageWidget(imageUrl: Assets.svgsMore),
+                      child: const ImageWidget(imageUrl: Assets.svgsMore),
                     ),
                   ],
                 ),
@@ -200,41 +217,48 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const ShadowCircleContainer(
-                      child: ImageWidget(
-                        imageUrl: Assets.svgsHeart,
-                      ),
-                    ),
+                    BookmarkButton(userDetails?.id.toString()??''),
                     ShadowCircleContainer(
                       size: 80,
                       color: Pallets.primary,
-                      child: const ImageWidget(
-                        imageUrl: Assets.svgsLink,
-                        color: Pallets.white,
-                      ),
-                      onTap: () {
-                        CustomDialogs.showCustomDialog(
-                            ConnectionRequestDialog(
-                              userDetails!,
-                              onRequestSent: (String? message) {
-                                _requestMessage = message;
-                                ref
-                                    .read(chatProvider.notifier)
-                                    .initiateChat(userDetails.id.toString());
-                              },
+                      child: ref
+                              .read(chatProvider.notifier)
+                              .isConnectedToUser(userDetails?.email??"")
+                          ? const ImageWidget(
+                              imageUrl: Assets.svgsChat,
+                              color: Pallets.white,
+                            )
+                          : const ImageWidget(
+                              imageUrl: Assets.svgsLink,
+                              color: Pallets.white,
                             ),
-                            context);
+                      onTap: () {
+                        if (ref
+                            .read(chatProvider.notifier)
+                            .isConnectedToUser(userDetails?.email)) {
+                          ref
+                              .read(chatProvider.notifier)
+                              .initiateChat(userDetails!.id.toString());
+                        } else {
+                          CustomDialogs.showCustomDialog(
+                              ConnectionRequestDialog(
+                                userDetails!,
+                                onRequestSent: (String? message) {
+                                  _requestMessage = message;
+                                  ref
+                                      .read(chatProvider.notifier)
+                                      .initiateChat(userDetails.id.toString());
+                                },
+                              ),
+                              context);
+                        }
 
                         // ref
                         //     .read(chatProvider.notifier)
                         //     .initiateChat(widget.userId);
                       },
                     ),
-                    const ShadowCircleContainer(
-                      child: ImageWidget(
-                        imageUrl: Assets.svgsBookmark,
-                      ),
-                    ),
+                    FavoriteButton(userDetails?.id.toString()??''),
                   ],
                 ),
                 26.verticalSpace,
@@ -265,8 +289,14 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     ),
                     UserUpDownWidget(
                       title: 'Location',
-                      value:
-                          '${ref.read(setupProfileProvider.notifier).countries.firstWhereOrNull((element) => element.id == userDetails?.residenceCountryId) ?? 'N/A'}',
+                      value: ref
+                              .read(setupProfileProvider.notifier)
+                              .countries
+                              .firstWhereOrNull((element) =>
+                                  element.id ==
+                                  userDetails?.residenceCountryId?.id)
+                              ?.name ??
+                          'N/A',
                     ),
                     Container(
                       width: 1,
@@ -277,7 +307,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     UserUpDownWidget(
                       title: 'Age',
                       value:
-                          '${Helpers.calculateAge(userDetails?.dob ?? '') ?? "N/A"}',
+                          Helpers.calculateAge(userDetails?.dob ?? '') ?? "N/A",
                     ),
                   ],
                 ),
@@ -345,7 +375,6 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
       ),
     );
   }
-
 
   void _sendInitialMessage(num chatId) {
     if (_requestMessage != null) {

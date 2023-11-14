@@ -29,7 +29,6 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
@@ -52,8 +51,7 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
   }
 
   prefillFields() {
-    final userProfile =
-        ref.watch(setupProfileProvider.notifier).userProfile.data;
+    final userProfile = ref.watch(setupProfileProvider.notifier).userProfile.data;
     otherLanguages.text = userProfile?.otherLanguages ?? '';
     townshipCtrl.text = userProfile?.town ?? '';
     // motherTongue.text = userProfile?. ?? '';
@@ -156,6 +154,7 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
                 TextBoxField(
                   label: 'Other languages spoken',
                   controller: otherLanguages,
+                  validator: FieldValidators.notEmptyValidator,
                 ),
                 45.verticalSpace,
                 ButtonWidget(
@@ -190,14 +189,6 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
       {VoidCallback? validationFailed}) {
     if (formValidated) {
       action();
-      // if (dob.text.isNotEmpty && dob.text != "N/A") {
-      //   action();
-      // } else {
-      //   CustomDialogs.error('Enter your date of birth.');
-      //   if (validationFailed != null) {
-      //     validationFailed();
-      //   }
-      // }
     } else {
       if (validationFailed != null) {
         validationFailed();
@@ -215,11 +206,11 @@ class _EthnicityTabState extends ConsumerState<EthnicityTab>
           if (user?.tribes != null &&
               user?.otherLanguages != null &&
               user?.originCountryId != null) {
-            widget.controller.index = 2;
+            widget.controller.index = next.nextIndex;
           } else {
             widget.controller.index = 1;
-
-            CustomDialogs.error('Please save your ethnicity information and continue.');
+            CustomDialogs.error(
+                'Please save your ethnicity information and continue.');
           }
         }, validationFailed: () {
           widget.controller.index = 1;

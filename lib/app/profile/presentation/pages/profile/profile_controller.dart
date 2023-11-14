@@ -1,8 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
-class ProfileController extends StateNotifier<ProfileState>{
-
+class ProfileController extends StateNotifier<ProfileState> {
   ProfileController(this.ref) : super(ProfileInitial());
   final StateNotifierProviderRef ref;
 
@@ -17,26 +15,24 @@ class ProfileController extends StateNotifier<ProfileState>{
   }
 
 
-}
 
+}
 
 final profileProvider =
     StateNotifierProvider<ProfileController, ProfileState>((ref) {
   return ProfileController(ref);
 });
 
+abstract class ProfileState {}
 
+class ProfileInitial extends ProfileState {}
 
- abstract class ProfileState {}
+class ProfileLoading extends ProfileState {}
 
- class ProfileInitial extends ProfileState {}
+class ProfileSuccess extends ProfileState {}
 
- class ProfileLoading extends ProfileState {}
+class ProfileError extends ProfileState {
+  final String message;
 
- class ProfileSuccess extends ProfileState {}
-
- class ProfileError extends ProfileState {
-   final String message;
-
-   ProfileError(this.message);
- }
+  ProfileError(this.message);
+}

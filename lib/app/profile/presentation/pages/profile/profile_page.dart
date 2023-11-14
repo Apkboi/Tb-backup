@@ -11,30 +11,21 @@ import 'package:triberly/app/profile/presentation/widgets/user_image_with_status
 import 'package:triberly/core/_core.dart';
 import 'package:triberly/core/services/data/session_manager.dart';
 
-class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends ConsumerWidget {
+  ProfilePage({super.key});
 
-  @override
-  ConsumerState createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends ConsumerState<ProfilePage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> dialogKey = GlobalKey<FormState>();
   late UserDto? user;
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    dialogKey.currentState?.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     ref.watch(profileProvider);
     ref.watch(setupProfileProvider);
-    user = sl<UserImpDao>().user;
+    user =  ref
+        .watch(setupProfileProvider.notifier)
+        .userProfile
+        .data;
     return Scaffold(
       key: scaffoldKey,
       appBar: CustomAppBar(
@@ -146,8 +137,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ],
                   );
                 }),
-                20.verticalSpace,
-                const _IncognitoSwitcher(),
+                // 20.verticalSpace,
+                // const _IncognitoSwitcher(),
                 20.verticalSpace,
                 ...ProfileOptionItemData.profileOptions
                     .map((e) => ProfileOptionItem(

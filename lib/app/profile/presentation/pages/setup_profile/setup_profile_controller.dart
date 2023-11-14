@@ -100,22 +100,22 @@ class SetupProfileController extends StateNotifier<SetupProfileState> {
     }
   }
 
-  void validateProfileForm(ProfileForm form) {
+  void validateProfileForm(ProfileForm form, int nextIndex) {
     switch (form) {
       case ProfileForm.bio:
-        state = PersonalBioValidation();
+        state = PersonalBioValidation(nextIndex);
         break;
 
       case ProfileForm.ethnicity:
-        state = EthnicityValidation();
+        state = EthnicityValidation(nextIndex);
         break;
 
       case ProfileForm.interest:
-        state = InterestValidation();
+        state = InterestValidation(nextIndex);
         break;
 
       case ProfileForm.others:
-        state = OthersValidation();
+        state = OthersValidation(nextIndex);
         break;
     }
   }
@@ -162,13 +162,29 @@ class GetConfigsError extends SetupProfileState {
 
 // Validation States
 
-class PersonalBioValidation extends SetupProfileState {}
+class PersonalBioValidation extends SetupProfileState {
+  PersonalBioValidation(this.nextIndex);
 
-class EthnicityValidation extends SetupProfileState {}
+  int nextIndex;
+}
 
-class InterestValidation extends SetupProfileState {}
+class EthnicityValidation extends SetupProfileState {
+  EthnicityValidation(this.nextIndex);
 
-class OthersValidation extends SetupProfileState {}
+  int nextIndex;
+}
+
+class InterestValidation extends SetupProfileState {
+  InterestValidation(this.nextIndex);
+
+  int nextIndex;
+}
+
+class OthersValidation extends SetupProfileState {
+  OthersValidation(this.nextIndex);
+
+  int nextIndex;
+}
 
 final selectedHashTagProvider =
     StateProvider.autoDispose<List<Hashtags>>((ref) => []);

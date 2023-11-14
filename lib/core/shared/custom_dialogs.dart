@@ -76,13 +76,13 @@ class CustomDialogs {
           children: [
             Row(
               children: [
-                const ImageWidget(
-                  imageUrl: Assets.pngsLaunch,
-                  size: 50,
-                ),
+                // const ImageWidget(
+                //   imageUrl: Assets.pngsLaunch,
+                //   size: 50,
+                // ),
                 10.horizontalSpace,
                 Expanded(
-                  child: TextView(text: message),
+                  child: TextView(text: message,),
                 ),
               ],
             ),
@@ -92,16 +92,21 @@ class CustomDialogs {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ButtonDialog(
-                  title: 'Cancel',
-                  isInverted: true,
-                  onTap: () {
-                    hideLoading(context);
-                  },
+                Expanded(
+                  child: ButtonDialog(
+                    title: 'Cancel',
+                    isInverted: true,
+                    onTap: () {
+                      hideLoading(context);
+                    },
+                  ),
                 ),
-                ButtonDialog(
-                  title: 'Confirm',
-                  onTap: onYes,
+                10.horizontalSpace,
+                Expanded(
+                  child: ButtonDialog(
+                    title: 'Confirm',
+                    onTap: onYes,
+                  ),
                 ),
               ],
             ),

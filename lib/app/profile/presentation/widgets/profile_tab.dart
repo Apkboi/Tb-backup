@@ -71,8 +71,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   }
 
   _prefillTab() {
-    final userProfile =
-        ref.watch(setupProfileProvider.notifier).userProfile.data;
+    final userProfile = ref.watch(setupProfileProvider.notifier).userProfile.data;
     firstName.text = userProfile?.firstName ?? '';
     lastName.text = userProfile?.lastName ?? '';
     email.text = userProfile?.email ?? '';
@@ -123,12 +122,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             21.verticalSpace,
-            // const TextView(
-            //   text: 'Profile details',
-            //   fontSize: 20,
-            //   fontWeight: FontWeight.w600,
-            // ),
-            // 8.verticalSpace,
+
             const TextView(
               text:
                   'Add a bit more to enable us match with other Trybers with similar background.',
@@ -144,7 +138,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                   label: 'Name',
                   topLabel: true,
                   controller: firstName,
-                ),
+validator: FieldValidators.notEmptyValidator,               ),
                 const TextView(
                   text: "Photos",
                   fontSize: 16,
@@ -245,6 +239,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                   topLabel: true,
                   label: 'Email Address',
                   controller: email,
+                  validator: FieldValidators.emailValidator,
                   // validator: FieldValidators.,
                 ),
                 InkWell(
@@ -276,8 +271,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                 CustomTypeDropDownSearch<CountriesData>(
                   hintText: "Current country of residence",
                   hasValidator: true,
-                  selectedItem:
-                      ref.watch(countryByIdProvider(_residenceCountryId)),
+                  selectedItem: ref.watch(countryByIdProvider(_residenceCountryId)),
                   itemAsString: (CountriesData? data) {
                     return data?.name ?? '';
                   },
@@ -310,12 +304,6 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
                       : () {
                           _updateProfile(context);
 
-                          // widget.controller.index = 2;
-
-                          // CustomDialogs.showFlushBar(
-                          //   context,
-                          //   'Profile updated successfully',
-                          // );
                         },
                 ),
                 45.verticalSpace,
@@ -333,18 +321,6 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
   void _pickDate(BuildContext context) async {
     pickDate(context, DateTime.now());
 
-    // }
-    // final value = await showDatePicker(
-    //   context: context,
-    //   initialDate: DateTime.now(),
-    //   firstDate: DateTime(1900),
-    //   lastDate: DateTime(3000),
-    // );
-    //
-    // if (value != null) {
-    //   dob.text = TimeUtil.formatDateDDMMYYY(
-    //       value.toIso8601String() ?? '');
-    // }
   }
 
   Future<void> pickDate(BuildContext context, DateTime initialDate) async {
@@ -378,6 +354,9 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
       if (dob.text.isNotEmpty && dob.text != "N/A") {
         action();
       } else {
+        if (validationFailed != null) {
+          validationFailed();
+        }
         CustomDialogs.error('Enter your date of birth.');
         if (validationFailed != null) {
           validationFailed();
@@ -395,15 +374,14 @@ class _ProfileTabState extends ConsumerState<ProfileTab>
       if (next is PersonalBioValidation) {
         validateAndExecute(() {
 
-
           //  Check if fields have been updated
           var user = ref.read(setupProfileProvider.notifier).userProfile.data;
-
           if (user?.profession != null &&
               user?.bio != null &&
               user?.residenceCountryId != null) {
-            widget.controller.index = 1;
+            widget.controller.index = next.nextIndex;
           }else{
+            widget.controller.index = 0;
             CustomDialogs.error('Please save your personal bio and continue.');
           }
         }, validationFailed: () {

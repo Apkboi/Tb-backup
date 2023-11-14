@@ -64,6 +64,13 @@ class ChatController extends StateNotifier<ChatState> {
 
     state = ChatSuccess();
   }
+  bool isConnectedToUser(String email){
+    logger.e(email);
+    return chats
+        .where((element) =>
+    element.participants?.first.user?.email == email)
+    .toList().length!=0;
+  }
 
   Future<Map<String, dynamic>> getLastMessage(String chatId) async {
     try {
@@ -183,13 +190,24 @@ class ChatController extends StateNotifier<ChatState> {
       state = ChatError(e.toString());
     }
   }
-
-
 }
 
 final chatProvider = StateNotifierProvider<ChatController, ChatState>((ref) {
   return ChatController(ref, sl());
 });
+
+final isConnectedToUserProvider = Provider.family<bool, String>(
+  (ref, id) {
+    logger.e(id);
+
+    return ref
+        .read(chatProvider.notifier)
+        .chats
+        .where((element) =>
+            element.participants?.first.user?.email == id)
+        .isNotEmpty;
+  },
+);
 
 abstract class ChatState {}
 

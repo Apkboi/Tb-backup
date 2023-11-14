@@ -1,16 +1,23 @@
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:triberly/app/auth/external/datasources/user_imp_dao.dart';
 import 'package:triberly/app/chat/domain/models/dtos/message_model_dto.dart';
 import 'package:triberly/app/chat/presentation/pages/chat_details/chat_details_controller.dart';
 import 'package:triberly/app/chat/presentation/pages/chat_details/chat_details_page.dart';
+import 'package:triberly/app/chat/presentation/widgets/replying_message_widget.dart';
 import 'package:triberly/core/_core.dart';
 
-class ChatBottomActionsBar extends StatefulWidget {
+import '../../../../core/services/image_manipulation/image_manager.dart';
+
+class ChatBottomActionsBar extends ConsumerStatefulWidget {
   const ChatBottomActionsBar({
     super.key,
     required this.messageCtrl,
+    required this.chatId,
     this.onSend,
     this.isRecording = false,
     this.audioCtrl,
@@ -21,15 +28,17 @@ class ChatBottomActionsBar extends StatefulWidget {
   final MessageModel? replyingMessage;
   final VoidCallback? onSend;
   final bool isRecording;
-
+  final String chatId;
   final RecorderController? audioCtrl;
 
   @override
-  State<ChatBottomActionsBar> createState() => _ChatBottomActionsBarState();
+  ConsumerState<ChatBottomActionsBar> createState() =>
+      _ChatBottomActionsBarState();
 }
 
-class _ChatBottomActionsBarState extends State<ChatBottomActionsBar> {
+class _ChatBottomActionsBarState extends ConsumerState<ChatBottomActionsBar> {
   bool isAudio = true;
+  final userDto = sl<UserImpDao>().user;
 
   @override
   void initState() {
@@ -58,57 +67,66 @@ class _ChatBottomActionsBarState extends State<ChatBottomActionsBar> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (ref.read(chatDetailsProvider.notifier).replyingMessage !=
-                  null)
-                Container(
-                  color: Pallets.grey.withOpacity(0.1),
-                  width: double.infinity,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 3,
-                            color: Pallets.black,
-                          ),
-                          16.horizontalSpace,
-                          TextView(
-                              text: ref
-                                      .watch(chatDetailsProvider.notifier)
-                                      .replyingMessage
-                                      ?.message ??
-                                  ''),
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            ref
-                                .watch(chatDetailsProvider.notifier)
-                                .replyingMessage = null;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.cancel_outlined,
-                          color: Pallets.primary,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              CustomDivider(),
+              const ReplyingMessageWidget(),
+              const CustomDivider(),
               Row(
                 children: [
-                  IconButton(
-                    onPressed: () async {},
-                    icon: Icon(
-                      Icons.add,
-                      // size: 24,
-                      color: Pallets.grey,
+                  PopupMenuButton<int>(
+                    onSelected: (value) {
+                      _onSelected(value, context);
+                    },
+                    itemBuilder: (context) => [
+                      // popupmenu item 1
+                      PopupMenuItem(
+                        value: 1,
+                        child: Row(
+                          children: [
+                            const ImageWidget(
+                                imageUrl: Assets.svgsImage, size: 20),
+                            8.horizontalSpace,
+                            const TextView(
+                              text: 'Upload image',
+                            )
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 2,
+                        child: Row(
+                          children: [
+                            const ImageWidget(
+                                imageUrl: Assets.svgsVideo, size: 20),
+                            8.horizontalSpace,
+                            const TextView(
+                              text: 'Upload video',
+                            )
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 3,
+                        child: Row(
+                          children: [
+                            const ImageWidget(
+                                imageUrl: Assets.svgsAudio, size: 20),
+                            8.horizontalSpace,
+                            const TextView(
+                              text: 'Upload audio file',
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                    offset: const Offset(0, 30),
+                    // color: Colors.grey,
+                    elevation: 5,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4.0),
+                      ),
                     ),
+                    child: const IconButton(
+                        onPressed: null, icon: Icon(Icons.add)),
                   ),
                   12.horizontalSpace,
                   Expanded(
@@ -165,7 +183,7 @@ class _ChatBottomActionsBarState extends State<ChatBottomActionsBar> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 16),
                       child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         transitionBuilder:
                             (Widget child, Animation<double> animation) {
                           return FadeTransition(
@@ -192,5 +210,95 @@ class _ChatBottomActionsBarState extends State<ChatBottomActionsBar> {
         );
       },
     );
+  }
+
+  void _onSelected(int value, BuildContext context) {
+    switch (value) {
+      case 1:
+        _pickImage(context);
+      case 2:
+        _pickVideo(context);
+      case 3:
+        _pickAudio(context);
+    }
+  }
+
+  void _pickImage(BuildContext context) async {
+    final imageManager = ImageManager();
+    var image = await imageManager.showDocumentSourceDialog(context);
+
+    final data = MessageModel(
+      message:
+          widget.messageCtrl.text.isNotEmpty ? widget.messageCtrl.text : null,
+      type: 'image',
+      senderId: userDto?.id.toString(),
+      isMe: true,
+      isLocal: false,
+      repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
+      date: DateTime.now().toString(),
+      files: image != null ? [image.path] : [],
+      timestamp: ServerValue.timestamp,
+    );
+
+    if (image != null) {
+      ref.read(chatDetailsProvider.notifier).addChat(
+            data,
+          );
+    }
+  }
+
+  void _pickVideo(BuildContext context) async {
+    final imageManager = ImageManager();
+    var image = await imageManager.fetchFiles(
+      fileType: FileType.video,
+      // allowedExtensions: ["mp4", 3gp]
+    );
+
+    final data = MessageModel(
+      message:
+          widget.messageCtrl.text.isNotEmpty ? widget.messageCtrl.text : null,
+      type: 'video',
+      senderId: userDto?.id.toString(),
+      isMe: true,
+      isLocal: false,
+      repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
+      date: DateTime.now().toString(),
+      files: image.isNotEmpty ? [image.first] : [],
+      timestamp: ServerValue.timestamp,
+    );
+
+    if (image.isNotEmpty) {
+      ref
+          .read(chatDetailsProvider.notifier)
+          .sendChatMessage(data, widget.chatId);
+    }
+  }
+
+  void _pickAudio(BuildContext context) async {
+    final imageManager = ImageManager();
+    var image = await imageManager.fetchFiles(
+      fileType: FileType.audio,
+      // allowedExtensions: ["mp4", 3gp]
+    );
+
+    final data = MessageModel(
+      message:
+          widget.messageCtrl.text.isNotEmpty ? widget.messageCtrl.text : null,
+      type: 'audio',
+      senderId: userDto?.id.toString(),
+      isMe: true,
+      isLocal: false,
+      repliedMessage: ref.read(chatDetailsProvider.notifier).replyingMessage,
+      date: DateTime.now().toString(),
+      files: image.isNotEmpty ? [image.first] : [],
+      timestamp: ServerValue.timestamp,
+    );
+    if (image.isNotEmpty) {
+      ref
+          .read(chatDetailsProvider.notifier)
+          .sendChatMessage(data, widget.chatId);
+    }
+
+
   }
 }

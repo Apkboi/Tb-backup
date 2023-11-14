@@ -8,6 +8,7 @@ import 'package:triberly/app/auth/domain/models/dtos/resend_otp_req_dto.dart';
 import 'package:triberly/app/auth/domain/models/dtos/sign_in_req_dto.dart';
 import 'package:triberly/app/auth/presentation/pages/otp/otp_controller.dart';
 import 'package:triberly/app/auth/presentation/widgets/onboarding/intro_dialog.dart';
+import 'package:triberly/app/chat/presentation/pages/chat/chat_controller.dart';
 import 'package:triberly/core/constants/enums/otp_type.dart';
 import 'package:triberly/core/navigation/path_params.dart';
 import 'package:triberly/core/services/_services.dart';
@@ -223,6 +224,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   void _userSignedIn(BuildContext context) {
     // Retreive app configs
     ref.read(setupProfileProvider.notifier).getDataConfigs();
+    ref.read(chatProvider.notifier).getChats();
     // ref.read(locationProvider.notifier).caller();
 
     // Get user data
@@ -250,6 +252,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
     // Confirm profile photoupload
     if (userData?.profileImage == null) {
+
       context.pushNamed(PageUrl.uploadProfilePhoto);
       return;
     }

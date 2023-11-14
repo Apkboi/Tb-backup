@@ -60,7 +60,7 @@ class _LocationAccessPageState extends ConsumerState<LocationAccessPage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 55.0),
               child: ButtonWidget(
-                title: 'Frant location access',
+                title: 'Grant location access',
                 onTap: () async {
                   final userEmail =
                       ref.read(signupProvider.notifier).getUserData.$1;

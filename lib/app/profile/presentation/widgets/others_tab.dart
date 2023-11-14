@@ -109,23 +109,23 @@ class _OthersTabState extends ConsumerState<OthersTab>
                 ButtonWidget(
                   title: 'Save',
                   onTap: () {
-                    final data = UpdateProfileReqDto(
-                      education: education.text,
-                      otherLanguages: otherLanguage.text,
-                      haveKids: haveKids.text,
-                      relationShipStatus: relationShip.text
 
-                    );
-                    ref
-                        .read(setupProfileProvider.notifier)
-                        .updateProfile(data)
-                        .then(
-                          (value) => context.goNamed(PageUrl.home),
-                        );
-                    // CustomDialogs.showFlushBar(
-                    //   context,
-                    //   'Profile updated successfully',
-                    // );
+                    if(formValidated){
+                      final data = UpdateProfileReqDto(
+                          education: education.text,
+                          otherLanguages: otherLanguage.text,
+                          haveKids: haveKids.text,
+                          relationShipStatus: relationShip.text
+                      );
+                      ref.read(setupProfileProvider.notifier)
+                          .updateProfile(data)
+                          .then(
+                            (value) => context.goNamed(PageUrl.home),
+                      );
+                    }
+
+
+
                   },
                 ),
                 45.verticalSpace,
@@ -150,6 +150,8 @@ class _OthersTabState extends ConsumerState<OthersTab>
 
     setState(() {});
   }
+
+  bool get formValidated => (_formKey.currentState?.validate() ?? false);
 
 
 

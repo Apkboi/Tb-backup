@@ -189,7 +189,7 @@ class CustomRoutes {
               GoRoute(
                 path: '/profile',
                 name: PageUrl.profile,
-                pageBuilder: (context, state) => const NoTransitionPage(
+                pageBuilder: (context, state) =>  NoTransitionPage(
                   child: ProfilePage(),
                 ),
                 routes: [

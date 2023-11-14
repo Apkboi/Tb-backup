@@ -39,11 +39,11 @@ class _SplashPageState extends ConsumerState<SplashPage>
       ),
     );
 
-    Future.delayed(Duration.zero, () {
-
-      ref.read(setupProfileProvider.notifier).getDataConfigs();
-      // ref.read(locationProvider.notifier).caller();
-    });
+    // Future.delayed(Duration.zero, () {
+    //
+    //   ref.read(setupProfileProvider.notifier).getDataConfigs();
+    //   // ref.read(locationProvider.notifier).caller();
+    // });
 
     animationCtrl?.forward();
     animation?.addListener(() async {

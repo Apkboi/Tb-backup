@@ -83,4 +83,36 @@ class Assets {
   static const String svgsTickCircle = 'assets/images/svgs/tick_circle.svg';
   static const String svgsIntroIcon = 'assets/images/svgs/intro_icon.svg';
   static const String svgsUpload = 'assets/images/svgs/upload.svg';
+  static const String svgsImage = 'assets/images/svgs/image.svg';
+  static const String svgsVideo = 'assets/images/svgs/video.svg';
+  static const String svgsAudio = 'assets/images/svgs/music.svg';
 }
+
+class InterestsAssets {
+  static const String svgsAdventure = 'assets/images/svgs/interests/adventure_films.svg';
+  static const String svgsAerobics = 'assets/images/svgs/interests/aerobics.svg';
+  static const String svgsBBQ = 'assets/images/svgs/interests/bbq.svg';
+  static const String svgsBollywood = 'assets/images/svgs/interests/bollywood.svg';
+  static const String svgsChurchEvents = 'assets/images/svgs/interests/church_events.svg';
+  static const String svgsGym = 'assets/images/svgs/interests/gym.svg';
+  static const String svgsCinema = 'assets/images/svgs/interests/cinema.svg';
+  static const String svgsGaming = 'assets/images/svgs/interests/gaming.svg';
+  static const String svgsTechGeek = 'assets/images/svgs/interests/tech_geek.svg';
+  static const String svgsAfrobeats = 'assets/images/svgs/interests/afrobeats.svg';
+  static const String svgsFootball = 'assets/images/svgs/interests/football.svg';
+  static const String svgsGospelMusic = 'assets/images/svgs/interests/gospel_music.svg';
+  static const String svgsLongDistanceTravel = 'assets/images/svgs/interests/long_distance_travel.svg';
+  static const String svgsRapMusic = 'assets/images/svgs/interests/rap_music.svg';
+  static const String svgsArt = 'assets/images/svgs/interests/art.svg';
+  static const String svgsWalkingHiking = 'assets/images/svgs/interests/walking_hiking.svg';
+  static const String svgsGhanaianFood = 'assets/images/svgs/interests/ghanaian_food.svg';
+  static const String svgsVRGaming = 'assets/images/svgs/interests/vr_gaming.svg';
+  static const String svgsKaraoke = 'assets/images/svgs/interests/karaoke.svg';
+  static const String svgsRunning = 'assets/images/svgs/interests/running.svg';
+  static const String svgsSweetTooth = 'assets/images/svgs/interests/sweet_tooth.svg';
+  static const String svgsSwimming = 'assets/images/svgs/interests/swimming.svg';
+  static const String svgsFineDining = 'assets/images/svgs/interests/fine_dining.svg';
+  static const String svgsCityTravel = 'assets/images/svgs/interests/city_travel.svg';
+  static const String svgsComedyFilms = 'assets/images/svgs/interests/comedy_films.svg';
+}
+
